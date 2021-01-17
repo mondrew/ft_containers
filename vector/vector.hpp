@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/15 23:34:33 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/17 22:13:10 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -583,8 +583,21 @@ namespace ft
 				if (this->_size + 1 > this->_capacity)
 				{
 					int		i = 0;
-					int		new_capacity = this->_capacity * static_cast<int>(log(this->_capacity));
-					T		*tmp = new T[new_capacity];
+					int		new_capacity;
+					int		inc;
+					T		*tmp;
+
+					inc = this->_capacity + 1;
+					if (inc == 1) // to protect from log(1)
+						inc = 2;
+
+					new_capacity = inc * \
+									static_cast<int>(ceil(log(inc)));
+
+					if (new_capacity <= 10) // high-level efficiency
+						new_capacity *= 2;
+
+					tmp = new T[new_capacity];
 
 					while (i < this->_size)
 					{
@@ -614,7 +627,473 @@ namespace ft
 					this->_size--;
 				}
 			}
+
+			// Insert #1 (single element)
+			iterator			insert(iterator position, T const &val) {
+
+				int			i = 0;
+				int			j = 0;
+				iterator	it = this->begin();
+				iterator	ite = this->_end();
+
+				// if (position < it || position > ite) // not original behaviour but it's good
+				//	throw(std::out_of_range);
+
+				if (this->_size + 1 > this->_capacity)
+				{
+					T	*big = new T[this->_size + 1];
+
+					while (i < this->_size)
+					{
+						if (it != position)
+						{
+							big[j] = this->_array[i];
+							i++;
+						}
+						else
+							big[j] = val;
+						j++;
+						it++;
+					}
+					if (position == ite) // double protection (if there will be no throw)
+						big[j] = val;
+
+					if (this->_array)
+						delete [] this->_array;
+					this->_array = big;
+					this->_size++;
+					this->_capacity = this->_size;
+				}
+				else
+				{
+					i = this->_size;
+					while (i > 0)
+					{
+						if (ite != position)
+							this->_array[i] = this->_array[i - 1];
+						else
+						{
+							this->_array[i] = val;
+							break ;
+						}
+						i--;
+						ite--;
+					}
+					if (position == it)
+						this->_array[i] = val;
+					this->_size++;
+				}
+
+				return (position);
+			}
+
+			// Insert #2 fill
+			void				insert(iterator position, size_t n, T const &val) {
+
+				int			i = 0;
+				int			j = 0;
+				int			k = 0;
+				iterator	it = this->begin();
+				iterator	ite = this->_end();
+
+				// if (position < it || position > ite) // not original behaviour but it's good
+				//	throw(std::out_of_range);
+
+				if (this->_size + n > this->_capacity)
+				{
+					T	*big = new T[this->_size + n];
+
+					while (i < this->_size)
+					{
+						if (it != position)
+						{
+							big[j] = this->_array[i];
+							i++;
+							j++;
+						}
+						else
+						{
+							while (k < n)
+							{
+								big[j] = val;
+								k++;
+								j++;
+							}
+						}
+						it++;
+					}
+					if (position == ite) // double protection (if there will be no throw)
+					{
+						while (k < n)
+						{
+							big[j] = val;
+							k++;
+							j++;
+						}
+					}
+
+					if (this->_array)
+						delete [] this->_array;
+					this->_array = big;
+					this->_size += n;
+					this->_capacity = this->_size;
+				}
+				else
+				{
+					i = this->_size + n - 1;
+					j = this->_size - 1;
+					while (j >= 0)
+					{
+						if (ite != position)
+							this->_array[i] = this->_array[j];
+						else
+						{
+							while (k < n)
+							{
+								this->_array[i] = val;
+								i--;
+								k++;
+							}
+						}
+						i--;
+						j--;
+						ite--;
+					}
+					if (position == it)
+					{
+						while (k < n)
+						{
+							this->_array[i] = val;
+							i--;
+							k++;
+						}
+					}
+					this->_size++;
+				}
+			}
+
+			// Insert #3 range
+			void			insert(iterator position, iterator first, iterator last) {
+
+				int			i = 0;
+				int			j = 0;
+				int			k = 0;
+				int			n = last - first;
+				iterator	it = this->begin();
+				iterator	ite = this->_end();
+
+				//if (position < it || position > ite || n < 0) // not original behaviour but it's good
+				//	throw(std::out_of_range);
+
+				if (this->_size + n > this->_capacity)
+				{
+					T	*big = new T[this->_size + n];
+
+					while (i < this->_size)
+					{
+						if (it != position)
+						{
+							big[j] = this->_array[i];
+							i++;
+							j++;
+						}
+						else
+						{
+							while (k < n)
+							{
+								big[j] = *first;
+								k++;
+								j++;
+								first++;
+							}
+						}
+						it++;
+					}
+					if (position == ite) // double protection (if there will be no throw)
+					{
+						while (k < n)
+						{
+							big[j] = *first;
+							k++;
+							j++;
+							first++;
+						}
+					}
+
+					if (this->_array)
+						delete [] this->_array;
+					this->_array = big;
+					this->_size += n;
+					this->_capacity = this->_size;
+				}
+				else
+				{
+					i = this->_size + n - 1;
+					j = this->_size - 1;
+					while (j >= 0)
+					{
+						if (ite != position)
+							this->_array[i] = this->_array[j];
+						else
+						{
+							while (k < n)
+							{
+								this->_array[i] = *(last - 1);
+								i--;
+								k++;
+								last--;
+							}
+						}
+						i--;
+						j--;
+						ite--;
+					}
+					if (position == it)
+					{
+						while (k < n)
+						{
+							this->_array[i] = *(last - 1);
+							i--;
+							k++;
+							last--;
+						}
+					}
+					this->_size++;
+				}
+			}
+
+			// Erase #1 single
+			iterator			erase(iterator position) {
+
+				int			i = 0;
+				iterator	it = this->begin();
+				iterator	ite = this->end();
+
+				while (i < this->_size && it != position)
+					i++;
+
+				while (i < this->_size - 1)
+				{
+					this->_array[i]->~T();
+					this->_array[i] = this->_array[i + 1];
+					i++;
+				}
+				this->_array[i]->~T();
+
+				this->_size--;
+
+				return (position);
+			}
+
+			// Erase #2 interval
+			iterator			erase(iterator first, iterator last) {
+
+				int			i = 0;
+				int			j;
+				int			rem = last - first;
+				iterator	it = this->begin();
+				iterator	ite = this->end();
+
+				while (i < this->_size && it != first)
+				{
+					i++;
+					first++;
+				}
+				if (rem == 0)
+					return (this->begin());
+
+				j = i;
+				while (i < this->_size && rem > 0)
+				{
+					this->_array[i]->~T();
+					rem--;
+					i++;
+				}
+
+				while (i < this->_size)
+				{
+					this->_array[j] = this->_array[i];
+					this->_array[i]->~T();
+					i++;
+					j++;
+				}
+
+				this->_size -= last - first;
+
+				return (position);
+			}
+
+			void				swap(vector &x) {
+
+				T		*tmp_array = this->_array;
+				size_t	tmp_size = this->_size;
+				size_t	tmp_capacity = this->_capacity;
+
+				this->_array = x._array;
+				x._array = tmp_array;
+
+				this->_size = x._size;
+				x._size = tmp_size;
+
+				this->_capacity = x._capacity;
+				x._capacity = tmp_capacity;
+			}
+
+			void				clear(void) {
+
+				// A reallocation is not guaranteed to happen - what does it mean?
+				// Possible it means that values can stay the same in the memory
+				// even though objects are deleted
+				int		i = 0;
+
+				while (i < this->_size)
+				{
+					this->_array[i]->~T();
+					i++;
+				}
+				if (this->_array)
+					delete [] this->_array;
+				this->_array = 0;
+
+				this->_size = 0;
+			}
+
+			// Getters
+			T			*getArray(void) {
+
+				return (this->_array);
+			}
+
+			// Setters
+			void		setArray(T *array) {
+
+				this->_array = array;
+			}
+
+			void		setSize(size_t size) {
+
+				this->_size = size;
+			}
+
+			void		setCapacity(size_t capacity) {
+
+				this->_capacity = capacity;
+			}
 	};
+}
+
+// NON-MEMBER FUNCTIONS OVERLOADS
+// Relational operators
+
+template < typename T, typename A = std::allocator<T> >
+bool		operator==(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	if (lhs.size() != rhs.size())
+		return (false);
+	while (i < rhs.size())
+	{
+		if (lhs.getArray()[i] != rhs.getArray()[i])
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool		operator!=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	if (lhs.size() != rhs.size())
+		return (true);
+	while (i < rhs.size())
+	{
+		if (lhs.getArray()[i] != rhs.getArray()[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool		operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs.getArray()[i] < rhs.getArray()[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool		operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs.getArray()[i] <= rhs.getArray()[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool		operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs.getArray()[i] > rhs.getArray()[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool		operator>=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs.getArray()[i] >= rhs.getArray()[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+// SWAP OVERLOAD
+
+template < typename T, typename A = std::allocator<T> >
+void			swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
+
+	T		*tmp_array = x.getArray();
+	size_t	tmp_size = x.size();
+	size_t	tmp_capacity = x.capacity();
+
+	x.setArray(y.getArray());
+	y.setArray(tmp_array);
+
+	x.setSize(y.getSize());
+	y.setSize(tmp_size);
+
+	x.setCapacity(y.getCapacity());
+	y.setCapacity(tmp_capacity);
 }
 
 #endif
