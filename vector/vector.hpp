@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/17 22:13:10 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/19 21:43:23 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <memory>
 # include <cmath>
 # include <stdexcept>
+# include <cstddef>
+# include <iostream>
 
 namespace ft
 {
@@ -30,38 +32,137 @@ namespace ft
 
 		public:
 
+			class iterator;
+
+			// MEMBER FUNCTIONS OF VECTOR CLASS
+
+			// CONSTRUCTORS (4 kinds)
+			// #1 default constructor (empty container with no elements)
+			explicit vector<T, A>(void) {
+
+				this->_array = 0;
+				this->_size = 0;
+				this->_capacity = 0;
+
+				return ;
+			}
+			// #2 fill constructor (n elements, each is a copy of val)
+			explicit vector<T, A>(size_t n, T const &val) { // maybe not size_t... for bad_alloc()
+
+				size_t	i = 0;
+
+				if (n == 0) // ???
+					return ;
+
+				this->_array = new T[n];
+				this->_size = n;
+				this->_capacity = n;
+
+				while (i < n)
+				{
+					this->_array[i] = val;
+					i++;
+				}
+			}
+			// #3 range constructor [first, last)
+			vector<T, A>(vector<T, A>::iterator first, vector<T, A>::iterator last) {
+
+				size_t	i = 0;
+				size_t	n = static_cast<size_t>(&(*last) - &(*first));
+
+				if (n == 0 || last < first) // ???
+					return ;
+
+				this->_array = new T[n];
+				this->_size = n;
+				this->_capacity = n;
+
+				while (i < n)
+				{
+					this->_array[i] = *first;
+					i++;
+					first++;
+				}
+			}
+			// #4 copy constructor
+			vector<T, A>(vector<T, A> const &src) {
+
+				*this = src;
+
+				return ;
+			}
+
+			// DESTRUCTOR
+			~vector<T, A>(void) {
+
+				delete [] this->_array;
+
+				return ;
+			}
+
+			// ASSIGNMENT OPERATION OVERLOAD
+			vector<T, A>		&operator=(vector<T, A> const &rhs) {
+
+				size_t	i = 0;
+
+				if (rhs.getArray() == 0 || rhs.size() == 0)
+				{
+					this->_array = 0;
+					this->_size = 0;
+					this->_capacity = 0;
+					return (*this);
+				}
+
+				this->_array = new T[rhs.capacity()];
+				this->_size = rhs.size();
+				this->_capacity = rhs.capacity();
+
+				while (i < this->_size)
+				{
+					this->_array[i] = rhs.getArray()[i];
+					i++;
+				}
+
+				return (*this);
+			}
+
 			class iterator {
 
 				private:
 
 					T		*_ptr;
-					T		*first;
+					T		*_first;
 					size_t	_size;
 
 				public:
 
 					// CONSTRUCTORS (4 kinds)
 					// #1 default constructor
-					iterator(void) : _ptr(0), _first(0), _size(0) { }
+					iterator(void) : _ptr(0), _first(0), _size(0) { return ; }
 					// #2 parameterized constructor (for iterator init: begin, end, etc)
-					iterator(T *ptr, T *first, size_t size) : _ptr(ptr), _first(first), _size(size) { }
+					iterator(T *ptr, T *first, size_t size) : 
+								_ptr(ptr), _first(first), _size(size) { return ; }
 					// #3 parameterized constructor
 					iterator(vector<T, A> const &src) {
 
 						this->_ptr = &src._array[0];
 						this->_first = &src._array[0];
 						this->_size = src._size();
+
+						return ;
 					}
 					// #4 copy constructor
 					iterator(iterator const &src) {
 
 						*this = src;
+
+						return ;
 					}
 
 					// DESTRUCTOR
-					~iterator(void) { }
+					~iterator(void) { return ; }
 
-					iterator	&iterator=(iterator const &rhs) {
+					iterator	&operator=(iterator const &rhs) {
 
 						this->_ptr = rhs._ptr;
 						this->_first = rhs._first;
@@ -186,35 +287,39 @@ namespace ft
 				private:
 
 					T		*_ptr;
-					T		*first;
+					T		*_first;
 					size_t	_size;
 
 				public:
 
 					// CONSTRUCTORS (4 kinds)
 					// #1 default constructor
-					reverse_iterator(void) : _ptr(0), _first(0), _size(0) { }
+					reverse_iterator(void) : _ptr(0), _first(0), _size(0) { return ; }
 					// #2 parameterized constructor (for iterator init: begin, end, etc)
 					reverse_iterator(T *ptr, T *first, size_t size) : 
-										_ptr(ptr), _first(first), _size(size) { }
+									_ptr(ptr), _first(first), _size(size) { return ; }
 					// #3 parameterized constructor
 					reverse_iterator(vector<T, A> const &src) {
 
 						this->_ptr = &src._array[src._size - 1];
 						this->_first = &src._array[src._size - 1];
 						this->_size = src._size;
+
+						return ;
 					}
 					// #4 copy constructor
 					reverse_iterator(reverse_iterator const &src) {
 
 						*this = src;
+
+						return ;
 					}
 
 					// DESTRUCTOR
-					~reverse_iterator(void) { }
+					~reverse_iterator(void) { return ; }
 
 					// ASSIGNMENT OPERATION OVERLOAD
-					reverse_iterator	&reverse_iterator=(reverse_iterator const &rhs) {
+					reverse_iterator	&operator=(reverse_iterator const &rhs) {
 
 						this->_ptr = rhs._ptr;
 						this->_first = rhs._first;
@@ -334,23 +439,6 @@ namespace ft
 					}
 			};
 
-			// MEMBER FUNCTIONS OF VECTOR CLASS
-
-			// CONSTRUCTORS (4 kinds)
-			// #1 default constructor (empty container with no elements)
-			explicit vector<T, A>(void);
-			// #2 fill constructor (n elements, each is a copy of val)
-			explicit vector<T, A>(size_t n, T const &val);
-			// #3 range constructor [first, last)
-			vector<T>(vector<T, A>::iterator first, vector<T>::iterator last);
-			// #4 copy constructor
-			vector<T, A>(vector<T, A> const &src);
-
-			// DESTRUCTOR
-			~vector<T, A>(void);
-
-			// ASSIGNMENT OPERATION OVERLOAD
-			vector<T, A>		&operator=(vector<T, A> const &rhs);
 
 			// ITERATORS
 			iterator			begin(void) {
@@ -359,30 +447,30 @@ namespace ft
 			}
 			iterator			end(void) {
 
-				return (iterator(this->_array[this->_size - 1], this->_array[0], this->_size));
+				return (iterator(&this->_array[this->_size], &this->_array[0], this->_size));
 			}
 			reverse_iterator	rbegin(void) {
 
-				return (iterator(this->_array[this->_size - 1], this->_array[0], this->_size));
+				return (iterator(&this->_array[this->_size - 1], &this->_array[0], this->_size));
 			}
 			reverse_iterator	rend(void) {
 
-				return (iterator(&this->_array[0], &this->_array[0], this->_size));
+				return (iterator(&this->_array[0] - 1, &this->_array[0], this->_size));
 			}
 
 			// CAPACITY
-			size_t				size(void) {
+			size_t				size(void) const {
 
 				return (this->_size);
 			}
 
-			size_t				max_size(void) {
+			size_t				max_size(void) const {
 
 				int		arch;
 
 				if (sizeof(void *) == 8)
 					arch = 64;
-				else (sizeof(void *) == 4)
+				else if (sizeof(void *) == 4)
 					arch = 32;
 				else
 					arch = 16;
@@ -432,12 +520,12 @@ namespace ft
 				}
 			}
 
-			size_t				capacity(void) {
+			size_t				capacity(void) const {
 
 				return (this->_capacity);
 			}
 
-			bool				empty(void) {
+			bool				empty(void) const {
 
 				if (this->_size == 0)
 					return (true);
@@ -445,6 +533,8 @@ namespace ft
 			}
 
 			void				reserve(size_t n) {
+
+				int		i = 0;
 
 				if (n > this->_capacity)
 				{
@@ -467,7 +557,7 @@ namespace ft
 				return (this->_array[n]);
 			}
 
-			T const				&operator[](size_t n) {
+			T const				&operator[](size_t n) const {
 
 				return (this->_array[n]);
 			}
@@ -475,14 +565,14 @@ namespace ft
 			T					&at(size_t n) {
 
 				if (n >= this->_size)
-					throw(std::out_of_range);
+					throw (std::out_of_range("Out of range error"));
 				return (this->_array[n]);
 			}
 
-			T const				&at(size_t n) {
+			T const				&at(size_t n) const {
 
 				if (n >= this->_size)
-					throw(std::out_of_range);
+					throw (std::out_of_range("Out of range error"));
 				return (this->_array[n]);
 			}
 
@@ -491,7 +581,7 @@ namespace ft
 				return (this->_array[0]);
 			}
 
-			T const				&front(void) {
+			T const				&front(void) const {
 
 				return (this->_array[0]);
 			}
@@ -501,7 +591,7 @@ namespace ft
 				return (this->_array[this->_size - 1]);
 			}
 
-			T const				&back(void) {
+			T const				&back(void) const {
 
 				return (this->_array[this->_size - 1]);
 			}
@@ -637,7 +727,7 @@ namespace ft
 				iterator	ite = this->_end();
 
 				// if (position < it || position > ite) // not original behaviour but it's good
-				//	throw(std::out_of_range);
+				//	throw (std::out_of_range);
 
 				if (this->_size + 1 > this->_capacity)
 				{
@@ -697,7 +787,7 @@ namespace ft
 				iterator	ite = this->_end();
 
 				// if (position < it || position > ite) // not original behaviour but it's good
-				//	throw(std::out_of_range);
+				//	throw (std::out_of_range);
 
 				if (this->_size + n > this->_capacity)
 				{
@@ -783,7 +873,7 @@ namespace ft
 				iterator	ite = this->_end();
 
 				//if (position < it || position > ite || n < 0) // not original behaviour but it's good
-				//	throw(std::out_of_range);
+				//	throw (std::out_of_range);
 
 				if (this->_size + n > this->_capacity)
 				{
@@ -870,7 +960,10 @@ namespace ft
 				iterator	ite = this->end();
 
 				while (i < this->_size && it != position)
+				{
 					i++;
+					it++;
+				}
 
 				while (i < this->_size - 1)
 				{
@@ -897,7 +990,7 @@ namespace ft
 				while (i < this->_size && it != first)
 				{
 					i++;
-					first++;
+					it++;
 				}
 				if (rem == 0)
 					return (this->begin());
@@ -920,7 +1013,7 @@ namespace ft
 
 				this->_size -= last - first;
 
-				return (position);
+				return (first);
 			}
 
 			void				swap(vector &x) {
@@ -959,7 +1052,7 @@ namespace ft
 			}
 
 			// Getters
-			T			*getArray(void) {
+			T			*getArray(void) const {
 
 				return (this->_array);
 			}
