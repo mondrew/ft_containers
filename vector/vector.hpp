@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/19 21:43:23 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/21 00:57:12 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ namespace ft
 				return ;
 			}
 			// #2 fill constructor (n elements, each is a copy of val)
-			explicit vector<T, A>(size_t n, T const &val) { // maybe not size_t... for bad_alloc()
+			explicit vector<T, A>(size_t n, T const &val) { // maybe not size_t
 
 				size_t	i = 0;
 
-				if (n == 0) // ???
+				if (n == 0) // ??? // check original!
 					return ;
 
 				this->_array = new T[n];
@@ -65,13 +65,15 @@ namespace ft
 				}
 			}
 			// #3 range constructor [first, last)
-			vector<T, A>(vector<T, A>::iterator first, vector<T, A>::iterator last) {
+			vector<T, A>(vector<T, A>::iterator first, \
+												vector<T, A>::iterator last) {
 
 				size_t	i = 0;
-				size_t	n = static_cast<size_t>(&(*last) - &(*first));
 
-				if (n == 0 || last < first) // ???
-					return ;
+				if (&(*last) <= &(*first)) // ???
+					throw (std::bad_alloc{});
+
+				size_t	n = static_cast<size_t>(&(*last) - &(*first));
 
 				this->_array = new T[n];
 				this->_size = n;
@@ -139,9 +141,9 @@ namespace ft
 					// CONSTRUCTORS (4 kinds)
 					// #1 default constructor
 					iterator(void) : _ptr(0), _first(0), _size(0) { return ; }
-					// #2 parameterized constructor (for iterator init: begin, end, etc)
+					// #2 param constructor (for iterator init: begin, end, etc)
 					iterator(T *ptr, T *first, size_t size) : 
-								_ptr(ptr), _first(first), _size(size) { return ; }
+							_ptr(ptr), _first(first), _size(size) { return ; }
 					// #3 parameterized constructor
 					iterator(vector<T, A> const &src) {
 
@@ -190,7 +192,7 @@ namespace ft
 					// Decrement prefix
 					iterator	&operator--(void) {
 
-						this->_prt--;
+						this->_ptr--;
 
 						return (*this);
 					}
@@ -205,11 +207,13 @@ namespace ft
 					}
 
 					// Addiction operator
-					iterator	&operator+(size_t n) {
+					iterator	operator+(size_t n) {
 
-						this->_ptr += n;
+						iterator	tmp(*this);
 
-						return (*this);
+						tmp._ptr += n;
+
+						return (tmp);
 					}
 					iterator	&operator+=(size_t n) {
 
@@ -218,11 +222,13 @@ namespace ft
 						return (*this);
 					}
 					// Substruction operator
-					iterator	&operator-(size_t n) {
+					iterator	operator-(size_t n) {
 
-						this->_ptr -= n;
+						iterator	tmp(*this);
 
-						return (*this);
+						tmp._ptr -= n;
+
+						return (tmp);
 					}
 					iterator	&operator-=(size_t n) {
 
@@ -294,10 +300,11 @@ namespace ft
 
 					// CONSTRUCTORS (4 kinds)
 					// #1 default constructor
-					reverse_iterator(void) : _ptr(0), _first(0), _size(0) { return ; }
-					// #2 parameterized constructor (for iterator init: begin, end, etc)
+					reverse_iterator(void) : 
+									_ptr(0), _first(0), _size(0) { return ; }
+					// #2 param constructor (for iterator init: begin, end, etc)
 					reverse_iterator(T *ptr, T *first, size_t size) : 
-									_ptr(ptr), _first(first), _size(size) { return ; }
+							_ptr(ptr), _first(first), _size(size) { return ; }
 					// #3 parameterized constructor
 					reverse_iterator(vector<T, A> const &src) {
 
@@ -319,7 +326,7 @@ namespace ft
 					~reverse_iterator(void) { return ; }
 
 					// ASSIGNMENT OPERATION OVERLOAD
-					reverse_iterator	&operator=(reverse_iterator const &rhs) {
+					reverse_iterator	&operator=(reverse_iterator const &rhs){
 
 						this->_ptr = rhs._ptr;
 						this->_first = rhs._first;
@@ -338,7 +345,7 @@ namespace ft
 					// Increment postfix
 					reverse_iterator	operator++(int) {
 
-						iterator	tmp(*this);
+						reverse_iterator	tmp(*this);
 
 						this->_ptr--;
 
@@ -347,7 +354,7 @@ namespace ft
 					// Decrement prefix
 					reverse_iterator	&operator--(void) {
 
-						this->_prt++;
+						this->_ptr++;
 
 						return (*this);
 					}
@@ -443,19 +450,23 @@ namespace ft
 			// ITERATORS
 			iterator			begin(void) {
 
-				return (iterator(&this->_array[0], &this->_array[0], this->_size));
+				return (iterator(&this->_array[0], &this->_array[0], \
+																this->_size));
 			}
 			iterator			end(void) {
 
-				return (iterator(&this->_array[this->_size], &this->_array[0], this->_size));
+				return (iterator(&this->_array[this->_size], \
+												&this->_array[0], this->_size));
 			}
 			reverse_iterator	rbegin(void) {
 
-				return (iterator(&this->_array[this->_size - 1], &this->_array[0], this->_size));
+				return (reverse_iterator(&this->_array[this->_size - 1], \
+												&this->_array[0], this->_size));
 			}
 			reverse_iterator	rend(void) {
 
-				return (iterator(&this->_array[0] - 1, &this->_array[0], this->_size));
+				return (reverse_iterator(&this->_array[0] - 1, \
+												&this->_array[0], this->_size));
 			}
 
 			// CAPACITY
@@ -478,7 +489,7 @@ namespace ft
 				return (pow(2, arch) / sizeof(T) - 1);
 			}
 
-			void				resize(size_t n, T val = 0) {
+			void				resize( size_t n, T val = T() ) {
 
 				int		i = 0;
 
@@ -487,7 +498,7 @@ namespace ft
 				if (n > this->_capacity)
 				{
 					T	*tmp = new T[n];
-					while (i < this->_capacity)
+					while (i < this->_size)
 					{
 						tmp[i] = this->_array[i];
 						i++;
@@ -503,20 +514,27 @@ namespace ft
 					this->_size = n;
 					this->_capacity = n;
 				}
-				else if (n < this->_capacity)
+				else
 				{
-					T	*tmp = new T[n];
-
-					while (i < n)
+					if (n < this->_size)
 					{
-						tmp[i] = this->_array[i];
-						i++;
+						i = n;
+						while (i < this->_size)
+						{
+							this->_array[i].~T();
+							i++;
+						}
 					}
-					if (this->_array)
-						delete [] this->_array;
-					this->_array = tmp;
+					else
+					{
+						i = this->_size;
+						while (i < n)
+						{
+							this->_array[i] = val;
+							i++;
+						}
+					}
 					this->_size = n;
-					this->_capacity = n;
 				}
 			}
 
@@ -539,7 +557,7 @@ namespace ft
 				if (n > this->_capacity)
 				{
 					T	*tmp = new T[n];
-					while (i < this->_capacity)
+					while (i < this->_size)
 					{
 						tmp[i] = this->_array[i];
 						i++;
@@ -726,7 +744,7 @@ namespace ft
 				iterator	it = this->begin();
 				iterator	ite = this->_end();
 
-				// if (position < it || position > ite) // not original behaviour but it's good
+				// if (position < it || position > ite) //not original behaviour
 				//	throw (std::out_of_range);
 
 				if (this->_size + 1 > this->_capacity)
@@ -745,7 +763,7 @@ namespace ft
 						j++;
 						it++;
 					}
-					if (position == ite) // double protection (if there will be no throw)
+					if (position == ite) // double protection
 						big[j] = val;
 
 					if (this->_array)
@@ -778,7 +796,8 @@ namespace ft
 			}
 
 			// Insert #2 fill
-			void				insert(iterator position, size_t n, T const &val) {
+			void				insert(iterator position, size_t n, \
+																T const &val) {
 
 				int			i = 0;
 				int			j = 0;
@@ -786,7 +805,7 @@ namespace ft
 				iterator	it = this->begin();
 				iterator	ite = this->_end();
 
-				// if (position < it || position > ite) // not original behaviour but it's good
+				// if (position < it || position > ite) //not original behaviour
 				//	throw (std::out_of_range);
 
 				if (this->_size + n > this->_capacity)
@@ -812,7 +831,7 @@ namespace ft
 						}
 						it++;
 					}
-					if (position == ite) // double protection (if there will be no throw)
+					if (position == ite) // double protection
 					{
 						while (k < n)
 						{
@@ -863,7 +882,8 @@ namespace ft
 			}
 
 			// Insert #3 range
-			void			insert(iterator position, iterator first, iterator last) {
+			void			insert(iterator position, iterator first, \
+																iterator last) {
 
 				int			i = 0;
 				int			j = 0;
@@ -872,7 +892,7 @@ namespace ft
 				iterator	it = this->begin();
 				iterator	ite = this->_end();
 
-				//if (position < it || position > ite || n < 0) // not original behaviour but it's good
+				//if (position < it || position > ite || n < 0)
 				//	throw (std::out_of_range);
 
 				if (this->_size + n > this->_capacity)
@@ -899,7 +919,7 @@ namespace ft
 						}
 						it++;
 					}
-					if (position == ite) // double protection (if there will be no throw)
+					if (position == ite) // double protection
 					{
 						while (k < n)
 						{
@@ -1034,7 +1054,7 @@ namespace ft
 
 			void				clear(void) {
 
-				// A reallocation is not guaranteed to happen - what does it mean?
+				// A reallocation is not guaranteed to happen
 				// Possible it means that values can stay the same in the memory
 				// even though objects are deleted
 				int		i = 0;
@@ -1079,7 +1099,7 @@ namespace ft
 // Relational operators
 
 template < typename T, typename A = std::allocator<T> >
-bool		operator==(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+bool	operator==(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
 	int		i = 0;
 
@@ -1095,7 +1115,7 @@ bool		operator==(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 }
 
 template < typename T, typename A = std::allocator<T> >
-bool		operator!=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+bool	operator!=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
 	int		i = 0;
 
@@ -1111,7 +1131,7 @@ bool		operator!=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 }
 
 template < typename T, typename A = std::allocator<T> >
-bool		operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+bool	operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
 	int		i = 0;
 
@@ -1126,7 +1146,7 @@ bool		operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 }
 
 template < typename T, typename A = std::allocator<T> >
-bool		operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+bool	operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
 	int		i = 0;
 
@@ -1141,7 +1161,7 @@ bool		operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 }
 
 template < typename T, typename A = std::allocator<T> >
-bool		operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+bool	operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
 	int		i = 0;
 
@@ -1156,7 +1176,7 @@ bool		operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 }
 
 template < typename T, typename A = std::allocator<T> >
-bool		operator>=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+bool	operator>=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
 	int		i = 0;
 
