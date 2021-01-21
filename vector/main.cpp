@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 11:40:18 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/21 15:44:58 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/21 17:40:28 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1012,7 +1012,7 @@ void	ft_test18(void)
 	it1 = v1.begin();
 	ite1 = v1.end();
 
-	std::cout << "Initial array:" << std::endl;
+	std::cout << "Array after clear:" << std::endl;
 	while (it1 != ite1)
 	{
 		std::cout << *it1 << " ";
@@ -1023,6 +1023,122 @@ void	ft_test18(void)
 	std::cout << "v1 size: " << v1.size();
    	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
 
+	std::cout << std::endl;
+}
+
+void	ft_test19(void)
+{
+	// Non-member functions
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Non-member functions ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0(5, 21);
+	ft::vector<int>		v1(10, 42);
+	ft::vector<int>		v2(v1);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	ft::vector<int>::iterator	it1 = v1.begin();
+	ft::vector<int>::iterator	ite1 = v1.end();
+
+	std::cout << "Initial array 1:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+	it = v0.begin();
+
+	std::cout << "Initial array 2:" << std::endl;
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Operator '==':";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	if (v0 == v1)
+		std::cout << "v0 is equal to v1" << std::endl;
+	else
+		std::cout << "v0 is NOT equal to v1" << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Operator '!=':";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	if (v0 != v1)
+		std::cout << "v0 is NOT equal to v1" << std::endl;
+	else
+		std::cout << "v0 is equal to v1" << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Operator '<':";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	if (v0 < v1)
+		std::cout << "v0 is less than v1" << std::endl;
+	else
+		std::cout << "v0 is NOT less than v1" << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Operator '<=':";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	if (v0 <= v1)
+		std::cout << "v0 is less than or equal to v1" << std::endl;
+	else
+		std::cout << "v0 is NOT less than or equal to v1" << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Operator '>':";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	if (v0 > v1)
+		std::cout << "v0 is greater than v1" << std::endl;
+	else
+		std::cout << "v0 is NOT greater than v1" << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "operator '>=':";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	if (v1 >= v2)
+		std::cout << "v1 is greater than or equal to v2" << std::endl;
+	else
+		std::cout << "v1 is NOT greater than or equal to v2" << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "Swap v0 & v1:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	swap(v0, v1);
+
+	it = v0.begin();
+	ite = v0.end();
+
+	it1 = v1.begin();
+	ite1 = v1.end();
+
+	std::cout << "Array 1 after swap:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "Array 2 after swap:" << std::endl;
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
 	std::cout << std::endl;
 }
 
@@ -1083,6 +1199,7 @@ int		main(void)
 	ft_test18();
 
 	// Non-member functions
+	ft_test19();
 
 	return (0);
 }

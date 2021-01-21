@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/21 15:41:43 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/21 17:39:02 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1215,10 +1215,10 @@ void			swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 	x.setArray(y.getArray());
 	y.setArray(tmp_array);
 
-	x.setSize(y.getSize());
+	x.setSize(y.size());
 	y.setSize(tmp_size);
 
-	x.setCapacity(y.getCapacity());
+	x.setCapacity(y.capacity());
 	y.setCapacity(tmp_capacity);
 }
 

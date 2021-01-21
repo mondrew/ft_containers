@@ -6,7 +6,7 @@
 #    By: mondrew <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/12/08 23:16:50 by mondrew           #+#    #+#              #
-#    Updated: 2021/01/19 20:26:46 by mondrew          ###   ########.fr        #
+#    Updated: 2021/01/21 17:42:01 by mondrew          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,7 @@ $(NAME): $(OBJS)
 
 clean:
 	@echo "Cleaning object files ..."
-	@/bin/rm -f $(OBJS)
+	@/bin/rm -f $(OBJS) *.o
 	@echo "Object files has been removed!"
 
 fclean: clean

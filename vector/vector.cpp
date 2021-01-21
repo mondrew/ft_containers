@@ -6,13 +6,14 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 18:46:57 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/19 20:27:00 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/21 17:42:56 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.hpp"
 #include <cstddef>
 
+/*
 template < typename T, typename A >
 ft::vector<T, A>::vector(void) {
 
@@ -102,3 +103,4 @@ ft::vector<T, A>	&ft::vector<T, A>::operator=(ft::vector<T, A> const &rhs) {
 
 	return (*this);
 }
+*/
