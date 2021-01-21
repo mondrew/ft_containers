@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 11:40:18 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/21 13:26:23 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/21 15:44:58 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -617,7 +617,49 @@ void	ft_test12(void)
 	std::cout << "v0 size: " << v0.size();
    	std::cout << " | v0 capacity: " << v0.capacity() << std::endl;
 
-	v0.insert(ite + 3, 42);
+	std::cout << std::endl;
+}
+
+void	ft_test13(void)
+{
+	// Insert (fill)
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: insert (fill) ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0;
+
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+	v0.push_back(6);
+	v0.push_back(7);
+	v0.push_back(8);
+	v0.push_back(9);
+	v0.push_back(10);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	std::cout << "Initial array:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+	it = v0.begin();
+
+	std::cout << "\x1B[33m";
+	std::cout << "Insert 5 element on 3 position:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v0.insert(it + 3, 5, 42);
+
+	it = v0.begin();
+	ite = v0.end();
+
 	while (it != ite)
 	{
 		std::cout << *it << " ";
@@ -625,10 +667,363 @@ void	ft_test12(void)
 	}
 	std::cout << std::endl;
 
+	std::cout << "v0 size: " << v0.size();
+   	std::cout << " | v0 capacity: " << v0.capacity() << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test14(void)
+{
+	// Insert (range)
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: insert (range) ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0;
+	ft::vector<int>		v1(10, 42);
+
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+	v0.push_back(6);
+	v0.push_back(7);
+	v0.push_back(8);
+	v0.push_back(9);
+	v0.push_back(10);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	ft::vector<int>::iterator	it1 = v1.begin();
+	ft::vector<int>::iterator	ite1 = v1.end();
+
+	std::cout << "Initial array 1 (src):" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
 	it = v0.begin();
+
+	std::cout << "Initial array 2 (dest):" << std::endl;
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
+	std::cout << std::endl;
+	it1 = v1.begin();
+
+	std::cout << "v1 size: " << v1.size();
+   	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Insert elements on 3 position:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v1.insert(it1 + 3, it + 5, ite);
+
+	it1 = v1.begin();
+	ite1 = v1.end();
+
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "v1 size: " << v1.size();
+   	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Insert elements on 2 position:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	it1 = v1.begin();
+	ite1 = v1.end();
+
+	v1.insert(it1 + 7, it, ite);
+
+	it1 = v1.begin();
+	ite1 = v1.end();
+
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "v1 size: " << v1.size();
+   	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test15(void)
+{
+	// Erase (single)
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: erase (single) ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0;
+
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+	v0.push_back(6);
+	v0.push_back(7);
+	v0.push_back(8);
+	v0.push_back(9);
+	v0.push_back(10);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	std::cout << "Initial array:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+	it = v0.begin();
+
+	std::cout << "\x1B[33m";
+	std::cout << "Erase element at 5th position";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v0.erase(it + 5);
+
+	it = v0.begin();
+	ite = v0.end();
+
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
 
 	std::cout << "v0 size: " << v0.size();
    	std::cout << " | v0 capacity: " << v0.capacity() << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Erase element at the last position";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v0.erase(ite);
+
+	it = v0.begin();
+	ite = v0.end();
+
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "v0 size: " << v0.size();
+   	std::cout << " | v0 capacity: " << v0.capacity() << std::endl;
+	std::cout << std::endl;
+}
+
+void	ft_test16(void)
+{
+	// Erase (range)
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: erase (range) ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0;
+
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+	v0.push_back(6);
+	v0.push_back(7);
+	v0.push_back(8);
+	v0.push_back(9);
+	v0.push_back(10);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	std::cout << "Initial array:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+	it = v0.begin();
+
+	std::cout << "\x1B[33m";
+	std::cout << "Erase element from 1 to 4 position";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v0.erase(it + 1, it + 4);
+
+	it = v0.begin();
+	ite = v0.end();
+
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "v0 size: " << v0.size();
+   	std::cout << " | v0 capacity: " << v0.capacity() << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Erase element with same iterators";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	it = v0.begin();
+
+	ft::vector<int>::iterator	ret = v0.erase(it + 1, it + 1);
+	std::cout << "ret: " << *ret << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test17(void)
+{
+	// Swap
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: swap ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0;
+	ft::vector<int>		v1(10, 42);
+
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+	v0.push_back(6);
+	v0.push_back(7);
+	v0.push_back(8);
+	v0.push_back(9);
+	v0.push_back(10);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	ft::vector<int>::iterator	it1 = v1.begin();
+	ft::vector<int>::iterator	ite1 = v1.end();
+
+	std::cout << "Initial array 1:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+	it = v0.begin();
+
+	std::cout << "Initial array 2:" << std::endl;
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
+	std::cout << std::endl;
+	it1 = v1.begin();
+
+	std::cout << "v1 size: " << v1.size();
+   	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Swap:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v0.swap(v1);
+
+	it = v0.begin();
+	ite = v0.end();
+
+	it1 = v1.begin();
+	ite1 = v1.end();
+
+	std::cout << "Array 1 after swap:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+	it = v0.begin();
+
+	std::cout << "Array 2 after swap:" << std::endl;
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
+	std::cout << std::endl;
+	it1 = v1.begin();
+
+	std::cout << "v1 size: " << v1.size();
+   	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test18(void)
+{
+	// Clear
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: clear ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v1(10, 42);
+
+	ft::vector<int>::iterator	it1 = v1.begin();
+	ft::vector<int>::iterator	ite1 = v1.end();
+
+	std::cout << "Initial array:" << std::endl;
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
+	std::cout << std::endl;
+	it1 = v1.begin();
+
+	std::cout << "v1 size: " << v1.size();
+   	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Clear:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v1.clear();
+
+	it1 = v1.begin();
+	ite1 = v1.end();
+
+	std::cout << "Initial array:" << std::endl;
+	while (it1 != ite1)
+	{
+		std::cout << *it1 << " ";
+		it1++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "v1 size: " << v1.size();
+   	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
+
+	std::cout << std::endl;
 }
 
 int		main(void)
@@ -668,6 +1063,26 @@ int		main(void)
 
 	// Insert (single element)
 	ft_test12();
+
+	// Insert (fill)
+	ft_test13();
+
+	// Insert (range)
+	ft_test14();
+
+	// Erase (single)
+	ft_test15();
+
+	// Erase (range)
+	ft_test16();
+
+	// Swap
+	ft_test17();
+
+	// Clear
+	ft_test18();
+
+	// Non-member functions
 
 	return (0);
 }

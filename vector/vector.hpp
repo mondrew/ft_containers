@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/21 13:25:53 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/21 15:41:43 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -808,7 +808,7 @@ namespace ft
 				int			j = 0;
 				int			k = 0;
 				iterator	it = this->begin();
-				iterator	ite = this->_end();
+				iterator	ite = this->end();
 
 				if (position < it || position > ite) // not original behaviour
 					throw (std::out_of_range("Error: std::out_of_range"));
@@ -854,7 +854,7 @@ namespace ft
 				}
 				else
 				{
-					i = this->_size + n - 1;
+					i = this->_size + n - 1; // start from the end
 					j = this->_size - 1;
 					while (j >= 0)
 					{
@@ -882,7 +882,7 @@ namespace ft
 							k++;
 						}
 					}
-					this->_size++;
+					this->_size += n;
 				}
 			}
 
@@ -893,12 +893,12 @@ namespace ft
 				int			i = 0;
 				int			j = 0;
 				int			k = 0;
-				int			n = last - first;
+				int			n = &(*last) - &(*first);
 				iterator	it = this->begin();
-				iterator	ite = this->_end();
+				iterator	ite = this->end();
 
-				//if (position < it || position > ite || n < 0)
-				//	throw (std::out_of_range);
+				if (position < it || position > ite || n < 0) // == ???
+					throw (std::out_of_range("Error: std::out_of_range"));
 
 				if (this->_size + n > this->_capacity)
 				{
@@ -973,7 +973,7 @@ namespace ft
 							last--;
 						}
 					}
-					this->_size++;
+					this->_size += n;
 				}
 			}
 
@@ -984,6 +984,9 @@ namespace ft
 				iterator	it = this->begin();
 				iterator	ite = this->end();
 
+				if (position < it || position > ite) // not original behaviour
+					throw (std::out_of_range("Error: std::out_of_range"));
+
 				while (i < this->_size && it != position)
 				{
 					i++;
@@ -992,38 +995,41 @@ namespace ft
 
 				while (i < this->_size - 1)
 				{
-					this->_array[i]->~T();
+					this->_array[i].~T();
 					this->_array[i] = this->_array[i + 1];
 					i++;
 				}
-				this->_array[i]->~T();
+				this->_array[i].~T();
 
 				this->_size--;
 
 				return (position);
 			}
 
-			// Erase #2 interval
+			// Erase #2 range
 			iterator			erase(iterator first, iterator last) {
 
 				int			i = 0;
 				int			j;
-				int			rem = last - first;
+				int			rem = &(*last) - &(*first);
 				iterator	it = this->begin();
 				iterator	ite = this->end();
+
+				if (first < it || last > ite || rem < 0)
+					throw (std::out_of_range("Error: std::out_of_range"));
+
+				if (rem == 0)
+					return (first);
 
 				while (i < this->_size && it != first)
 				{
 					i++;
 					it++;
 				}
-				if (rem == 0)
-					return (this->begin());
-
 				j = i;
 				while (i < this->_size && rem > 0)
 				{
-					this->_array[i]->~T();
+					this->_array[i].~T();
 					rem--;
 					i++;
 				}
@@ -1031,16 +1037,17 @@ namespace ft
 				while (i < this->_size)
 				{
 					this->_array[j] = this->_array[i];
-					this->_array[i]->~T();
+					this->_array[i].~T();
 					i++;
 					j++;
 				}
 
-				this->_size -= last - first;
+				this->_size -= &(*last) - &(*first);
 
 				return (first);
 			}
 
+			// Swap
 			void				swap(vector &x) {
 
 				T		*tmp_array = this->_array;
@@ -1057,6 +1064,7 @@ namespace ft
 				x._capacity = tmp_capacity;
 			}
 
+			// Clear
 			void				clear(void) {
 
 				// A reallocation is not guaranteed to happen
@@ -1066,7 +1074,7 @@ namespace ft
 
 				while (i < this->_size)
 				{
-					this->_array[i]->~T();
+					this->_array[i].~T();
 					i++;
 				}
 				if (this->_array)
