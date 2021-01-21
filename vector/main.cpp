@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 11:40:18 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/21 00:59:37 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/21 13:26:23 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -351,22 +351,68 @@ void	ft_test7(void)
 	std::cout << std::endl;
 }
 
-int		main(void)
+void	ft_test8(void)
 {
-	/*
-	std::vector<std::string>	vs0;
+	// Element access
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>>>>>>> [ Element access test ] <<<<<<<<<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<double>		vd0;
+	int						i = 0;
 
-	vs0.push_back("May");
-	vs0.push_back("the");
-	vs0.push_back("Force");
-	vs0.push_back("be");
-	vs0.push_back("with");
-	vs0.push_back("you!");
+	vd0.push_back(12.021);
+	vd0.push_back(42.0);
+	vd0.push_back(42.042042);
+	vd0.push_back(2.1);
+	vd0.push_back(21.42);
 
-	std::vector<std::string>::iterator	it = vs0.begin();
-	std::vector<std::string>::iterator	ite = vs0.end();
+	vd0[0] = 33;
 
-	std::cout << "Initial vector content:" << std::endl;
+	std::cout << "\x1B[33m";
+	std::cout << "Using index operator:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	int						n = vd0.size();
+
+	while (i < n)
+	{
+		std::cout << vd0[i] << " ";
+		i++;
+	}
+	std::cout <<std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Using 'at' member-function for 3rd element:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	std::cout << vd0.at(3) << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Using 'front' and 'back' member-function:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	std::cout << "front: " << vd0.front() << " | end: " << vd0.back() << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test9(void)
+{
+	// Modifiers: push_back & pop_back
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: push_back & pop_back ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Using 'push_back' member-function:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
 	while (it != ite)
 	{
 		std::cout << *it << " ";
@@ -374,84 +420,219 @@ int		main(void)
 	}
 	std::cout << std::endl;
 
-	std::cout << "vector size(): " << vs0.size() << "cap: " << vs0.capacity() << std::endl;
-	std::cout << "vector max_size(): " << vs0.max_size() << std::endl;
-
-	// Resize to 10
 	std::cout << "\x1B[33m";
-	std::cout << "Resize vector to 10 with \"!\" values";
+	std::cout << "Using 'pop_back' member-function 2 times:";
 	std::cout << "\033[0m\t\t" << std::endl;
-	vs0.resize(10, "!");
-	std::cout << "vector size(): " << vs0.size();
-	std::cout << ", vector capacity(): " << vs0.capacity() << std::endl;
-	it = vs0.begin();
-	ite = vs0.end();
+	v0.pop_back();
+	v0.pop_back();
+
+	it = v0.begin();
+	ite = v0.end();
+
 	while (it != ite)
 	{
-		std::cout << *it << std::endl;
+		std::cout << *it << " ";
 		it++;
 	}
+	std::cout << std::endl;
 
-	// Resize to 12 by default
-	std::cout << "\x1B[33m";
-	std::cout << "Resize vector to 12 by default values";
+	std::cout << std::endl;
+}
+
+void	ft_test10(void)
+{
+	// Modifiers: assign range
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: assign range ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	vs0.resize(12);
-	std::cout << "vector size(): " << vs0.size();
-	std::cout << ", vector capacity(): " << vs0.capacity() << std::endl;
-	it = vs0.begin();
-	ite = vs0.end();
+	ft::vector<int>		v0;
+	ft::vector<int>		v1;
+
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+	v0.push_back(6);
+	v0.push_back(7);
+	v0.push_back(8);
+	v0.push_back(9);
+	v0.push_back(10);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	std::cout << "Initial array:" << std::endl;
 	while (it != ite)
 	{
-		std::cout << *it << std::endl;
+		std::cout << *it << " ";
 		it++;
 	}
-
-	// Resize to 5 by default
-	std::cout << "\x1B[33m";
-	std::cout << "Resize vector to 5 by default values";
-	std::cout << "\033[0m\t\t" << std::endl;
-	vs0.resize(5);
-	std::cout << "vector size(): " << vs0.size();
-	std::cout << ", vector capacity(): " << vs0.capacity() << std::endl;
-	it = vs0.begin();
-	ite = vs0.end();
-	while (it != ite)
-	{
-		std::cout << *it << std::endl;
-		it++;
-	}
+	std::cout << std::endl;
+	it = v0.begin();
+	ite = v0.end();
 
 	std::cout << "\x1B[33m";
-	std::cout << "Resize vector to 3 with \"!\" value";
+	std::cout << "Using 'assign' range member-function:";
 	std::cout << "\033[0m\t\t" << std::endl;
-	vs0.resize(3, "!");
-	std::cout << "vector size(): " << vs0.size();
-	std::cout << ", vector capacity(): " << vs0.capacity() << std::endl;
-	it = vs0.begin();
-	ite = vs0.end();
+
+	v1.assign(it, it + 5);
+
+	std::cout << "v1 size: " << v1.size() << std::endl;
+
+	it = v1.begin();
+	ite = v1.end();
+
 	while (it != ite)
 	{
-		std::cout << *it << std::endl;
+		std::cout << *it << " ";
 		it++;
 	}
+	std::cout << std::endl;
 
-	// Reserve 50
 	std::cout << "\x1B[33m";
-	std::cout << "Reserve 50 for vector";
+	std::cout << "Using 'assign' range with equal params member-function:";
 	std::cout << "\033[0m\t\t" << std::endl;
-	vs0.reserve(50);
-	std::cout << "vector size(): " << vs0.size();
-	std::cout << ", vector capacity(): " << vs0.capacity() << std::endl;
-	it = vs0.begin();
-	ite = vs0.end();
+	it = v0.begin();
+	ite = v0.end();
+	v1.assign(it, it);
+
+	std::cout << "v1 size: " << v1.size();
+   	std::cout << " | v1 capacity: " << v1.capacity() << std::endl;
+
+	it = v1.begin();
+	ite = v1.end();
+
 	while (it != ite)
 	{
-		std::cout << *it << std::endl;
+		std::cout << *it << " ";
 		it++;
 	}
-	*/
+	std::cout << std::endl;
+}
 
+void	ft_test11(void)
+{
+	// Modifiers: assign fill
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: assign fill ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0;
+
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	std::cout << "Initial array:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+	it = v0.begin();
+	ite = v0.end();
+
+	std::cout << "\x1B[33m";
+	std::cout << "Using 'assign' fill member-function:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v0.assign(7, 42);
+
+	std::cout << "v0 size: " << v0.size() << std::endl;
+
+	it = v0.begin();
+	ite = v0.end();
+
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "\x1B[33m";
+	std::cout << "Using 'assign' fill member-function with 0:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	v0.assign(0, 21);
+
+	std::cout << "v0 size: " << v0.size();
+   	std::cout << " | v0 capacity: " << v0.capacity() << std::endl;
+	it = v0.begin();
+	ite = v0.end();
+
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+}
+
+void	ft_test12(void)
+{
+	// Insert (single element)
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Modifiers test: insert (single) ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::vector<int>		v0;
+
+	v0.push_back(1);
+	v0.push_back(2);
+	v0.push_back(3);
+	v0.push_back(4);
+	v0.push_back(5);
+
+	ft::vector<int>::iterator	it = v0.begin();
+	ft::vector<int>::iterator	ite = v0.end();
+
+	std::cout << "Initial array:" << std::endl;
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+	it = v0.begin();
+
+	std::cout << "\x1B[33m";
+	std::cout << "Insert 1 element on 3 position:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	v0.insert(it + 3, 42);
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+
+	it = v0.begin();
+
+	std::cout << "v0 size: " << v0.size();
+   	std::cout << " | v0 capacity: " << v0.capacity() << std::endl;
+
+	v0.insert(ite + 3, 42);
+	while (it != ite)
+	{
+		std::cout << *it << " ";
+		it++;
+	}
+	std::cout << std::endl;
+
+	it = v0.begin();
+
+	std::cout << "v0 size: " << v0.size();
+   	std::cout << " | v0 capacity: " << v0.capacity() << std::endl;
+}
+
+int		main(void)
+{
 	// Default constructor
 	ft_test1();
 
@@ -472,6 +653,21 @@ int		main(void)
 
 	// Capacity
 	ft_test7();
+
+	// Element access
+	ft_test8();
+
+	// Modifiers: push_back & pop_back
+	ft_test9();
+
+	// Modifiers: assign range
+	ft_test10();
+
+	// Modifiers: assign fill
+	ft_test11();
+
+	// Insert (single element)
+	ft_test12();
 
 	return (0);
 }

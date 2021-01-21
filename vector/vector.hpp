@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/21 00:57:12 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/21 13:25:53 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -615,10 +615,14 @@ namespace ft
 			}
 
 			// MODIFIERS
+			// Assign range
 			void				assign(iterator first, iterator last) {
 
 				int		i = 0;
-				int		new_size = last - first;
+				int		new_size = &(*last) - &(*first);
+
+				if (&(*last) < &(*first))
+					throw (std::bad_alloc{});
 
 				if (new_size > this->_capacity)
 				{
@@ -652,6 +656,7 @@ namespace ft
 				}
 			}
 
+			// Assign fill
 			void				assign(size_t n, T const &val) {
 
 				int		i = 0;
@@ -742,10 +747,10 @@ namespace ft
 				int			i = 0;
 				int			j = 0;
 				iterator	it = this->begin();
-				iterator	ite = this->_end();
+				iterator	ite = this->end();
 
-				// if (position < it || position > ite) //not original behaviour
-				//	throw (std::out_of_range);
+				if (position < it || position > ite) // not original behaviour
+					throw (std::out_of_range("Error: std::out_of_range"));
 
 				if (this->_size + 1 > this->_capacity)
 				{
@@ -805,8 +810,8 @@ namespace ft
 				iterator	it = this->begin();
 				iterator	ite = this->_end();
 
-				// if (position < it || position > ite) //not original behaviour
-				//	throw (std::out_of_range);
+				if (position < it || position > ite) // not original behaviour
+					throw (std::out_of_range("Error: std::out_of_range"));
 
 				if (this->_size + n > this->_capacity)
 				{
