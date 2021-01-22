@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/21 17:39:02 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/23 00:50:00 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,13 @@ namespace ft
 
 				size_t	i = 0;
 
-				if (n == 0) // ??? // check original!
+				if (n == 0)
+				{
+					this->_array = 0;
+					this->_size = 0;
+					this->_capacity = 0;
 					return ;
+				}
 
 				this->_array = new T[n];
 				this->_size = n;
@@ -70,7 +75,14 @@ namespace ft
 
 				size_t	i = 0;
 
-				if (&(*last) <= &(*first)) // ???
+				if (&(*last) == &(*first))
+				{
+					this->_array = 0;
+					this->_size = 0;
+					this->_capacity = 0;
+					return ;
+				}
+				if (&(*last) < &(*first))
 					throw (std::bad_alloc{});
 
 				size_t	n = static_cast<size_t>(&(*last) - &(*first));
@@ -128,6 +140,8 @@ namespace ft
 				return (*this);
 			}
 
+			// ITERATORS
+			// Simple iterator
 			class iterator {
 
 				private:
