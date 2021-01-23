@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/23 01:23:48 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/23 14:18:33 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,7 @@ namespace ft
 
 				private:
 
-					t_list		*_ptr;
+					t_list		*_node;
 					t_list		*_head;
 					size_t		_size;
 
@@ -241,16 +241,16 @@ namespace ft
 
 					// CONSTRUCTORS
 					// #1 default constructor
-					iterator(void) : _ptr(0), _head(0), _size(0) { return ; }
+					iterator(void) : _node(0), _head(0), _size(0) { return ; }
 					// #2 param constructor (for iterator init: begin, end, etc)
-					iterator(t_list *ptr, t_list *head, size_t size) : 
-								_ptr(ptr), _head(head), _size(size) { return ; }
+					iterator(t_list *node, t_list *head, size_t size) : 
+								_node(node), _head(head), _size(size) { return ; }
 					// #3 Parameterized constructor
 					iterator(list<T, A> const &src) {
 
-						this->_ptr = src._head;
-						this->_head = src._head;
-						this->_size = src._size;
+						this->_node = src.getHead();
+						this->_head = src.getHead();
+						this->_size = src.size();
 
 						return ;
 					}
@@ -266,13 +266,393 @@ namespace ft
 
 					iterator	&operator=(iterator const &rhs) {
 
-						this->_ptr = rhs._ptr;
+						this->_node = rhs._node;
 						this->_head = rhs._head;
 						this->_size = rhs._size;
 
 						return (*this);
 					}
+
+					// Increment prefix
+					iterator	&operator++(void) {
+
+						this->_node = this->_node->next;
+
+						return (*this);
+					}
+
+					// Increment postfix
+					iterator	operator++(int) {
+
+						iterator	tmp(*this);
+
+						this->_node = this->_node->next;
+
+						return (tmp);
+					}
+
+					// Decrement prefix
+					iterator	&operator--(void) {
+
+						this->_node = this->_node->prev;
+
+						return (*this);
+					}
+
+					// Decrement postfix
+					iterator	operator--(int) {
+
+						iterator	tmp(*this);
+
+						this->_node = this->_node->prev;
+						return (tmp);
+					}
+
+					// Addiction operator
+					iterator	operator+(size_t n) {
+
+						int			i = 0;
+						iterator	tmp(*this);
+
+						while (i < n)
+						{
+							tmp->_node = tmp->_node->next;
+							i++;
+						}
+						return (tmp);
+					}
+
+					iterator	&operator+=(size_t n) {
+
+						int		i = 0;
+
+						while (i < n)
+						{
+							this->_node = this->_node->next;
+							i++;
+						}
+						return (*this);
+					}
+
+					// Substruction operator
+					iterator	operator-(size_t n) {
+
+						int			i = 0;
+						iterator	tmp(*this);
+
+						while (i < n)
+						{
+							tmp->_node = tmp->_node->prev;
+							i++;
+						}
+						return (tmp);
+					}
+
+					iterator	&operator-=(size_t n) {
+
+						int			i = 0;
+
+						while (i < n)
+						{
+							this->_node = this->_node->prev;
+							i++;
+						}
+						return (*this);
+					}
+
+					// Comparison operators
+					bool		operator==(iterator const &rhs) {
+
+						return (this->_node == rhs._node);
+					}
+
+					bool		operator!=(iterator const &rhs) {
+
+						return (this->_node != rhs._node);
+					}
+
+					bool		operator<(iterator const &rhs) {
+
+						return (this->_node < rhs._node);
+					}
+
+					bool		operator<=(iterator const &rhs) {
+
+						return (this->_node <= rhs._node);
+					}
+
+					bool		operator>(iterator const &rhs) {
+
+						return (this->_node > rhs._node);
+					}
+
+					bool		operator>=(iterator const &rhs) {
+
+						return (this->_node >= rhs._node);
+					}
+
+					// Dereference operator
+					T			&operator*(void) {
+
+						return (this->_node->val);
+					}
+
+					T			&operator*++(void) {
+
+						iterator	*tmp(*this);
+
+						this->_node = this->_node->next;
+
+						return (tmp->val);
+					}
+
+					T			&operator*--(void) {
+
+						iterator	*tmp(*this);
+
+						this->_node = this->_node->prev;
+
+						return (tmp->val);
+					}
 			};
+
+			// Reverse iterator
+			class reverse_iterator {
+
+				private:
+
+					t_list		*_node;
+					t_list		*_head;
+					size_t		_size;
+
+				public:
+
+					// CONSTRUCTORS
+					// #1 default constructor
+					reverse_iterator(void) : _node(0), _head(0), _size(0) { return ; }
+					// #2 param constructor (for iterator init: begin, end, etc)
+					reverse_iterator(t_list *node, t_list *head, size_t size) : 
+								_node(node), _head(head), _size(size) { return ; }
+					// #3 Parameterized constructor
+					reverse_iterator(list<T, A> const &src) {
+
+						if (src.getHead()->prev == 0)
+						{
+							this->_node = src.getHead();
+							this->_head = src.getHead();
+							this->_size = src.size();
+
+							return ;
+						}
+
+						this->_node = src.getHead()->prev->prev;
+						this->_head = src.getHead()->prev->prev;
+						this->_size = src.size();
+
+						return ;
+					}
+
+					// #4 Copy constructor
+					reverse_iterator(reverse_iterator const &src) {
+
+						*this = src;
+					}
+
+					// DESTRUCTOR
+					~reverse_iterator(void) { return ; }
+
+					reverse_iterator	&operator=(reverse_iterator const &rhs) {
+
+						this->_node = rhs._node;
+						this->_head = rhs._head;
+						this->_size = rhs._size;
+
+						return (*this);
+					}
+
+					// Increment prefix
+					reverse_iterator	&operator++(void) {
+
+						this->_node = this->_node->prev;
+
+						return (*this);
+					}
+
+					// Increment postfix
+					reverse_iterator	operator++(int) {
+
+						reverse_iterator	tmp(*this);
+
+						this->_node = this->_node->prev;
+
+						return (tmp);
+					}
+
+					// Decrement prefix
+					reverse_iterator	&operator--(void) {
+
+						this->_node = this->_node->next;
+
+						return (*this);
+					}
+
+					// Decrement postfix
+					reverse_iterator	operator--(int) {
+
+						reverse_iterator	tmp(*this);
+
+						this->_node = this->_node->next;
+						return (tmp);
+					}
+
+					// Addiction operator
+					reverse_iterator	operator+(size_t n) {
+
+						int			i = 0;
+						reverse_iterator	tmp(*this);
+
+						while (i < n)
+						{
+							tmp->_node = tmp->_node->prev;
+							i++;
+						}
+						return (tmp);
+					}
+
+					reverse_iterator	&operator+=(size_t n) {
+
+						int		i = 0;
+
+						while (i < n)
+						{
+							this->_node = this->_node->prev;
+							i++;
+						}
+						return (*this);
+					}
+
+					// Substruction operator
+					reverse_iterator	operator-(size_t n) {
+
+						int			i = 0;
+						reverse_iterator	tmp(*this);
+
+						while (i < n)
+						{
+							tmp->_node = tmp->_node->next;
+							i++;
+						}
+						return (tmp);
+					}
+
+					reverse_iterator	&operator-=(size_t n) {
+
+						int			i = 0;
+
+						while (i < n)
+						{
+							this->_node = this->_node->next;
+							i++;
+						}
+						return (*this);
+					}
+
+					// Comparison operators
+					bool		operator==(reverse_iterator const &rhs) {
+
+						return (this->_node == rhs._node);
+					}
+
+					bool		operator!=(reverse_iterator const &rhs) {
+
+						return (this->_node != rhs._node);
+					}
+
+					bool		operator<(reverse_iterator const &rhs) {
+
+						return (this->_node < rhs._node);
+					}
+
+					bool		operator<=(reverse_iterator const &rhs) {
+
+						return (this->_node <= rhs._node);
+					}
+
+					bool		operator>(reverse_iterator const &rhs) {
+
+						return (this->_node > rhs._node);
+					}
+
+					bool		operator>=(reverse_iterator const &rhs) {
+
+						return (this->_node >= rhs._node);
+					}
+
+					// Dereference operator
+					T			&operator*(void) {
+
+						return (this->_node->val);
+					}
+
+					T			&operator*++(void) {
+
+						reverse_iterator	*tmp(*this);
+
+						this->_node = this->_node->prev;
+
+						return (tmp->val);
+					}
+
+					T			&operator*--(void) {
+
+						reverse_iterator	*tmp(*this);
+
+						this->_node = this->_node->next;
+
+						return (tmp->val);
+					}
+			};
+			// ITERATORS
+			iterator			begin(void) {
+
+				return (iterator(this->_head, this->_head, this->_size));
+			}
+
+			//const_iterator 	begin(void) const {
+			//}
+
+			iterator			end(void) {
+
+				if (this->_head->prev == 0)
+					return (iterator(this->_head, this->_head, this->_size));
+
+				return (iterator(this->_head->prev, this->_head, this->_size));
+			}
+
+			//const_iterator			begin(void) {
+			//}
+
+			reverse_iterator	rbegin(void) {
+
+				if (this->_head->prev == 0)
+					return (iterator(this->_head, this->_head, this->_size));
+				return (iterator(this->_head->prev->prev, \
+										this->_head->prev->prev, this->_size));
+			}
+
+			//const_reverse_iterator	rbegin(void) const {
+			//}
+
+			reverse_iterator	rend(void) {
+
+				if (this->_head->prev == 0)
+					return (iterator(this->_head, this->_head, this->_size));
+				return (iterator(this->_head->prev, this->_head->prev->prev, \
+																this->_size));
+			}
+
+			//const_reverse_iterator	rend(void) {
+			//}
 	};
 }
 

@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/23 00:50:00 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/23 14:18:39 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,9 +161,9 @@ namespace ft
 					// #3 parameterized constructor
 					iterator(vector<T, A> const &src) {
 
-						this->_ptr = &src._array[0];
-						this->_first = &src._array[0];
-						this->_size = src._size();
+						this->_ptr = &src.getArray()[0];
+						this->_first = &src.getArray()[0];
+						this->_size = src.size();
 
 						return ;
 					}
@@ -295,7 +295,7 @@ namespace ft
 						return (*(this->_ptr));
 					}
 
-					// Offset dereference operator
+					// Offset dereference operator (index operator)
 					T			&operator[](size_t idx) {
 
 						return (this->_first[idx]);
@@ -322,9 +322,9 @@ namespace ft
 					// #3 parameterized constructor
 					reverse_iterator(vector<T, A> const &src) {
 
-						this->_ptr = &src._array[src._size - 1];
-						this->_first = &src._array[src._size - 1];
-						this->_size = src._size;
+						this->_ptr = &src.getArray()[src._size - 1];
+						this->_first = &src.getArray()[src._size - 1];
+						this->_size = src.size();
 
 						return ;
 					}

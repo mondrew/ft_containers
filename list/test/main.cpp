@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 10:58:24 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/22 23:59:28 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/23 14:13:58 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,14 @@
 
 int		main(void)
 {
-	std::vector<int>	v0(0, 100);
-	std::vector<int>::iterator	it2 = v0.begin();
+	std::vector<int>					v0(0, 100);
+	std::vector<int>::reverse_iterator	it2 = v0.rbegin();
+	std::vector<int>::reverse_iterator	ite2 = v0.rend();
+
+	if (it2 < ite2)
+		std::cout << "less" << std::endl;
+	else
+		std::cout << "more" << std::endl;
 
 	std::vector<int>	v1(it2, it2);
 
@@ -30,6 +36,13 @@ int		main(void)
 	lst.push_back(5);
 
 	std::list<int>::iterator		it = lst.begin();
+	std::list<int>::iterator		it11;
+
+	std::cout << "One" << std::endl;
+	int	*ptr = NULL;
+	int a = *ptr;
+	std::cout << "Two" << std::endl;
+	a = 2;
 	//std::list<int>::iterator		ite = lst.end();
 
 	std::list<int>				lst1(it, it);
