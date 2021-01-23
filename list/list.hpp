@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/24 00:12:09 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/24 02:26:15 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,8 @@ namespace ft
 				this->_head = new t_list;
 
 				this->_head->val = 0;
-				this->_head->prev = 0;
-				this->_head->next = 0;
+				this->_head->prev = this->_head;
+				this->_head->next = this->_head;
 
 				this->_tail = this->_head;
 
@@ -68,8 +68,8 @@ namespace ft
 				// Create null-element
 				this->_head = new t_list;
 				this->_head->val = 0;
-				this->_head->prev = 0;
-				this->_head->next = 0;
+				this->_head->prev = this->_head;
+				this->_head->next = this->_head;
 				this->_tail = this->_head;
 				this->_size = 0;
 
@@ -100,8 +100,8 @@ namespace ft
 				// Create null-element
 				this->_head = new t_list;
 				this->_head->val = 0;
-				this->_head->prev = 0;
-				this->_head->next = 0;
+				this->_head->prev = this->_head;
+				this->_head->next = this->_head;
 				this->_tail = this->_head;
 				this->_size = 0;
 
@@ -143,7 +143,6 @@ namespace ft
 				{
 					tmp = this->_head->next;
 					delete this->_head;
-					this->_head = 0;
 					this->_head = tmp;
 				}
 				this->_size = 0;
@@ -159,8 +158,8 @@ namespace ft
 				// Create null-element
 				this->_head = new t_list;
 				this->_head->val = 0;
-				this->_head->prev = 0;
-				this->_head->next = 0;
+				this->_head->prev = this->_head;
+				this->_head->next = this->_head;
 				this->_tail = this->_head;
 				this->_size = 0;
 
@@ -703,6 +702,22 @@ namespace ft
 				return ;
 			}
 
+			void				pop_front(void) {
+
+				t_list		*tmp = this->_head->next;
+
+				if (this->_size == 0)
+					return ;
+
+				delete this->_head;
+				this->_head = tmp;
+				this->_size--;
+
+				this->_head->prev = this->_tail;
+				this->_tail->next = this->head;
+				return ;
+			}
+
 			void				push_back(T const &val) {
 
 				t_list		*tmp = new t_list;
@@ -716,6 +731,137 @@ namespace ft
 				this->_size++;
 				return ;
 			}
+
+			void				pop_back(void) {
+
+				t_list		*tmp = this->_tail->prev->prev;
+
+				if (this->_size == 0)
+					return ;
+
+				delete this->_tail->prev;
+				this->_size--;
+
+				tmp->next = this->_tail;
+				this->_tail->prev = tmp;
+				return ;
+			}
+
+			// Insert #1 (single element)
+			iterator			insert(iterator position, T const &val) {
+
+				t_list		*tmp = new t_list;
+
+				tmp->val = val;
+				tmp->prev = position->_node->prev;
+				tmp->next = position->_node;
+				position->_node->prev->next = tmp;
+				position->_node->prev = tmp;
+				this->_size++;
+
+				position--;
+
+				return (position); // test it
+			}
+
+			// Insert #2 (fill)
+			void				insert(iterator position, size_t n, \
+																T const &val) {
+
+				int			i = n;
+				t_list		*tmp;
+
+				while (n > 0)
+				{
+					tmp = new t_list;
+
+					tmp->val = val;
+					tmp->prev = position.prev;
+					tmp->next = position;
+					position._node->prev->next = tmp;
+					position._node->prev = tmp;
+					this->_size++;
+
+					n--;
+				}
+
+				while (i > 0)
+				{
+					position--;
+					i--;
+				}
+
+				return (position); // test it
+			}
+
+			// Insert #3 (range)
+			void				insert(iterator position, iterator first, \
+																iterator last) {
+
+				int			n = 0;
+				t_list		*tmp;
+
+				while (first != last)
+				{
+					tmp = new t_list;
+					tmp->val = *first;
+					tmp->prev = position._node->prev;
+					tmp->next = position._node;
+					position._node->prev->next = tmp;
+					position._node->prev = tmp;
+					this->_size++;
+					first++;
+					n++;
+				}
+
+				while (n > 0)
+				{
+					position--;
+					n--;
+				}
+				return (position);
+			}
+
+			// Erase #1
+			iterator				erase(iterator position) {
+
+				t_list		*tmp = position._node->prev;
+
+				if (this->_size == 0) // check the original
+					return (position);
+
+				tmp->prev = position._node;
+				position._node->prev = tmp->prev;
+
+				delete tmp;
+
+				this->_size--;
+
+				return (position);
+			}
+
+			// Erase #2
+			iterator				erase(iterator first, iterator last) {
+
+				t_list		*tmp;
+
+				if (first == last) // check original
+					return (this->_head);
+
+				while (first != last)
+				{
+			   		tmp = first._node;
+					first._node->prev->next = first._node->next;
+					first._node->next->prev = first._node->prev;
+					delete tmp;
+					this->_size--;
+
+					first++;
+				}
+				return (last);
+			}
+
+			// Swap
 	};
 }
 

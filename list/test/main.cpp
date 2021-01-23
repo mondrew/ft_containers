@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 10:58:24 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/23 19:02:44 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/24 00:52:10 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,16 @@
 
 int		main(void)
 {
-	std::list<int>					v0(0, 100);
-	std::list<int>::iterator	it2 = v0.begin();
+	std::list<int>					v0;
+	std::list<int>::iterator		it = v0.begin();
+
+	for (int i = 0; i < 10; ++i)
+	{
+		std::cout << *it << std::endl;
+		it++;
+	}
+
+	/*
 	//std::list<int>::iterator	ite2 = v0.end();
 
 	std::list<int>						v1(3, 55);
@@ -35,6 +43,7 @@ int		main(void)
 	std::cout << std::endl;
 
 	std::cout << "Size of v1: " << v1.size() << std::endl;
+	*/
 
 	/*
 	if (it2 < ite2)
