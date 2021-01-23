@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/22 10:58:24 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/23 14:13:58 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/23 19:02:44 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,27 @@
 
 int		main(void)
 {
-	std::vector<int>					v0(0, 100);
-	std::vector<int>::reverse_iterator	it2 = v0.rbegin();
-	std::vector<int>::reverse_iterator	ite2 = v0.rend();
+	std::list<int>					v0(0, 100);
+	std::list<int>::iterator	it2 = v0.begin();
+	//std::list<int>::iterator	ite2 = v0.end();
 
+	std::list<int>						v1(3, 55);
+	std::cout << "Size of v1: " << v1.size() << std::endl;
+
+	v1.assign(it2, it2);
+	std::list<int>::iterator	it3 = v1.begin();
+	std::list<int>::iterator	ite3 = v1.end();
+
+	while (it3 != ite3)
+	{
+		std::cout << *it3 << " ";
+		it3++;
+	}
+	std::cout << std::endl;
+
+	std::cout << "Size of v1: " << v1.size() << std::endl;
+
+	/*
 	if (it2 < ite2)
 		std::cout << "less" << std::endl;
 	else
@@ -58,6 +75,7 @@ int		main(void)
 		it1++;
 	}
 	std::cout << std::endl;
+	*/
 
 
 	/*
@@ -67,4 +85,5 @@ int		main(void)
 	lst.push_back('d');
 	lst.push_back('e');
 	*/
+	return (0);
 }

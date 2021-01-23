@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/23 14:18:39 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/23 17:54:20 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -500,7 +500,7 @@ namespace ft
 				else
 					arch = 16;
 
-				return (pow(2, arch) / sizeof(T) - 1);
+				return (static_cast<size_t>(pow(2, arch) / sizeof(T)) - 1);
 			}
 
 			void				resize( size_t n, T val = T() ) {

@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/23 14:18:33 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/24 00:12:09 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 // 2. Если добавить в пустой лист элемент пустого листа - то он добавится, т.к.
 // дефолтный конструктор создает нулевой элемент (val = 0)
 // 3. Учесть в ++ и -- итератора зацикленность списка
+
+//	LOGIC OF DOUBLE-LINKED LIST
+//	[null_node]<---node1<->node2<->node3<->[null_node]--->node1
 
 namespace ft
 {
@@ -34,6 +37,7 @@ namespace ft
 			}					t_list;
 
 			t_list				*_head;
+			t_list				*_tail; // null-tail
 			size_t				_size;
 
 		public:
@@ -50,6 +54,8 @@ namespace ft
 				this->_head->prev = 0;
 				this->_head->next = 0;
 
+				this->_tail = this->_head;
+
 				this->_size = 0;
 			}
 
@@ -64,92 +70,60 @@ namespace ft
 				this->_head->val = 0;
 				this->_head->prev = 0;
 				this->_head->next = 0;
+				this->_tail = this->_head;
 				this->_size = 0;
 
 				if (n == 0)
 					return ;
-
-				// Create first element
-				tmp = new t_list;
-				tmp->val = val;
-				tmp->prev = 0;
-				tmp->next = this->_head;
-				this->_head->prev = tmp;
-				this->_head = tmp;
-				this->_size++;
-				i++;
 
 				// Create other elements if any
 				while (i < n)
 				{
 					tmp = new t_list;
 					tmp->val = val;
-					tmp->prev = 0;
+					tmp->prev = this->_tail;
 					tmp->next = this->_head;
 					this->_head->prev = tmp;
+					this->_tail->next = tmp;
 					this->_head = tmp;
 					this->_size++;
 					i++;
 				}
-				// Link head and null-tail
-				tmp = this->_head;
-				while (tmp->next != 0)
-					tmp = tmp->next;
-				tmp->next = this->_head;
-				this->_head->prev = tmp;
 			}
 
 			// #3 Range constructor
 			list(iterator first, iterator last) {
 
 				int		i = 0;
-				int		n = &(*first) - &(*last);
 				t_list	*tmp;
-				t_list	*tail;
-
-				if (n < 0)
-					throw (std::bad_alloc {});
 
 				// Create null-element
 				this->_head = new t_list;
 				this->_head->val = 0;
 				this->_head->prev = 0;
 				this->_head->next = 0;
+				this->_tail = this->_head;
 				this->_size = 0;
 
-				if (n == 0)
+				if (first == last)
 					return ;
-
-				tail = this->_head;
-
-				// Create first element
-				tmp = new t_list;
-				tmp->val = *first;
-				tmp->prev = 0;
-				tmp->next = this->_head;
-				this->_head->prev = tmp;
-				this->_head = tmp;
-				this->_size++;
-				first++;
-				i++;
 
 				// Create other elements if any
 				while (i < n)
 				{
 					tmp = new t_list;
 					tmp->val = *first;
-					tmp->prev = tail->prev;
-					tmp->next = tail;
+					tmp->prev = this->_tail;
+					tmp->next = this->_head;
 
-					(tail->prev)->next = tmp;
-					tail->prev = tmp;
+					this->_tail->next = tmp;
+					this->_head->prev = tmp;
 
+					this->_head = tmp;
 					this->_size++;
+					first++;
 					i++;
 				}
-				// Link head and null-tail
-				tail->next = this->_head;
-				this->_head->prev = tail;
 				return ;
 			}
 
@@ -172,58 +146,42 @@ namespace ft
 					this->_head = 0;
 					this->_head = tmp;
 				}
+				this->_size = 0;
 				return ;
 			}
 
 			// Assignment operation overload
 			list<T, A>		operator=(list<T, A> const &rhs) {
 
-				int		i = 0;
-				int		n = rhs.size();
 				t_list	*tmp;
 				t_list	*from = rhs._head;
-				t_list	*tail;
 
 				// Create null-element
 				this->_head = new t_list;
 				this->_head->val = 0;
 				this->_head->prev = 0;
 				this->_head->next = 0;
+				this->_tail = this->_head;
 				this->_size = 0;
 
 				if (rhs.size() == 0)
 					return (*this);
 
-				tail = this->_head;
-
-				// Create first element
-				tmp = new t_list;
-				tmp->val = from->val;
-				tmp->prev = 0;
-				tmp->next = this->_head;
-				this->_head->prev = tmp;
-				this->_head = tmp;
-				this->_size++;
-				from = from->next;
-				i++;
-
 				// Create other elements if any
-				while (i < n)
+				while (from != rhs._tail)
 				{
 					tmp = new t_list;
-					tmp->val = from_val;
-					tmp->prev = tail->prev;
-					tmp->next = tail;
+					tmp->val = from->val;
+					tmp->prev = this->_tail;
+					tmp->next = this->_head;
 
-					(tail->prev)->next = tmp;
-					tail->prev = tmp;
+					this->_tail->next = tmp;
+					this->_head->prev = tmp;
 
 					this->_size++;
+					from = from->next;
 					i++;
 				}
-				// Link head and null-tail
-				tail->next = this->_head;
-				this->_head->prev = tail;
 				return (*this);
 			}
 
@@ -234,23 +192,18 @@ namespace ft
 				private:
 
 					t_list		*_node;
-					t_list		*_head;
-					size_t		_size;
 
 				public:
 
 					// CONSTRUCTORS
 					// #1 default constructor
-					iterator(void) : _node(0), _head(0), _size(0) { return ; }
+					iterator(void) : _node(0) { return ; }
 					// #2 param constructor (for iterator init: begin, end, etc)
-					iterator(t_list *node, t_list *head, size_t size) : 
-								_node(node), _head(head), _size(size) { return ; }
+					iterator(t_list *node) : _node(node) { return ; }
 					// #3 Parameterized constructor
 					iterator(list<T, A> const &src) {
 
 						this->_node = src.getHead();
-						this->_head = src.getHead();
-						this->_size = src.size();
 
 						return ;
 					}
@@ -267,8 +220,6 @@ namespace ft
 					iterator	&operator=(iterator const &rhs) {
 
 						this->_node = rhs._node;
-						this->_head = rhs._head;
-						this->_size = rhs._size;
 
 						return (*this);
 					}
@@ -422,32 +373,18 @@ namespace ft
 				private:
 
 					t_list		*_node;
-					t_list		*_head;
-					size_t		_size;
 
 				public:
 
 					// CONSTRUCTORS
 					// #1 default constructor
-					reverse_iterator(void) : _node(0), _head(0), _size(0) { return ; }
+					reverse_iterator(void) : _node(0) { return ; }
 					// #2 param constructor (for iterator init: begin, end, etc)
-					reverse_iterator(t_list *node, t_list *head, size_t size) : 
-								_node(node), _head(head), _size(size) { return ; }
+					reverse_iterator(t_list *node) : _node(node) { return ; }
 					// #3 Parameterized constructor
 					reverse_iterator(list<T, A> const &src) {
 
-						if (src.getHead()->prev == 0)
-						{
-							this->_node = src.getHead();
-							this->_head = src.getHead();
-							this->_size = src.size();
-
-							return ;
-						}
-
-						this->_node = src.getHead()->prev->prev;
-						this->_head = src.getHead()->prev->prev;
-						this->_size = src.size();
+						this->_node = src.getTail()->prev;
 
 						return ;
 					}
@@ -464,8 +401,6 @@ namespace ft
 					reverse_iterator	&operator=(reverse_iterator const &rhs) {
 
 						this->_node = rhs._node;
-						this->_head = rhs._head;
-						this->_size = rhs._size;
 
 						return (*this);
 					}
@@ -615,7 +550,7 @@ namespace ft
 			// ITERATORS
 			iterator			begin(void) {
 
-				return (iterator(this->_head, this->_head, this->_size));
+				return (iterator(this->_head));
 			}
 
 			//const_iterator 	begin(void) const {
@@ -623,10 +558,7 @@ namespace ft
 
 			iterator			end(void) {
 
-				if (this->_head->prev == 0)
-					return (iterator(this->_head, this->_head, this->_size));
-
-				return (iterator(this->_head->prev, this->_head, this->_size));
+				return (iterator(this->_tail));
 			}
 
 			//const_iterator			begin(void) {
@@ -634,10 +566,7 @@ namespace ft
 
 			reverse_iterator	rbegin(void) {
 
-				if (this->_head->prev == 0)
-					return (iterator(this->_head, this->_head, this->_size));
-				return (iterator(this->_head->prev->prev, \
-										this->_head->prev->prev, this->_size));
+				return (iterator(this->_tail->prev));
 			}
 
 			//const_reverse_iterator	rbegin(void) const {
@@ -645,14 +574,148 @@ namespace ft
 
 			reverse_iterator	rend(void) {
 
-				if (this->_head->prev == 0)
-					return (iterator(this->_head, this->_head, this->_size));
-				return (iterator(this->_head->prev, this->_head->prev->prev, \
-																this->_size));
+				return (iterator(this->_head->prev));
 			}
 
 			//const_reverse_iterator	rend(void) {
 			//}
+
+			// CAPACITY
+
+			bool				empty(void) const {
+
+				return (this->_size == 0);
+			}
+
+			size_t				size(void) const {
+
+				return (this->_size);
+			}
+
+			size_t				max_size(void) const {
+
+				int		arch;
+
+				if (sizeof(void *) == 8)
+					arch = 64;
+				else if (sizeof(void *) == 4)
+					arch = 32;
+				else
+					arch = 16;
+
+				return (static_cast<size_t>(pow(2, arch) / sizeof(T)) - 1);
+			}
+
+			// ELEMENT ACCESS
+			T					&front(void) {
+
+				return (this->_head->val);
+			}
+
+			T					&back(void) {
+
+				return (this->tail->prev->val);
+			}
+
+			// MODIFIERS
+			// Assign #1 range
+			void				assign(iterator first, iterator last) {
+
+				t_list	*tmp = first;
+
+				// Delete all nodes except tail-null-node
+				while (this->_head->next)
+				{
+					tmp = this->_head->next;
+					delete this->_head;
+					this->_head = 0;
+					this->_head = tmp;
+				}
+				this->_size = 0;
+
+				if (first == last)
+					return ;
+
+				// Create first node
+				while (tmp != this->_tail)
+				{
+					tmp = new t_list;
+					tmp->val = *tmp;
+					tmp->prev = this->_tail;
+					tmp->next = this->_head;
+
+					this->_head->prev = tmp;
+					this->_tail->next = tmp;
+					this->_head = tmp;
+
+					this->_size++;
+					tmp++;
+				}
+				return ;
+			}
+
+			// Assign #2 fill
+			void				assign(size_t n, T const &val) {
+
+				t_list	*tmp;
+
+				// Delete all nodes except tail-null-node
+				while (this->_head->next)
+				{
+					tmp = this->_head->next;
+					delete this->_head;
+					this->_head = 0;
+					this->_head = tmp;
+				}
+				this->_size = 0;
+
+				if (n == 0)
+					return ;
+
+				while (n > 0)
+				{
+					tmp = new t_list;
+					tmp->val = val;
+					tmp->prev = this->_head;
+					tmp->_next = this->_tail;
+					this->_head->next = tmp;
+					this->_tail->prev = tmp;
+					this->_head = tmp;
+					this->_size++;
+					n--;
+				}
+				return ;
+			}
+
+			// Push front
+			void				push_front(T const &val) {
+
+				t_list	*tmp = new t_list;
+
+				tmp->val = val;
+				tmp->prev = this->_tail;
+				tmp->next = this->_head;
+				this->_head->prev = tmp;
+				this->_tail->next = tmp;
+
+				this->_head = tmp;
+				this->_size++;
+				return ;
+			}
+
+			void				push_back(T const &val) {
+
+				t_list		*tmp = new t_list;
+
+				tmp->val = val;
+				tmp->prev = this->_tail->prev;
+				tmp->next = this->_tail;
+				this->_tail->prev = tmp;
+				this->_tail->_prev->next = tmp;
+
+				this->_size++;
+				return ;
+			}
 	};
 }
 
