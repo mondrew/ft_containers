@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 02:21:24 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 02:31:20 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 	size_t	tmp_size = x.size();
 	size_t	tmp_capacity = x.capacity();
 
-	x._array = y.getArray();
+	x._array = y._array;
 	y._array = tmp_array;
 
 	x._size = y.size();

@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 02:21:55 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 02:32:58 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,6 +154,23 @@ friend bool	operator>=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 	if (it2 != ite2)
 		return (false);
 	return (true);
+}
+
+friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
+
+	t_list		*tmp_head = y._head;
+	t_list		*tmp_tail = y._tail;
+	size_t		tmp_size = y._size;
+
+	y._head = x._head;
+	y._tail = x._tail;
+	y._size = x._size;
+
+	x._head = tmp_head;
+	x._tail = tmp_tail;
+	x._size = tmp_size;
+
+	return ;
 }
 
 			// CONSTRUCTORS
@@ -1355,29 +1372,33 @@ friend bool	operator>=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 }
 // NON-MEMBER FUNCTION OVERLOADS
 // Relational operators
-template < typename T, typename A = std::allocator<T> >
-friend bool	operator==(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+template < typename T, typename A >
+bool	operator==(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 
 }
 
-template < typename T, typename A = std::allocator<T> >
-friend bool	operator!=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+template < typename T, typename A >
+bool	operator!=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 }
 	
-template < typename T, typename A = std::allocator<T> >
-friend bool	operator<(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+template < typename T, typename A >
+bool	operator<(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 }
 
-template < typename T, typename A = std::allocator<T> >
-friend bool	operator<=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+template < typename T, typename A >
+bool	operator<=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 }
 
-template < typename T, typename A = std::allocator<T> >
-friend bool	operator>(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+template < typename T, typename A >
+bool	operator>(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 }
 
-template < typename T, typename A = std::allocator<T> >
-friend bool	operator>=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+template < typename T, typename A >
+bool	operator>=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+}
+
+template < typename T, typename A >
+void	swap(ft::list<T, A> &x, list<T, A> &y) {
 }
 
 #endif
