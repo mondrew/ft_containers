@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/24 02:26:15 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/24 22:19:54 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -823,7 +823,7 @@ namespace ft
 			}
 
 			// Erase #1
-			iterator				erase(iterator position) {
+			iterator			erase(iterator position) {
 
 				t_list		*tmp = position._node->prev;
 
@@ -841,7 +841,7 @@ namespace ft
 			}
 
 			// Erase #2
-			iterator				erase(iterator first, iterator last) {
+			iterator			erase(iterator first, iterator last) {
 
 				t_list		*tmp;
 
@@ -862,6 +862,272 @@ namespace ft
 			}
 
 			// Swap
+			void				swap(list &x) {
+
+				t_list		*tmp_head = x._head;
+				t_list		*tmp_tail = x._tail;
+				size_t		tmp_size = x._size;
+
+				x._head = this->_head;
+				x._tail = this->_tail;
+				x._size = this->_size;
+
+				this->_head = tmp_head;
+				this->_tail = tmp_tail;
+				this->_size = tmp_size;
+
+				return ;
+			}
+
+			// Resize
+			void				resize( size_t n, T val = T() ) {
+
+				int		i = 0;
+
+				if (n < this->_size)
+				{
+					while (n < this->_size)
+					{
+						this->pop_back();
+						this->_size--;
+					}
+				}
+				else if (n > this->_size)
+				{
+					while (this->_size < n)
+					{
+						this->push_back(val);
+						this->_size++;
+					}
+				}
+				return ;
+			}
+
+			// Clear
+			void				clear(void) {
+
+				while (this->_size)
+				{
+					this->pop_back();
+					this->_size--;
+				}
+				delete this->_head;
+				this->_head = 0;
+				this->_tail = 0;
+			}
+
+			// OPERATIONS
+			// Splice #1 (entire list)
+			void				splice(iterator position, list &x) {
+
+				t_list		*before = position._node->prev;
+				t_list		*after = position._node;
+				t_list		*tmp;
+
+				while (x._size)
+				{
+					tmp = x._head;
+					x._tail->next = x._head->next;
+					x._head->next->prev = x._tail;
+					x._size--;
+
+					before->next = tmp;
+					tmp->prev = before;
+					after->prev = tmp;
+					tmp->next = after;
+					this->_size++;
+					before = before->next;
+				}
+			}
+
+			// Splice #2 (single element)
+			void				splice(iterator position, list &x, iterator i) {
+
+				t_list		*before = position._node->prev;
+				t_list		*after = position._node;
+				t_list		*tmp;
+
+				tmp = iterator._node;
+
+				tmp->prev->next = tmp->next;
+				tmp->next->prev = tmp->prev;
+				x._size--;
+
+				before->next = tmp;
+				tmp->prev = before;
+				after->prev = tmp;
+				tmp->next = after;
+				this->_size++;
+			}
+
+			// Splice #3 (element range)
+			void				splice(iterator position, list &x, \
+												iterator first, iterator last) {
+
+				t_list		*before = position._node->prev;
+				t_list		*after = position._node;
+				t_list		*tmp;
+
+				while (first != last)
+				{
+					tmp = first._node;
+					tmp->prev->next = tmp->next;
+					tmp->next->prev = tmp->prev;
+					x._size--;
+
+					before->next = tmp;
+					tmp->prev = before;
+					after->prev = tmp;
+					tmp->next = after;
+					this->_size++;
+					first++;
+					before = before->next;
+				}
+			}
+
+			// Remove
+			void				remove(T const &val) {
+
+				int			i = 0;
+				t_list		*tmp = this->_head;
+				t_list		*tmp2;
+
+				while (tmp != this->_tail)
+				{
+					tmp2 = tmp->next;
+					if (tmp->val == val)
+					{
+						tmp->prev->next = tmp->next;
+						tmp->next->prev = tmp->prev;
+						delete tmp;
+						this->_size--;
+					}
+					tmp = tmp2;
+				}
+			}
+
+			// Remove if
+			template <class Predicate>
+			void				remove_if(Predicate pred) {
+
+				iterator	it = this->begin();
+				iterator	ite = this->end();
+				t_list		*tmp;
+
+				while (it != ite)
+				{
+					if (pred(*it))
+					{
+						tmp = it._node;
+						it++;
+						tmp->prev->next = tmp->next;
+						tmp->next->prev = tmp->prev;
+						delete tmp;
+						this->_size--;
+					}
+					else
+						it++;
+				}
+			}
+
+			// Unique #1
+			void				unique(void) {
+
+				t_list		*fst = this->_head;
+				t_list		*snd = this->_head->next;
+
+				while (snd != this->_tail)
+				{
+					if (fst->val == snd->val)
+					{
+						fst->next = snd->next;
+						snd->next->prev = fst;
+						delete snd;
+						this->_size--;
+					}
+					else
+						fst = fst->next;
+					snd = fst->next;
+				}
+			}
+
+			// Unique #2
+			template <class BinaryPredicate>
+			void				unique(BinaryPredicate binary_pred) {
+
+				iterator	it = this->begin();
+				iterator	ite = this->end();
+				iterator	tmp;
+
+				it++;
+				while (it != ite)
+				{
+					tmp = it + 1;
+					if (binary_pred(*it, *(it - 1)))
+						erase(it);
+					it = tmp;
+				}
+			}
+
+			// Merge #1
+			void				merge(list &x) {
+
+				t_list		*src = x._head;
+				t_list		*dest = this->_head;
+				t_list		*tmp;
+
+				if (x._size == 0)
+					return ;
+				while (src != x._tail)
+				{
+					tmp = src->next;
+					while (dest != this->_tail && dest->val <= src->val)
+						dest = dest->next;
+					src->prev->next = src->next;
+					src->next->prev = src->prev;
+					x._size--;
+
+					src->prev = dest->prev;
+					src->next = dest;
+
+					dest->prev->next = src;
+					dest->prev = src;
+					this->_size++;
+
+					src = tmp;
+				}
+			}
+
+			// Merge #2
+			template <class Compare>
+			void				merge(list &x, Compare comp) {
+
+				if (&x == this || x._size == 0)
+					return ;
+				t_list		*src = x._head;
+				t_list		*dest = this->_head;
+				t_list		*tmp;
+
+				while (src != x._tail)
+				{
+					tmp = src->next;
+					while (dest != this->_tail && !comp(dest->val, src->val))
+						dest = dest->next;
+					src->prev->next = src->next;
+					src->next->prev = src->prev;
+					x._size--;
+
+					src->prev = dest->prev;
+					src->next = dest;
+
+					dest->prev->next = src;
+					dest->prev = src;
+					this->_size++;
+
+					src = tmp;
+				}
+			}
+
 	};
 }
 
