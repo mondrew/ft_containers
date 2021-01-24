@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 01:24:46 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 02:21:55 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,118 @@ namespace ft
 		public:
 
 			class iterator;
+
+friend bool	operator==(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+
+	ft::list<T, A>::iterator	it1 = lhs.begin();
+	ft::list<T, A>::iterator	ite1 = lhs.end();
+	ft::list<T, A>::iterator	it2 = rhs.begin();
+
+	if (lhs._size != rhs._size)
+		return (false);
+	while (it1 != ite1)
+	{
+		if (*it1 != *it2)
+			return (false);
+		it1++;
+		it2++;
+	}
+	return (true);
+}
+
+friend bool	operator!=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+
+	ft::list<T, A>::iterator	it1 = lhs.begin();
+	ft::list<T, A>::iterator	ite1 = lhs.end();
+	ft::list<T, A>::iterator	it2 = rhs.begin();
+
+	if (lhs._size != rhs._size)
+		return (true);
+	while (it1 != ite1)
+	{
+		if (*it1 != *it2)
+			return (true);
+		it1++;
+		it2++;
+	}
+	return (false);
+}
+	
+friend bool	operator<(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+
+	ft::list<T, A>::iterator	it1 = lhs.begin();
+	ft::list<T, A>::iterator	ite1 = lhs.end();
+	ft::list<T, A>::iterator	it2 = rhs.begin();
+	ft::list<T, A>::iterator	ite2 = rhs.end();
+
+	while (it1 != ite1 && it2 != ite2)
+	{
+		if (*it1 >= *it2)
+			return (false);
+		it1++;
+		it2++;
+	}
+	if (it2 != ite2)
+		return (true);
+	return (false);
+}
+
+friend bool	operator<=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+
+	ft::list<T, A>::iterator	it1 = lhs.begin();
+	ft::list<T, A>::iterator	ite1 = lhs.end();
+	ft::list<T, A>::iterator	it2 = rhs.begin();
+	ft::list<T, A>::iterator	ite2 = rhs.end();
+
+	while (it1 != ite1 && it2 != ite2)
+	{
+		if (*it1 > *it2)
+			return (false);
+		it1++;
+		it2++;
+	}
+	if (it1 != ite1)
+		return (false);
+	return (true);
+}
+
+friend bool	operator>(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+
+	ft::list<T, A>::iterator	it1 = lhs.begin();
+	ft::list<T, A>::iterator	ite1 = lhs.end();
+	ft::list<T, A>::iterator	it2 = rhs.begin();
+	ft::list<T, A>::iterator	ite2 = rhs.end();
+
+	while (it1 != ite1 && it2 != ite2)
+	{
+		if (*it1 <= *it2)
+			return (false);
+		it1++;
+		it2++;
+	}
+	if (it1 != ite1)
+		return (true);
+	return (false);
+}
+
+friend bool	operator>=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+
+	ft::list<T, A>::iterator	it1 = lhs.begin();
+	ft::list<T, A>::iterator	ite1 = lhs.end();
+	ft::list<T, A>::iterator	it2 = rhs.begin();
+	ft::list<T, A>::iterator	ite2 = rhs.end();
+
+	while (it1 != ite1 && it2 != ite2)
+	{
+		if (*it1 < *it2)
+			return (false);
+		it1++;
+		it2++;
+	}
+	if (it2 != ite2)
+		return (false);
+	return (true);
+}
 
 			// CONSTRUCTORS
 			// #1 Default constructor

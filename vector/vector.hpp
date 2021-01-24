@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 01:41:13 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 02:21:24 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,14 @@ friend bool	operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) 
 	int		i = 0;
 
 	// Only elements counts! Not size and not capacity!
-	while (i < lhs.size() || i < rhs.size())
+	while (i < lhs.size() && i < rhs.size())
 	{
-		if (lhs._array[i] < rhs._array[i])
-			return (true);
+		if (lhs._array[i] >= rhs._array[i])
+			return (false);
 		i++;
 	}
+	if (i < rhs.size())
+		return (true);
 	return (false);
 }
 
@@ -87,13 +89,15 @@ friend bool	operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs)
 	int		i = 0;
 
 	// Only elements counts! Not size and not capacity!
-	while (i < lhs.size() || i < rhs.size())
+	while (i < lhs.size() && i < rhs.size())
 	{
-		if (lhs._array[i] <= rhs._array[i])
-			return (true);
+		if (lhs._array[i] > rhs._array[i])
+			return (false);
 		i++;
 	}
-	return (false);
+	if (i < lhs.size())
+		return (false);
+	return (true);
 }
 
 friend bool	operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
@@ -101,12 +105,14 @@ friend bool	operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) 
 	int		i = 0;
 
 	// Only elements counts! Not size and not capacity!
-	while (i < lhs.size() || i < rhs.size())
+	while (i < lhs.size() && i < rhs.size())
 	{
-		if (lhs._array[i] > rhs._array[i])
-			return (true);
+		if (lhs._array[i] <= rhs._array[i])
+			return (false);
 		i++;
 	}
+	if (i < lhs.size())
+		return (true);
 	return (false);
 }
 
@@ -115,13 +121,15 @@ friend bool	operator>=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs)
 	int		i = 0;
 
 	// Only elements counts! Not size and not capacity!
-	while (i < lhs.size() || i < rhs.size())
+	while (i < lhs.size() && i < rhs.size())
 	{
-		if (lhs._array[i] >= rhs._array[i])
-			return (true);
+		if (lhs._array[i] < rhs._array[i])
+			return (false);
 		i++;
 	}
-	return (false);
+	if (i < rhs.size())
+		return (false);
+	return (true);
 }
 
 // SWAP OVERLOAD
