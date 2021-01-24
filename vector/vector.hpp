@@ -6,9 +6,13 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/24 01:42:27 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 01:41:13 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+// DELETE ALL GETTERS AND SETTERS!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
@@ -33,6 +37,117 @@ namespace ft
 		public:
 
 			class iterator;
+
+friend bool	operator==(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	if (lhs.size() != rhs.size())
+		return (false);
+	while (i < rhs.size())
+	{
+		if (lhs._array[i] != rhs._array[i])
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+friend bool	operator!=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	if (lhs.size() != rhs.size())
+		return (true);
+	while (i < rhs.size())
+	{
+		if (lhs._array[i] != rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+friend bool	operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs._array[i] < rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+friend bool	operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs._array[i] <= rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+friend bool	operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs._array[i] > rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+friend bool	operator>=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs._array[i] >= rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+// SWAP OVERLOAD
+
+friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
+
+	T		*tmp_array = x._array;
+	size_t	tmp_size = x.size();
+	size_t	tmp_capacity = x.capacity();
+
+	x._array = y.getArray();
+	y._array = tmp_array;
+
+	x._size = y.size();
+	y._size = tmp_size;
+
+	x._capacity = y.capacity();
+	y._capacity = tmp_capacity;
+}
+
+//friend bool	operator!=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs);
+//friend bool	operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs);
+//friend bool	operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs);
+//friend bool	operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs);
+//friend bool	operator>=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs);
+//friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y);
 
 			// MEMBER FUNCTIONS OF VECTOR CLASS
 
@@ -1125,6 +1240,7 @@ namespace ft
 // NON-MEMBER FUNCTIONS OVERLOADS
 // Relational operators
 
+/*
 template < typename T, typename A = std::allocator<T> >
 bool	operator==(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
@@ -1235,5 +1351,119 @@ void			swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 	x.setCapacity(y.capacity());
 	y.setCapacity(tmp_capacity);
 }
+*/
+
+/*
+template < typename T, typename A >
+bool	operator==(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	if (lhs.size() != rhs.size())
+		return (false);
+	while (i < rhs.size())
+	{
+		if (lhs._array[i] != rhs._array[i])
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool	operator!=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	if (lhs.size() != rhs.size())
+		return (true);
+	while (i < rhs.size())
+	{
+		if (lhs._array[i] != rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool	operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs._array[i] < rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool	operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs._array[i] <= rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool	operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs._array[i] > rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+template < typename T, typename A = std::allocator<T> >
+bool	operator>=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
+
+	int		i = 0;
+
+	// Only elements counts! Not size and not capacity!
+	while (i < lhs.size() || i < rhs.size())
+	{
+		if (lhs._array[i] >= rhs._array[i])
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+// SWAP OVERLOAD
+
+template < typename T, typename A = std::allocator<T> >
+void			swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
+
+	T		*tmp_array = x._array();
+	size_t	tmp_size = x.size();
+	size_t	tmp_capacity = x.capacity();
+
+	x._array = y.getArray();
+	y._array = tmp_array;
+
+	x._size = y.size();
+	y._size = tmp_size;
+
+	x._capacity = y.capacity();
+	y._capacity = tmp_capacity;
+}
+*/
 
 #endif

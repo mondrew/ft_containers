@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/24 22:19:54 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 01:24:46 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1128,7 +1128,144 @@ namespace ft
 				}
 			}
 
+			// Sort #1
+			void				sort(void) {
+
+				t_list		*fst = this->_head;
+				t_list		*snd = this->_head->next;
+				bool		swaped = false;
+
+				while (snd != this->_tail)
+				{
+					if (snd->val < fst->val)
+					{
+						swapped = true;
+						// link 1 & 3
+						fst->next = snd->next;
+						snd->next->prev = fst;
+
+						// link 2 & pre-1
+						snd->prev = fst->prev;
+						snd->next = fst;
+
+						// link 1 & 2 (rev order)
+						fst->prev->next = snd;
+						fst->prev = snd;
+
+						// swap ptrs
+						fst = snd;
+						snd = fst->next;
+					}
+					fst = fst->next;
+					snd = snd->next;
+
+					// Here we go again
+					if (snd == this->_tail && swapped)
+					{
+						fst = this->_head;
+						snd = this->_head->next;
+					}
+				}
+			}
+
+			// Sort #2
+			template <class Compare>
+			void				sort(Compare comp) {
+
+				t_list		*fst = this->_head;
+				t_list		*snd = this->_head->next;
+				bool		swaped = false;
+
+				while (snd != this->_tail)
+				{
+					if (!comp(fst->val, snd->val))
+					{
+						swapped = true;
+						// link 1 & 3
+						fst->next = snd->next;
+						snd->next->prev = fst;
+
+						// link 2 & pre-1
+						snd->prev = fst->prev;
+						snd->next = fst;
+
+						// link 1 & 2 (rev order)
+						fst->prev->next = snd;
+						fst->prev = snd;
+
+						// swap ptrs
+						fst = snd;
+						snd = fst->next;
+					}
+					fst = fst->next;
+					snd = snd->next;
+
+					// Here we go again
+					if (snd == this->_tail && swapped)
+					{
+						fst = this->_head;
+						snd = this->_head->next;
+					}
+				}
+			}
+
+			// Reverse
+			void				reverse(void) {
+
+				t_list		*fst = this->_head;
+				t_list		*snd = this->_head->next;
+				t_list		*tmp;
+
+				while (snd != this->_tail)
+				{
+					// link to neightbours
+					snd->prev = fst->prev;
+					fst->next = snd->next;
+
+					// link from neightbours
+					snd->next->prev = fst;
+					fst->prev->next = snd;
+
+					// re-link each-other
+					snd->next = fst;
+					fst->prev = snd;
+
+					// rename
+					fst = snd;
+					snd = fst->next;
+
+					// move fwd
+					fst = fst->next;
+					snd = snd->next;
+				}
+			}
 	};
+}
+// NON-MEMBER FUNCTION OVERLOADS
+// Relational operators
+template < typename T, typename A = std::allocator<T> >
+friend bool	operator==(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+
+}
+
+template < typename T, typename A = std::allocator<T> >
+friend bool	operator!=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+}
+	
+template < typename T, typename A = std::allocator<T> >
+friend bool	operator<(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+}
+
+template < typename T, typename A = std::allocator<T> >
+friend bool	operator<=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+}
+
+template < typename T, typename A = std::allocator<T> >
+friend bool	operator>(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
+}
+
+template < typename T, typename A = std::allocator<T> >
+friend bool	operator>=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 }
 
 #endif
