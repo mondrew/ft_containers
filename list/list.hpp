@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 23:02:21 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/26 00:46:47 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -334,7 +334,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					// #3 Parameterized constructor
 					iterator(list<T, A> const &src) {
 
-						this->_node = src._head; // not getHead() !!! change in vector !!!!!!!!!!!!!!
+						this->_node = src._head;
 						this->_head = src._head;
 
 						return ;
@@ -1090,14 +1090,14 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				return (iterator(this->_head, this->_head));
 			}
 
-			const_iterator 		cbegin(void) const {
-
-				return (const_iterator(this->_head, this->_head));
-			}
-
 			iterator			end(void) {
 
 				return (iterator(this->_tail, this->_head));
+			}
+
+			const_iterator 		cbegin(void) const {
+
+				return (const_iterator(this->_head, this->_head));
 			}
 
 			const_iterator		cend(void) const {
@@ -1110,15 +1110,15 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				return (iterator(this->_tail->prev, this->_head));
 			}
 
-			//const_reverse_iterator	rbegin(void) const {
-			//}
-
 			reverse_iterator	rend(void) {
 
 				return (iterator(this->_head->prev, this->_head));
 			}
 
-			//const_reverse_iterator	rend(void) const {
+			//const_reverse_iterator	crbegin(void) const {
+			//}
+
+			//const_reverse_iterator	crend(void) const {
 			//}
 
 			// CAPACITY
