@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 02:31:20 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 19:36:10 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 					return ;
 				}
 				if (&(*last) < &(*first))
-					throw (std::bad_alloc{});
+					throw (std::bad_alloc());
 
 				size_t	n = static_cast<size_t>(&(*last) - &(*first));
 
@@ -242,7 +242,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 
 				size_t	i = 0;
 
-				if (rhs.getArray() == 0 || rhs.size() == 0)
+				if (rhs._array == 0 || rhs.size() == 0)
 				{
 					this->_array = 0;
 					this->_size = 0;
@@ -256,7 +256,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 
 				while (i < this->_size)
 				{
-					this->_array[i] = rhs.getArray()[i];
+					this->_array[i] = rhs._array[i];
 					i++;
 				}
 
@@ -284,8 +284,8 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 					// #3 parameterized constructor
 					iterator(vector<T, A> const &src) {
 
-						this->_ptr = &src.getArray()[0];
-						this->_first = &src.getArray()[0];
+						this->_ptr = &src._array[0];
+						this->_first = &src._array[0];
 						this->_size = src.size();
 
 						return ;
@@ -445,8 +445,8 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 					// #3 parameterized constructor
 					reverse_iterator(vector<T, A> const &src) {
 
-						this->_ptr = &src.getArray()[src._size - 1];
-						this->_first = &src.getArray()[src._size - 1];
+						this->_ptr = &src._array[src._size - 1];
+						this->_first = &src._array[src._size - 1];
 						this->_size = src.size();
 
 						return ;
@@ -535,39 +535,27 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 					// Comparison operators
 					bool		operator==(reverse_iterator const &rhs) {
 
-						if (this->_ptr == rhs._ptr)
-							return (true);
-						return (false);
+						return (this->_ptr == rhs._ptr);
 					}
 					bool		operator!=(reverse_iterator const &rhs) {
 
-						if (this->_ptr != rhs._ptr)
-							return (true);
-						return (false);
+						return (this->_ptr != rhs._ptr);
 					}
 					bool		operator<(reverse_iterator const &rhs) {
 
-						if (this->_ptr < rhs._ptr)
-							return (true);
-						return (false);
+						return (this->_ptr > rhs._ptr);
 					}
 					bool		operator<=(reverse_iterator const &rhs) {
 
-						if (this->_ptr <= rhs._ptr)
-							return (true);
-						return (false);
+						return (this->_ptr >= rhs._ptr);
 					}
 					bool		operator>(reverse_iterator const &rhs) {
 
-						if (this->_ptr > rhs._ptr)
-							return (true);
-						return (false);
+						return (this->_ptr < rhs._ptr);
 					}
 					bool		operator>=(reverse_iterator const &rhs) {
 
-						if (this->_ptr >= rhs._ptr)
-							return (true);
-						return (false);
+						return (this->_ptr <= rhs._ptr);
 					}
 
 					// Dereference operator
@@ -628,7 +616,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 
 			void				resize( size_t n, T val = T() ) {
 
-				int		i = 0;
+				size_t		i = 0;
 
 				if (n == 0)
 					return ;
@@ -759,7 +747,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 				int		new_size = &(*last) - &(*first);
 
 				if (&(*last) < &(*first))
-					throw (std::bad_alloc{});
+					throw (std::bad_alloc());
 
 				if (new_size > this->_capacity)
 				{
@@ -796,7 +784,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 			// Assign fill
 			void				assign(size_t n, T const &val) {
 
-				int		i = 0;
+				size_t		i = 0;
 
 				if (n > this->_capacity)
 				{
@@ -946,6 +934,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 				int			k = 0;
 				iterator	it = this->begin();
 				iterator	ite = this->end();
+				n = static_cast<int>(n);
 
 				if (position < it || position > ite) // not original behaviour
 					throw (std::out_of_range("Error: std::out_of_range"));
@@ -1121,10 +1110,12 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 				iterator	it = this->begin();
 				iterator	ite = this->end();
 
-				if (position < it || position > ite) // not original behaviour
+				if (position == ite)
+					throw (std::out_of_range("Error: std::out_of_range"));
+				if (position < it || position > ite)
 					throw (std::out_of_range("Error: std::out_of_range"));
 
-				while (i < this->_size && it != position)
+				while (it != position)
 				{
 					i++;
 					it++;
@@ -1136,7 +1127,6 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 					this->_array[i] = this->_array[i + 1];
 					i++;
 				}
-				this->_array[i].~T();
 
 				this->_size--;
 
@@ -1221,6 +1211,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 				this->_size = 0;
 			}
 
+			/*
 			// Getters
 			T			*getArray(void) const {
 
@@ -1242,6 +1233,7 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 
 				this->_capacity = capacity;
 			}
+			*/
 	};
 }
 

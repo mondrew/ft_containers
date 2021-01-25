@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 11:40:18 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 02:21:37 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 13:53:20 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	ft_test1(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>>>>>> [ Default constructor test ] <<<<<<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
+
 	ft::vector<int>				v0;
 
 	std::cout << "Empty vector size: " << v0.size() << std::endl;
@@ -49,7 +50,7 @@ void	ft_test2(void)
 
 void	ft_test3(void)
 {
-	// Range constructor + reverse_iterator + rbegin() + rend()
+	// Range constructor
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>>>>>>>>>> [ Range constructor ] <<<<<<<<<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
@@ -62,7 +63,7 @@ void	ft_test3(void)
 
 	ft::vector<int>::iterator	it2 = v2.begin();
 
-	ft::vector<int>				v3(it2, it2 + 3); // why are they equal?
+	ft::vector<int>				v3(it2, it2 + 3);
 	ft::vector<int>::iterator	it3 = v3.begin();
 	ft::vector<int>::iterator	ite3 = v3.end();
 
@@ -818,7 +819,7 @@ void	ft_test15(void)
 	std::cout << "Erase element at the last position";
 	std::cout << "\033[0m\t\t" << std::endl;
 
-	v0.erase(ite);
+	v0.erase(ite - 1);
 
 	it = v0.begin();
 	ite = v0.end();
