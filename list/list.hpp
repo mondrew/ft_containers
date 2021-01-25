@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 18:59:55 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 23:02:21 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 # include <memory>
 # include <cmath>
+# include <iostream>
 
 namespace ft
 {
@@ -182,7 +183,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 
 				this->_head = new t_list;
 
-				this->_head->val = 0;
+				this->_head->val = T();
 				this->_head->prev = this->_head;
 				this->_head->next = this->_head;
 
@@ -199,7 +200,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 
 				// Create null-element
 				this->_head = new t_list;
-				this->_head->val = 0;
+				this->_head->val = T();
 				this->_head->prev = this->_head;
 				this->_head->next = this->_head;
 				this->_tail = this->_head;
@@ -224,13 +225,13 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 			}
 
 			// #3 Range constructor
-			list(iterator first, iterator last) {
+			list<T, A>(list<T, A>::iterator first, list<T, A>::iterator last){
 
 				t_list	*tmp;
 
 				// Create null-element
 				this->_head = new t_list;
-				this->_head->val = 0;
+				this->_head->val = T();
 				this->_head->prev = this->_head;
 				this->_head->next = this->_head;
 				this->_tail = this->_head;
@@ -239,43 +240,37 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				if (first == last)
 					return ;
 
+
 				// Create other elements if any
 				while (first != last)
 				{
-					tmp = new t_list;
-					tmp->val = *first;
-					tmp->prev = this->_tail;
-					tmp->next = this->_head;
-
-					this->_tail->next = tmp;
-					this->_head->prev = tmp;
-
-					this->_head = tmp;
-					this->_size++;
+					this->push_back(*first);
 					first++;
 				}
 				return ;
 			}
 
 			// #4 Copy constructor
-			list(list const &src) {
+			list<T, A>(list<T, A> const &src) {
 
 				*this = src;
 				return ;
 			}
 
 			// DESTRUCTOR
-			~list(void) {
+			~list<T, A>(void) {
 
 				t_list	*tmp;
 
 				while (this->_head != this->_tail)
 				{
 					tmp = this->_head->next;
+					this->_head->val.~T();
 					delete this->_head;
 					this->_head = 0;
 					this->_head = tmp;
 				}
+				this->_tail->val.~T();
 				delete this->_tail;
 				this->_tail = 0;
 				this->_size = 0;
@@ -283,14 +278,14 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 			}
 
 			// Assignment operation overload
-			list<T, A>		operator=(list<T, A> const &rhs) {
+			list<T, A>		&operator=(list<T, A> const &rhs) {
 
-				t_list	*tmp;
-				t_list	*from = rhs._head;
+				t_list			*tmp;
+				t_list			*from = rhs._head;
 
 				// Create null-element
 				this->_head = new t_list;
-				this->_head->val = 0;
+				this->_head->val = T();
 				this->_head->prev = this->_head;
 				this->_head->next = this->_head;
 				this->_tail = this->_head;
@@ -304,11 +299,14 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				{
 					tmp = new t_list;
 					tmp->val = from->val;
-					tmp->prev = this->_tail;
-					tmp->next = this->_head;
+					tmp->prev = this->_tail->prev;
+					tmp->next = this->_tail;
 
-					this->_tail->next = tmp;
-					this->_head->prev = tmp;
+					this->_tail->prev->next = tmp;
+					this->_tail->prev = tmp;
+
+					if (this->_size == 0)
+						this->_head = tmp;
 
 					this->_size++;
 					from = from->next;
@@ -397,25 +395,23 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					// Addiction operator
 					iterator	operator+(std::size_t n) {
 
-						int			i = 0;
 						iterator	tmp(*this);
 
-						while (i < n)
+						while (n)
 						{
-							tmp->_node = tmp->_node->next;
-							i++;
+							//tmp._node = tmp._node->next;
+							tmp++;
+							n--;
 						}
 						return (tmp);
 					}
 
 					iterator	&operator+=(std::size_t n) {
 
-						int		i = 0;
-
-						while (i < n)
+						while (n)
 						{
 							this->_node = this->_node->next;
-							i++;
+							n--;
 						}
 						return (*this);
 					}
@@ -423,25 +419,22 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					// Substruction operator
 					iterator	operator-(std::size_t n) {
 
-						int			i = 0;
 						iterator	tmp(*this);
 
-						while (i < n)
+						while (n)
 						{
-							tmp->_node = tmp->_node->prev;
-							i++;
+							tmp._node = tmp._node->prev;
+							n--;
 						}
 						return (tmp);
 					}
 
 					iterator	&operator-=(std::size_t n) {
 
-						int			i = 0;
-
-						while (i < n)
+						while (n)
 						{
 							this->_node = this->_node->prev;
-							i++;
+							n--;
 						}
 						return (*this);
 					}
@@ -575,6 +568,262 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					}
 					*/
 			};
+
+			// Const iterator
+			class const_iterator {
+
+				private:
+
+					t_list		*_node;
+					t_list		*_head;
+
+				public:
+
+					// CONSTRUCTORS
+					// #1 default constructor
+					const_iterator(void) : _node(0), _head(0) { return ; }
+					// #2 param constructor (for iterator init: begin, end, etc)
+					const_iterator(t_list *node, t_list *head) :
+										_node(node), _head(head) { return ; }
+					// #3 Parameterized constructor
+					const_iterator(list<T, A> const &src) {
+
+						this->_node = src._head; // not getHead() !!! change in vector !!!!!!!!!!!!!!
+						this->_head = src._head;
+
+						return ;
+					}
+
+					// #4 Copy constructor
+					const_iterator(iterator const &src) {
+
+						*this = src;
+					}
+
+					// DESTRUCTOR
+					~const_iterator(void) { return ; }
+
+					const_iterator const	&operator=(const_iterator const &rhs) {
+
+						this->_node = rhs._node;
+						this->_head = rhs._head;
+
+						return (*this);
+					}
+
+					// Increment prefix
+					const_iterator const	&operator++(void) {
+
+						this->_node = this->_node->next;
+
+						return (*this);
+					}
+
+					// Increment postfix
+					const_iterator		operator++(int) {
+
+						const_iterator	tmp(*this);
+
+						this->_node = this->_node->next;
+
+						return (tmp);
+					}
+
+					// Decrement prefix
+					const_iterator const	&operator--(void) {
+
+						this->_node = this->_node->prev;
+
+						return (*this);
+					}
+
+					// Decrement postfix
+					const_iterator		operator--(int) {
+
+						const_iterator	tmp(*this);
+
+						this->_node = this->_node->prev;
+						return (tmp);
+					}
+
+					// Addiction operator
+					const_iterator		operator+(std::size_t n) {
+
+						const_iterator	tmp(*this);
+
+						while (n)
+						{
+							//tmp._node = tmp._node->next;
+							tmp++;
+							n--;
+						}
+						return (tmp);
+					}
+
+					const_iterator const	&operator+=(std::size_t n) {
+
+						while (n)
+						{
+							this->_node = this->_node->next;
+							n--;
+						}
+						return (*this);
+					}
+
+					// Substruction operator
+					const_iterator		operator-(std::size_t n) {
+
+						const_iterator	tmp(*this);
+
+						while (n)
+						{
+							tmp._node = tmp._node->prev;
+							n--;
+						}
+						return (tmp);
+					}
+
+					const_iterator const	&operator-=(std::size_t n) {
+
+						while (n)
+						{
+							this->_node = this->_node->prev;
+							n--;
+						}
+						return (*this);
+					}
+
+					// Comparison operators
+					bool			operator==(const_iterator const &rhs) {
+
+						return (this->_node == rhs._node);
+					}
+
+					bool			operator!=(const_iterator const &rhs) {
+
+						return (this->_node != rhs._node);
+					}
+
+					bool			operator<(const_iterator const &rhs) {
+
+						t_list		*tmp = this->_head;
+						int			cur = 0;
+						int			rhside = 0;
+
+						// this position
+						while (tmp != this->_node)
+						{
+							tmp = tmp->next;
+							cur++;
+						}
+
+						// rhs position
+						tmp = rhs._head;
+						while (tmp != rhs._node)
+						{
+							tmp = tmp->next;
+							rhside++;
+						}
+						return (cur < rhside);
+					}
+
+					bool			operator<=(const_iterator const &rhs) {
+
+						t_list		*tmp = this->_head;
+						int			cur = 0;
+						int			rhside = 0;
+
+						// this position
+						while (tmp != this->_node)
+						{
+							tmp = tmp->next;
+							cur++;
+						}
+
+						// rhs position
+						tmp = rhs._head;
+						while (tmp != rhs._node)
+						{
+							tmp = tmp->next;
+							rhside++;
+						}
+						return (cur <= rhside);
+					}
+
+					bool			operator>(const_iterator const &rhs) {
+
+						t_list		*tmp = this->_head;
+						int			cur = 0;
+						int			rhside = 0;
+
+						// this position
+						while (tmp != this->_node)
+						{
+							tmp = tmp->next;
+							cur++;
+						}
+
+						// rhs position
+						tmp = rhs._head;
+						while (tmp != rhs._node)
+						{
+							tmp = tmp->next;
+							rhside++;
+						}
+						return (cur > rhside);
+					}
+
+					bool			operator>=(const_iterator const &rhs) {
+
+						t_list		*tmp = this->_head;
+						int			cur = 0;
+						int			rhside = 0;
+
+						// this position
+						while (tmp != this->_node)
+						{
+							tmp = tmp->next;
+							cur++;
+						}
+
+						// rhs position
+						tmp = rhs._head;
+						while (tmp != rhs._node)
+						{
+							tmp = tmp->next;
+							rhside++;
+						}
+						return (cur >= rhside);
+					}
+
+					// Dereference operator
+					T 				&operator*(void) {
+
+						return (this->_node->val);
+					}
+
+					/*
+					T			&operator*++(void) {
+
+						iterator	*tmp(*this);
+
+						this->_node = this->_node->next;
+
+						return (tmp->val);
+					}
+
+					T			&operator*--(void) {
+
+						iterator	*tmp(*this);
+
+						this->_node = this->_node->prev;
+
+						return (tmp->val);
+					}
+					*/
+			};
+
+
 
 			// Reverse iterator
 			class reverse_iterator {
@@ -841,16 +1090,20 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				return (iterator(this->_head, this->_head));
 			}
 
-			//const_iterator 	begin(void) const {
-			//}
+			const_iterator 		cbegin(void) const {
+
+				return (const_iterator(this->_head, this->_head));
+			}
 
 			iterator			end(void) {
 
 				return (iterator(this->_tail, this->_head));
 			}
 
-			//const_iterator			end(void) {
-			//}
+			const_iterator		cend(void) const {
+
+				return (const_iterator(this->_tail, this->_head));
+			}
 
 			reverse_iterator	rbegin(void) {
 
@@ -865,7 +1118,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				return (iterator(this->_head->prev, this->_head));
 			}
 
-			//const_reverse_iterator	rend(void) {
+			//const_reverse_iterator	rend(void) const {
 			//}
 
 			// CAPACITY
@@ -915,6 +1168,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				while (this->_head->next)
 				{
 					tmp = this->_head->next;
+					this->_head->val.~T();
 					delete this->_head;
 					this->_head = 0;
 					this->_head = tmp;
@@ -951,6 +1205,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				while (this->_head->next)
 				{
 					tmp = this->_head->next;
+					this->_head->val.~T();
 					delete this->_head;
 					this->_head = 0;
 					this->_head = tmp;
@@ -998,6 +1253,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				if (this->_size == 0)
 					return ;
 
+				this->_head->val.~T();
 				delete this->_head;
 				this->_head = tmp;
 				this->_size--;
@@ -1014,9 +1270,11 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				tmp->val = val;
 				tmp->prev = this->_tail->prev;
 				tmp->next = this->_tail;
+				this->_tail->prev->next = tmp;
 				this->_tail->prev = tmp;
-				this->_tail->_prev->next = tmp;
 
+				if (this->_size == 0)
+					this->_head = tmp;
 				this->_size++;
 				return ;
 			}
@@ -1028,6 +1286,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				if (this->_size == 0)
 					return ;
 
+				this->_tail->prev->val.~T();
 				delete this->_tail->prev;
 				this->_size--;
 
@@ -1122,6 +1381,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				tmp->prev = position._node;
 				position._node->prev = tmp->prev;
 
+				tmp->val.~T();
 				delete tmp;
 
 				this->_size--;
@@ -1142,6 +1402,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 			   		tmp = first._node;
 					first._node->prev->next = first._node->next;
 					first._node->next->prev = first._node->prev;
+					tmp->val.~T();
 					delete tmp;
 					this->_size--;
 
@@ -1200,6 +1461,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					this->pop_back();
 					this->_size--;
 				}
+				this->_head->val.~T();
 				delete this->_head;
 				this->_head = 0;
 				this->_tail = 0;
@@ -1288,6 +1550,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					{
 						tmp->prev->next = tmp->next;
 						tmp->next->prev = tmp->prev;
+						tmp->val.~T();
 						delete tmp;
 						this->_size--;
 					}
@@ -1311,6 +1574,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 						it++;
 						tmp->prev->next = tmp->next;
 						tmp->next->prev = tmp->prev;
+						tmp->val.~T();
 						delete tmp;
 						this->_size--;
 					}
@@ -1331,6 +1595,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					{
 						fst->next = snd->next;
 						snd->next->prev = fst;
+						snd->val.~T();
 						delete snd;
 						this->_size--;
 					}

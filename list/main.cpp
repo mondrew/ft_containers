@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:58:32 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/25 18:59:49 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/25 23:03:00 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ void	ft_test4(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>>>> [ Copy constructor test (floats) ] <<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
+
 	ft::list<float>				vf0(10, 42.021f);
 	ft::list<float>				vf1(vf0);
+
 	ft::list<float>::iterator	it4 = vf1.begin();
 	ft::list<float>::iterator	ite4 = vf1.end();
 
@@ -99,7 +101,7 @@ void	ft_test5(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>> [ Assignment operation test (chars) ] <<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<char>				vc0 = ft::vector<char>(5, 'S');
+	ft::list<char>				vc0 = ft::list<char>(5, 'S');
 	ft::list<char>::iterator	it5 = vc0.begin();
 	ft::list<char>::iterator	ite5 = vc0.end();
 
