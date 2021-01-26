@@ -6,13 +6,15 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:58:32 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/26 23:21:11 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 00:57:14 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "list.hpp"
 #include <list>
 #include <iostream>
+
+// DO IT (see test21)
 
 void	ft_test1(void)
 {
@@ -1113,6 +1115,8 @@ void	ft_test19(void)
 		it1++;
 	}
 	std::cout << std::endl;
+
+	std::cout << std::endl;
 }
 
 void	ft_test20(void)
@@ -1261,7 +1265,108 @@ void	ft_test20(void)
 	for (it = mylist2.begin(); it != mylist2.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << std::endl;
+
+	std::cout << std::endl;
 }
+
+void	ft_test21(void)
+{
+	// Remove
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Remove functions test ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	//int				myints[] = {17, 89, 7, 14};
+	//ft::list<int>	mylist(myints, myints + 4); // DO IT
+	ft::list<int>	mylist;
+
+	mylist.push_back(17);
+	mylist.push_back(89);
+	mylist.push_back(7);
+	mylist.push_back(14);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial list:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+
+	mylist.remove(89);
+
+	std::cout << "\x1b[33m";
+	std::cout << "List after removing element '89':";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+}
+
+// a predicate implemented as a function:
+bool single_digit (const int &value) { return (value < 10); }
+
+// a predicate implemented as a class:
+struct is_odd {
+bool operator() (const int &value) { return (value % 2) == 1; }
+};
+
+void	ft_test22(void)
+{
+	// Remove_if
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Remove_if functions test ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	//int myints[]= {15,36,7,17,20,39,4,1};
+	//std::list<int> mylist (myints,myints+8);   // 15 36 7 17 20 39 4 1
+	ft::list<int>	mylist;
+
+	mylist.push_back(15);
+	mylist.push_back(36);
+	mylist.push_back(7);
+	mylist.push_back(17);
+	mylist.push_back(20);
+	mylist.push_back(39);
+	mylist.push_back(4);
+	mylist.push_back(1);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial list";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+
+	mylist.remove_if(single_digit);           // 15 36 17 20 39
+
+	mylist.remove_if(is_odd());               // 36 20
+
+	std::cout << "\x1b[33m";
+	std::cout << "mylist contains:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout <<std::endl;
+
+	std::cout <<std::endl;
+}
+
+void	ft_test23(void)
+{
+	// Remove_if
+	std::cout << "---------------------------------" << std::endl;
+	int				myints[]= {15,36,7,17,20,39,4,1};
+	ft::list<int>	mylist(myints, myints + 8);   // 15 36 7 17 20 39 4 1
+
+	for (ft::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+}
+
 
 int		main(void)
 {
@@ -1325,11 +1430,25 @@ int		main(void)
 	// Operations
 	// Splice
 	ft_test20();
-	// Remove, remove_if
-	// Unique
-	// Merge
-	// Sort
-	// Reverse
 
+	// Remove
+	ft_test21();
+
+	// Remove if
+	ft_test22();
+
+	// Unique
+	ft_test23();
+
+	/*
+	// Merge
+	ft_test24();
+
+	// Sort
+	ft_test25();
+
+	// Reverse
+	ft_test26();
+	*/
 	return (0);
 }

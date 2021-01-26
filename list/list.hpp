@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/26 23:20:21 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 00:55:32 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 			}
 
 			// #3 Range constructor
-			list<T, A>(list<T, A>::iterator first, list<T, A>::iterator last){
+			list<T, A>(list<T, A>::iterator first, list<T, A>::iterator last) {
 
 				t_list	*tmp;
 
@@ -240,6 +240,31 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				if (first == last)
 					return ;
 
+
+				// Create other elements if any
+				while (first != last)
+				{
+					this->push_back(*first);
+					first++;
+				}
+				return ;
+			}
+
+			// #3.1 Range constructor (type pointers)
+			list<T, A>(T *first, T *last) {
+
+				t_list	*tmp;
+
+				// Create null-element
+				this->_head = new t_list;
+				this->_head->val = T();
+				this->_head->prev = this->_head;
+				this->_head->next = this->_head;
+				this->_tail = this->_head;
+				this->_size = 0;
+
+				if (first == last)
+					return ;
 
 				// Create other elements if any
 				while (first != last)
@@ -1549,6 +1574,9 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 						tmp->next->prev = tmp->prev;
 						tmp->val.~T();
 						delete tmp;
+
+						this->_head = this->_tail->next;
+
 						this->_size--;
 					}
 					tmp = tmp2;
@@ -1567,12 +1595,15 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				{
 					if (pred(*it))
 					{
-						tmp = it._node;
+						tmp = it.getNode();
 						it++;
 						tmp->prev->next = tmp->next;
 						tmp->next->prev = tmp->prev;
 						tmp->val.~T();
 						delete tmp;
+
+						this->_head = this->_tail->next;
+
 						this->_size--;
 					}
 					else
@@ -1594,6 +1625,9 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 						snd->next->prev = fst;
 						snd->val.~T();
 						delete snd;
+
+						this->_head = this->_tail->next;
+
 						this->_size--;
 					}
 					else

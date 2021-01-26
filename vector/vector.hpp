@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/26 19:13:20 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 01:01:16 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1015,6 +1015,97 @@ friend void	swap(ft::vector<T, A> &x, ft::vector<T, A> &y) {
 			// Insert #3 range
 			void			insert(iterator position, iterator first, \
 																iterator last) {
+
+				int			i = 0;
+				int			j = 0;
+				int			k = 0;
+				int			n = &(*last) - &(*first);
+				iterator	it = this->begin();
+				iterator	ite = this->end();
+
+				if (position < it || position > ite || n < 0) // == ???
+					throw (std::out_of_range("Error: std::out_of_range"));
+
+				if (this->_size + n > this->_capacity)
+				{
+					T	*big = new T[this->_size + n];
+
+					while (i < this->_size)
+					{
+						if (it != position)
+						{
+							big[j] = this->_array[i];
+							i++;
+							j++;
+						}
+						else
+						{
+							while (k < n)
+							{
+								big[j] = *first;
+								k++;
+								j++;
+								first++;
+							}
+						}
+						it++;
+					}
+					if (position == ite) // double protection
+					{
+						while (k < n)
+						{
+							big[j] = *first;
+							k++;
+							j++;
+							first++;
+						}
+					}
+
+					if (this->_array)
+						delete [] this->_array;
+					this->_array = big;
+					this->_size += n;
+					this->_capacity = this->_size;
+				}
+				else
+				{
+					i = this->_size + n - 1;
+					j = this->_size - 1;
+					while (j >= 0)
+					{
+						if (ite != position)
+							this->_array[i] = this->_array[j];
+						else
+						{
+							while (k < n)
+							{
+								this->_array[i] = *(last - 1);
+								i--;
+								k++;
+								last--;
+							}
+						}
+						i--;
+						j--;
+						ite--;
+					}
+					if (position == it)
+					{
+						while (k < n)
+						{
+							this->_array[i] = *(last - 1);
+							i--;
+							k++;
+							last--;
+						}
+					}
+					this->_size += n;
+				}
+			}
+
+			// Insert #3 range
+			void			insert(iterator position, T *first, \
+																T *last) {
 
 				int			i = 0;
 				int			j = 0;

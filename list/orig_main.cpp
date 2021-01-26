@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:58:32 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/26 20:35:02 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 00:53:10 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1113,16 +1113,19 @@ void	ft_test19(void)
 		it1++;
 	}
 	std::cout << std::endl;
+
+	std::cout << std::endl;
 }
 
 void	ft_test20(void)
 {
 	// Splice
 	std::cout << "\x1B[91m";
-	std::cout << ">>>>>>>>> [ Splice ] <<<<<<<<<";
+	std::cout << ">>>>>>>>> [ Splice functions test ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
 	std::list<int>				mylist1, mylist2;
-	std::list<int>::iterator	it;
+	std::list<int>::iterator		it;
+	std::list<int>::iterator		tmp;
 
 	// Set some initial values
 	for (int i = 1; i <= 4; ++i) 	// mylist1: 1 2 3 4
@@ -1131,21 +1134,123 @@ void	ft_test20(void)
 	for (int i = 1; i <= 3; ++i)
 		mylist2.push_back(i * 10);	// mylist2: 10 20 30
 
+	// Print initial lists
+	std::cout << "\x1b[33m";
+	std::cout << "Initial mylist1 list: ";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	it = mylist1.begin();
+	while (it != mylist1.end())
+	{
+		std::cout << *it << ' ';
+		it++;
+	}
+	std::cout << std::endl;
+	std::cout << "mylist1 size: " << mylist1.size() << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial mylist2 list: ";
+	std::cout << "\033[0m\t\t" << std::endl;
+	it = mylist2.begin();
+	while (it != mylist2.end())
+	{
+		std::cout << *it << ' ';
+		it++;
+	}
+	std::cout << std::endl;
+	std::cout << "mylist2 size: " << mylist2.size() << std::endl;
+
 	it = mylist1.begin();
 	++it;							// points to 2
 
-	mylist.splice(it, mylist2);		// mylist1: 1 10 20 30 2 3 4
+
+	std::cout << "\x1b[32m";
+	std::cout << "SPLICE (entire list) mylist2 to mylist1 at the 1st position:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	mylist1.splice(it, mylist2);	// mylist1: 1 10 20 30 2 3 4
 									// mylist2 (empty)
 									// 'it' still points to 2 (the 5th element)
+	// Print lists after splicing
+	std::cout << "\x1b[33m";
+	std::cout << "'it' still points to: ";
+	std::cout << "\033[0m\t\t" << std::endl;
+	std::cout << *it << std::endl;
+
+	tmp = it; // Save it
+	std::cout << "\x1b[33m";
+	std::cout << "mylist1 after splicing mylist2 to it at 1st position:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	it = mylist1.begin();
+	while (it != mylist1.end())
+	{
+		std::cout << *it << ' ';
+		it++;
+	}
+	std::cout << std::endl;
+	std::cout << "mylist1 size: " << mylist1.size() << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "mylist2 after being spliced to mylist1 at 1st position:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	it = mylist2.begin();
+	while (it != mylist2.end())
+	{
+		std::cout << *it << ' ';
+		it++;
+	}
+	std::cout << std::endl;
+	std::cout << "mylist2 size: " << mylist2.size() << std::endl;
+
+	it = tmp; // Recover it
+
+	std::cout << "\x1b[32m";
+	std::cout << "SPLICE (single) mylist2 to mylist1 at the 1st position:";
+	std::cout << "\033[0m\t\t" << std::endl;
 	mylist2.splice(mylist2.begin(), mylist1, it);
 									// mylist1: 1 10 20 30 3 4
 									// mylist2: 2
 									// 'it' is now invalid.
+	// Print lists after splicing
+	std::cout << "\x1b[33m";
+	std::cout << "'it' is invalid now"; // TEST in ORIGINAL!!!
+	std::cout << "\033[0m\t\t" << std::endl;
+	std::cout << *it << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "mylist1 after splicing";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	it = mylist1.begin();
+	while (it != mylist1.end())
+	{
+		std::cout << *it << ' ';
+		it++;
+	}
+	std::cout << std::endl;
+	std::cout << "mylist1 size: " << mylist1.size() << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "mylist2 after splicing";
+	std::cout << "\033[0m\t\t" << std::endl;
+	it = mylist2.begin();
+	while (it != mylist2.end())
+	{
+		std::cout << *it << ' ';
+		it++;
+	}
+	std::cout << std::endl;
+	std::cout << "mylist2 size: " << mylist2.size() << std::endl;
+
 	it = mylist1.begin();
 	it++;
 	it++;
 	it++;							// 'it' points now to 30
+	std::cout << "IT: " << *it << std::endl; // test
 
+	std::cout << "\x1b[32m";
+	std::cout << "SPLICE (elem range) mylist1 3 last elements to the begining:";
+	std::cout << "\033[0m\t\t" << std::endl;
 	mylist1.splice(mylist1.begin(), mylist1, it, mylist1.end());
 									// mylist1: 30 3 4 1 10 20
 	
@@ -1158,6 +1263,95 @@ void	ft_test20(void)
 	for (it = mylist2.begin(); it != mylist2.end(); ++it)
 		std::cout << ' ' << *it;
 	std::cout << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test21(void)
+{
+	// Remove
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Remove functions test ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	//int				myints[] = {17, 89, 7, 14};
+	//std::list<int>	mylist(myints, myints + 4);
+
+	std::list<int>	mylist;
+
+	mylist.push_back(17);
+	mylist.push_back(89);
+	mylist.push_back(7);
+	mylist.push_back(14);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial list";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+
+	mylist.remove(89);
+
+	std::cout << "\x1b[33m";
+	std::cout << "List after removing element '89':";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+}
+
+// a predicate implemented as a function:
+bool single_digit (const int &value) { return (value < 10); }
+
+// a predicate implemented as a class:
+struct is_odd {
+bool operator() (const int &value) { return (value % 2) == 1; }
+};
+
+void	ft_test22(void)
+{
+	// Remove_if
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Remove_if functions test ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	//int myints[]= {15,36,7,17,20,39,4,1};
+	//std::list<int> mylist (myints,myints+8);   // 15 36 7 17 20 39 4 1
+	std::list<int>	mylist;
+
+	mylist.push_back(15);
+	mylist.push_back(36);
+	mylist.push_back(7);
+	mylist.push_back(17);
+	mylist.push_back(20);
+	mylist.push_back(39);
+	mylist.push_back(4);
+	mylist.push_back(1);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial list";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+
+	mylist.remove_if(single_digit);           // 15 36 17 20 39
+
+	mylist.remove_if(is_odd());               // 36 20
+
+	std::cout << "\x1b[33m";
+	std::cout << "mylist contains:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout <<std::endl;
+
+	std::cout <<std::endl;
 }
 
 int		main(void)
@@ -1220,13 +1414,28 @@ int		main(void)
 	ft_test19();
 
 	// Operations
-	ft_test20();
 	// Splice
-	// Remove, remove_if
+	ft_test20();
+
+	// Remove
+	ft_test21();
+
+	// Remove if
+	ft_test22();
+
 	// Unique
+	ft_test23();
+
+	/*
 	// Merge
+	ft_test24();
+
 	// Sort
+	ft_test25();
+
 	// Reverse
+	ft_test26();
+	*/
 
 	return (0);
 }
