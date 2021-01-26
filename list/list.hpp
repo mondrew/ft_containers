@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/27 00:55:32 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 01:40:05 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1647,8 +1647,10 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				it++;
 				while (it != ite)
 				{
-					tmp = it + 1;
-					if (binary_pred(*it, *(it - 1)))
+					tmp = ++it;
+					it--;
+					// if (binary_pred(*it, *(it - 1)))
+					if (binary_pred(*it, it.getNode()->prev->val))
 						erase(it);
 					it = tmp;
 				}

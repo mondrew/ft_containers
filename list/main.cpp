@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:58:32 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/27 00:57:14 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 01:39:03 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1346,24 +1346,63 @@ void	ft_test22(void)
 	mylist.remove_if(is_odd());               // 36 20
 
 	std::cout << "\x1b[33m";
-	std::cout << "mylist contains:";
+	std::cout << "List after remove_if:";
 	std::cout << "\033[0m\t\t" << std::endl;
 	for (ft::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
 		std::cout << *it << ' ';
-	std::cout <<std::endl;
+	std::cout << std::endl;
 
-	std::cout <<std::endl;
+	std::cout << std::endl;
 }
+
+// a binary predicate implemented as a function:
+bool	same_integral_part(double first, double second)
+{ return (int(first) == int(second)); }
+
+// a binary predicate implemented as a class:
+struct is_near {
+	bool	operator() (double first, double second)
+	{ return (fabs(first - second) < 5.0); }
+};
+
 
 void	ft_test23(void)
 {
-	// Remove_if
-	std::cout << "---------------------------------" << std::endl;
-	int				myints[]= {15,36,7,17,20,39,4,1};
-	ft::list<int>	mylist(myints, myints + 8);   // 15 36 7 17 20 39 4 1
+	// Unique
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Unique functions test ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
 
-	for (ft::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+	//double				mydoubles[] = {12.15, 2.72, 73.0, 12.77, 3.14, \
+	//									12.77, 73.35, 72.25, 15.3, 72.25};
+	double				mydoubles[] = {2.72, 3.14, 12.15, 12.77, 12.77,
+										15.3, 72.25, 72.25, 73.0, 73.35};
+	ft::list<double>	mylist(mydoubles, mydoubles + 10);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial list";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<double>::iterator it = mylist.begin(); it != mylist.end(); ++it)
 		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+	    
+	//mylist.sort();			// 2.72, 3.14, 12.15, 12.77, 12.77,
+							// 15.3, 72.25, 72.25, 73.0, 73.35
+	mylist.unique();		// 2.72, 3.14, 12.15, 12.77
+							// 15.3, 72.25, 73.0,  73.35
+	mylist.unique(same_integral_part);		// 2.72, 3.14, 12.15
+											// 15.3, 72.25, 73.0
+	mylist.unique(is_near());				// 2.72, 12.15, 72.25
+
+	std::cout << "\x1b[33m";
+	std::cout << "List after unique function:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<double>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
 	std::cout << std::endl;
 }
 
