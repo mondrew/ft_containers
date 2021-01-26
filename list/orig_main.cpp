@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:58:32 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/26 23:21:11 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/26 20:35:02 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_test1(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>>>>>> [ Default constructor test ] <<<<<<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>	v0;
+	std::list<int>	v0;
 
 	std::cout << "Empty list size: " << v0.size() << std::endl;
 	std::cout << std::endl;
@@ -32,9 +32,9 @@ void	ft_test2(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>>>>>>>>>> [ Fill constructor ] <<<<<<<<<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>				v1(5, 100);
-	ft::list<int>::iterator	it1 = v1.begin();
-	ft::list<int>::iterator	ite1 = v1.end();
+	std::list<int>				v1(5, 100);
+	std::list<int>::iterator	it1 = v1.begin();
+	std::list<int>::iterator	ite1 = v1.end();
 
 	while (it1 != ite1)
 	{
@@ -51,7 +51,7 @@ void	ft_test3(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>>>>>>>>>> [ Range constructor ] <<<<<<<<<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>				v2;
+	std::list<int>				v2;
 
 	v2.push_back(1);
 	v2.push_back(2);
@@ -59,15 +59,15 @@ void	ft_test3(void)
 	v2.push_back(4);
 	v2.push_back(5);
 
-	ft::list<int>::iterator		it2 = v2.begin();
-	ft::list<int>::iterator		it21 = it2;
+	std::list<int>::iterator		it2 = v2.begin();
+	std::list<int>::iterator		it21 = it2;
 	it21++;
 	it21++;
 	it21++;
 
-	ft::list<int>				v3(it2, it21);
-	ft::list<int>::iterator		it3 = v3.begin();
-	ft::list<int>::iterator		ite3 = v3.end();
+	std::list<int>				v3(it2, it21);
+	std::list<int>::iterator		it3 = v3.begin();
+	std::list<int>::iterator		ite3 = v3.end();
 
 	while (it3 != ite3)
 	{
@@ -85,11 +85,11 @@ void	ft_test4(void)
 	std::cout << ">>>>>>>>>>>>> [ Copy constructor test (floats) ] <<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
 
-	ft::list<float>				vf0(10, 42.021f);
-	ft::list<float>				vf1(vf0);
+	std::list<float>				vf0(10, 42.021f);
+	std::list<float>				vf1(vf0);
 
-	ft::list<float>::iterator	it4 = vf1.begin();
-	ft::list<float>::iterator	ite4 = vf1.end();
+	std::list<float>::iterator	it4 = vf1.begin();
+	std::list<float>::iterator	ite4 = vf1.end();
 
 	while (it4 != ite4)
 	{
@@ -106,9 +106,9 @@ void	ft_test5(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>> [ Assignment operation test (chars) ] <<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<char>				vc0 = ft::list<char>(5, 'S');
-	ft::list<char>::iterator	it5 = vc0.begin();
-	ft::list<char>::iterator	ite5 = vc0.end();
+	std::list<char>				vc0 = std::list<char>(5, 'S');
+	std::list<char>::iterator	it5 = vc0.begin();
+	std::list<char>::iterator	ite5 = vc0.end();
 
 	it5++;
 	it5--;
@@ -132,7 +132,7 @@ void	ft_test6(void)
 	std::cout << ">>>>>>>>>>>>>>>>> [ Iterators test (ints) ] <<<<<<<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
 
-	ft::list<int>				v2;
+	std::list<int>				v2;
 	v2.push_back(1);
 	v2.push_back(2);
 	v2.push_back(3);
@@ -142,8 +142,8 @@ void	ft_test6(void)
 	std::cout << "\x1B[33m";
 	std::cout << "List in direct order using classic iterator:";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>::iterator	it2 = v2.begin();
-	ft::list<int>::iterator	ite2 = v2.end();
+	std::list<int>::iterator	it2 = v2.begin();
+	std::list<int>::iterator	ite2 = v2.end();
 
 	while (it2 != ite2)
 	{
@@ -155,8 +155,8 @@ void	ft_test6(void)
 	std::cout << "\x1B[33m";
 	std::cout << "List in reverse order using reverse_iterator:";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>::reverse_iterator	rit2 = v2.rbegin();
-	ft::list<int>::reverse_iterator	rite2 = v2.rend();
+	std::list<int>::reverse_iterator	rit2 = v2.rbegin();
+	std::list<int>::reverse_iterator	rite2 = v2.rend();
 
 	while (rit2 != rite2)
 	{
@@ -221,7 +221,7 @@ void	ft_test7(void)
 	std::cout << ">>>>>>>> [ Capacity member-functions of list class] <<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
 
-	ft::list<std::string>		vs0;
+	std::list<std::string>		vs0;
 
 	vs0.push_back("May");
 	vs0.push_back("the");
@@ -230,8 +230,8 @@ void	ft_test7(void)
 	vs0.push_back("with");
 	vs0.push_back("you!");
 
-	ft::list<std::string>::iterator	it = vs0.begin();
-	ft::list<std::string>::iterator	ite = vs0.end();
+	std::list<std::string>::iterator	it = vs0.begin();
+	std::list<std::string>::iterator	ite = vs0.end();
 
 	std::cout << "\x1B[33m";
 	std::cout << "Initial list content:";
@@ -318,7 +318,7 @@ void	ft_test8(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>>>>>>>>>> [ Element access test ] <<<<<<<<<<<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<double>		vd0;
+	std::list<double>		vd0;
 
 	vd0.push_back(12.021);
 	vd0.push_back(42.0);
@@ -326,8 +326,8 @@ void	ft_test8(void)
 	vd0.push_back(2.1);
 	vd0.push_back(21.42);
 
-	ft::list<double>::iterator	it = vd0.begin();
-	ft::list<double>::iterator	ite = vd0.end();
+	std::list<double>::iterator	it = vd0.begin();
+	std::list<double>::iterator	ite = vd0.end();
 
 	while (it != ite)
 	{
@@ -351,7 +351,7 @@ void	ft_test9(void)
 	std::cout << ">>>>>>>>> [ Modifiers test: push_back & pop_back";
 	std::cout << " & push_front & pop_front ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
+	std::list<int>		v0;
 
 	std::cout << "\x1B[33m";
 	std::cout << "Using 'push_front' & 'push_back' member-functions:";
@@ -362,8 +362,8 @@ void	ft_test9(void)
 	v0.push_back(4);
 	v0.push_back(5);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
 	while (it != ite)
 	{
@@ -398,8 +398,8 @@ void	ft_test10(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: assign range ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
-	ft::list<int>		v1;
+	std::list<int>		v0;
+	std::list<int>		v1;
 
 	v0.push_back(1);
 	v0.push_back(2);
@@ -412,8 +412,8 @@ void	ft_test10(void)
 	v0.push_back(9);
 	v0.push_back(10);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
 	std::cout << "Initial array:" << std::endl;
 	while (it != ite)
@@ -429,7 +429,7 @@ void	ft_test10(void)
 	std::cout << "Using 'assign' range member-function:";
 	std::cout << "\033[0m\t\t" << std::endl;
 
-	ft::list<int>::iterator	it_tmp = it;
+	std::list<int>::iterator	it_tmp = it;
 	it_tmp++;
 	it_tmp++;
 	it_tmp++;
@@ -475,7 +475,7 @@ void	ft_test11(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: assign fill ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
+	std::list<int>		v0;
 
 	v0.push_back(1);
 	v0.push_back(2);
@@ -483,8 +483,8 @@ void	ft_test11(void)
 	v0.push_back(4);
 	v0.push_back(5);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
 	std::cout << "Initial array:" << std::endl;
 	while (it != ite)
@@ -537,7 +537,7 @@ void	ft_test12(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: insert (single) ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
+	std::list<int>		v0;
 
 	v0.push_back(1);
 	v0.push_back(2);
@@ -545,8 +545,8 @@ void	ft_test12(void)
 	v0.push_back(4);
 	v0.push_back(5);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
 	std::cout << "Initial array:" << std::endl;
 	while (it != ite)
@@ -586,7 +586,7 @@ void	ft_test13(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: insert (fill) ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
+	std::list<int>		v0;
 
 	v0.push_back(1);
 	v0.push_back(2);
@@ -599,8 +599,8 @@ void	ft_test13(void)
 	v0.push_back(9);
 	v0.push_back(10);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
 	std::cout << "Initial array:" << std::endl;
 	while (it != ite)
@@ -641,8 +641,8 @@ void	ft_test14(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: insert (range) ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
-	ft::list<int>		v1(10, 42);
+	std::list<int>		v0;
+	std::list<int>		v1(10, 42);
 
 	v0.push_back(1);
 	v0.push_back(2);
@@ -655,11 +655,11 @@ void	ft_test14(void)
 	v0.push_back(9);
 	v0.push_back(10);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
-	ft::list<int>::iterator	it1 = v1.begin();
-	ft::list<int>::iterator	ite1 = v1.end();
+	std::list<int>::iterator	it1 = v1.begin();
+	std::list<int>::iterator	ite1 = v1.end();
 
 	std::cout << "Initial array 1 (src):" << std::endl;
 	while (it != ite)
@@ -747,7 +747,7 @@ void	ft_test15(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: erase (single) ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
+	std::list<int>		v0;
 
 	v0.push_back(1);
 	v0.push_back(2);
@@ -760,8 +760,8 @@ void	ft_test15(void)
 	v0.push_back(9);
 	v0.push_back(10);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
 	std::cout << "Initial array:" << std::endl;
 	while (it != ite)
@@ -822,7 +822,7 @@ void	ft_test16(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: erase (range) ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
+	std::list<int>		v0;
 
 	v0.push_back(1);
 	v0.push_back(2);
@@ -835,8 +835,8 @@ void	ft_test16(void)
 	v0.push_back(9);
 	v0.push_back(10);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
 	std::cout << "Initial array:" << std::endl;
 	while (it != ite)
@@ -852,7 +852,7 @@ void	ft_test16(void)
 	std::cout << "\033[0m\t\t" << std::endl;
 
 	it++;
-	ft::list<int>::iterator	it1 = it;
+	std::list<int>::iterator	it1 = it;
 	it1++;
 	it1++;
 	it1++;
@@ -877,7 +877,7 @@ void	ft_test16(void)
 	it = v0.begin();
 
 	it++;
-	ft::list<int>::iterator	ret = v0.erase(it, it);
+	std::list<int>::iterator	ret = v0.erase(it, it);
 	std::cout << "ret: " << *ret << std::endl;
 
 	std::cout << std::endl;
@@ -889,8 +889,8 @@ void	ft_test17(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: swap ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0;
-	ft::list<int>		v1(11, 42);
+	std::list<int>		v0;
+	std::list<int>		v1(11, 42);
 
 	v0.push_back(1);
 	v0.push_back(2);
@@ -903,11 +903,11 @@ void	ft_test17(void)
 	v0.push_back(9);
 	v0.push_back(10);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
-	ft::list<int>::iterator	it1 = v1.begin();
-	ft::list<int>::iterator	ite1 = v1.end();
+	std::list<int>::iterator	it1 = v1.begin();
+	std::list<int>::iterator	ite1 = v1.end();
 
 	std::cout << "Initial array 1:" << std::endl;
 	while (it != ite)
@@ -970,10 +970,10 @@ void	ft_test18(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Modifiers test: clear ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v1(10, 42);
+	std::list<int>		v1(10, 42);
 
-	ft::list<int>::iterator	it1 = v1.begin();
-	ft::list<int>::iterator	ite1 = v1.end();
+	std::list<int>::iterator	it1 = v1.begin();
+	std::list<int>::iterator	ite1 = v1.end();
 
 	std::cout << "Initial array:" << std::endl;
 	while (it1 != ite1)
@@ -1014,15 +1014,15 @@ void	ft_test19(void)
 	std::cout << "\x1B[91m";
 	std::cout << ">>>>>>>>> [ Non-member functions ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>		v0(5, 21);
-	ft::list<int>		v1(10, 42);
-	ft::list<int>		v2(v1);
+	std::list<int>		v0(5, 21);
+	std::list<int>		v1(10, 42);
+	std::list<int>		v2(v1);
 
-	ft::list<int>::iterator	it = v0.begin();
-	ft::list<int>::iterator	ite = v0.end();
+	std::list<int>::iterator	it = v0.begin();
+	std::list<int>::iterator	ite = v0.end();
 
-	ft::list<int>::iterator	it1 = v1.begin();
-	ft::list<int>::iterator	ite1 = v1.end();
+	std::list<int>::iterator	it1 = v1.begin();
+	std::list<int>::iterator	ite1 = v1.end();
 
 	std::cout << "Initial array 1:" << std::endl;
 	while (it != ite)
@@ -1119,11 +1119,10 @@ void	ft_test20(void)
 {
 	// Splice
 	std::cout << "\x1B[91m";
-	std::cout << ">>>>>>>>> [ Splice functions test ] <<<<<<<<<";
+	std::cout << ">>>>>>>>> [ Splice ] <<<<<<<<<";
 	std::cout << "\033[0m\t\t" << std::endl;
-	ft::list<int>				mylist1, mylist2;
-	ft::list<int>::iterator		it;
-	ft::list<int>::iterator		tmp;
+	std::list<int>				mylist1, mylist2;
+	std::list<int>::iterator	it;
 
 	// Set some initial values
 	for (int i = 1; i <= 4; ++i) 	// mylist1: 1 2 3 4
@@ -1132,123 +1131,21 @@ void	ft_test20(void)
 	for (int i = 1; i <= 3; ++i)
 		mylist2.push_back(i * 10);	// mylist2: 10 20 30
 
-	// Print initial lists
-	std::cout << "\x1b[33m";
-	std::cout << "Initial mylist1 list: ";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	it = mylist1.begin();
-	while (it != mylist1.end())
-	{
-		std::cout << *it << ' ';
-		it++;
-	}
-	std::cout << std::endl;
-	std::cout << "mylist1 size: " << mylist1.size() << std::endl;
-
-	std::cout << "\x1b[33m";
-	std::cout << "Initial mylist2 list: ";
-	std::cout << "\033[0m\t\t" << std::endl;
-	it = mylist2.begin();
-	while (it != mylist2.end())
-	{
-		std::cout << *it << ' ';
-		it++;
-	}
-	std::cout << std::endl;
-	std::cout << "mylist2 size: " << mylist2.size() << std::endl;
-
 	it = mylist1.begin();
 	++it;							// points to 2
 
-
-	std::cout << "\x1b[32m";
-	std::cout << "SPLICE (entire list) mylist2 to mylist1 at the 1st position:";
-	std::cout << "\033[0m\t\t" << std::endl;
-	mylist1.splice(it, mylist2);	// mylist1: 1 10 20 30 2 3 4
+	mylist.splice(it, mylist2);		// mylist1: 1 10 20 30 2 3 4
 									// mylist2 (empty)
 									// 'it' still points to 2 (the 5th element)
-	// Print lists after splicing
-	std::cout << "\x1b[33m";
-	std::cout << "'it' still points to: ";
-	std::cout << "\033[0m\t\t" << std::endl;
-	std::cout << *it << std::endl;
-
-	tmp = it; // Save it
-	std::cout << "\x1b[33m";
-	std::cout << "mylist1 after splicing mylist2 to it at 1st position:";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	it = mylist1.begin();
-	while (it != mylist1.end())
-	{
-		std::cout << *it << ' ';
-		it++;
-	}
-	std::cout << std::endl;
-	std::cout << "mylist1 size: " << mylist1.size() << std::endl;
-
-	std::cout << "\x1b[33m";
-	std::cout << "mylist2 after being spliced to mylist1 at 1st position:";
-	std::cout << "\033[0m\t\t" << std::endl;
-	it = mylist2.begin();
-	while (it != mylist2.end())
-	{
-		std::cout << *it << ' ';
-		it++;
-	}
-	std::cout << std::endl;
-	std::cout << "mylist2 size: " << mylist2.size() << std::endl;
-
-	it = tmp; // Recover it
-
-	std::cout << "\x1b[32m";
-	std::cout << "SPLICE (single) mylist2 to mylist1 at the 1st position:";
-	std::cout << "\033[0m\t\t" << std::endl;
 	mylist2.splice(mylist2.begin(), mylist1, it);
 									// mylist1: 1 10 20 30 3 4
 									// mylist2: 2
 									// 'it' is now invalid.
-	// Print lists after splicing
-	std::cout << "\x1b[33m";
-	std::cout << "'it' is invalid now"; // TEST in ORIGINAL!!!
-	std::cout << "\033[0m\t\t" << std::endl;
-	std::cout << *it << std::endl;
-
-	std::cout << "\x1b[33m";
-	std::cout << "mylist1 after splicing";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	it = mylist1.begin();
-	while (it != mylist1.end())
-	{
-		std::cout << *it << ' ';
-		it++;
-	}
-	std::cout << std::endl;
-	std::cout << "mylist1 size: " << mylist1.size() << std::endl;
-
-	std::cout << "\x1b[33m";
-	std::cout << "mylist2 after splicing";
-	std::cout << "\033[0m\t\t" << std::endl;
-	it = mylist2.begin();
-	while (it != mylist2.end())
-	{
-		std::cout << *it << ' ';
-		it++;
-	}
-	std::cout << std::endl;
-	std::cout << "mylist2 size: " << mylist2.size() << std::endl;
-
 	it = mylist1.begin();
 	it++;
 	it++;
 	it++;							// 'it' points now to 30
-	std::cout << "IT: " << *it << std::endl; // test
 
-	std::cout << "\x1b[32m";
-	std::cout << "SPLICE (elem range) mylist1 3 last elements to the begining:";
-	std::cout << "\033[0m\t\t" << std::endl;
 	mylist1.splice(mylist1.begin(), mylist1, it, mylist1.end());
 									// mylist1: 30 3 4 1 10 20
 	
@@ -1323,8 +1220,8 @@ int		main(void)
 	ft_test19();
 
 	// Operations
-	// Splice
 	ft_test20();
+	// Splice
 	// Remove, remove_if
 	// Unique
 	// Merge

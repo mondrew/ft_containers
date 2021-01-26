@@ -1,0 +1,209 @@
+[91m>>>>>>>>>>>>>>> [ Default constructor test ] <<<<<<<<<<<<<<<[0m		
+Empty list size: 0
+
+[91m>>>>>>>>>>>>>>>>>>> [ Fill constructor ] <<<<<<<<<<<<<<<<<<[0m		
+100 100 100 100 100 
+
+[91m>>>>>>>>>>>>>>>>>>> [ Range constructor ] <<<<<<<<<<<<<<<<<<[0m		
+1 2 3 
+
+[91m>>>>>>>>>>>>> [ Copy constructor test (floats) ] <<<<<<<<<<<[0m		
+42.021 42.021 42.021 42.021 42.021 42.021 42.021 42.021 42.021 42.021 
+
+[91m>>>>>>>>>>> [ Assignment operation test (chars) ] <<<<<<<<<<[0m		
+S S S S S 
+
+[91m>>>>>>>>>>>>>>>>> [ Iterators test (ints) ] <<<<<<<<<<<<<<<<[0m		
+[33mList in direct order using classic iterator:[0m		
+1 2 3 4 5 
+[33mList in reverse order using reverse_iterator:[0m		
+5 4 3 2 1 
+[33mIterator arithmetic operations test:[0m		
+Initail it2: 1
+After it2++: 2
+After it2--: 1
+After ++it2: 2
+After --it2: 1
+[33mReverse iterator arithmetic operations test:[0m		
+Initail rit2: 5
+After rit2++: 4
+After rit2--: 5
+After ++rit2: 4
+After --rit2: 5
+[33mIterator comparison operators test:[0m		
+it2 is NOT equal to ite2
+[33mReverse iterator comparison operators test:[0m		
+rit2 is NOT equal to rite2
+
+[91m>>>>>>>> [ Capacity member-functions of list class] <<<<<<[0m		
+[33mInitial list content:[0m		
+May
+the
+Force
+be
+with
+you!
+list size(): 6
+list max_size(): 384307168202282325
+
+[33mResize list to 10 with "!" values[0m		
+list size(): 10
+May
+the
+Force
+be
+with
+you!
+!
+!
+!
+!
+
+[33mResize list to 12 by default values[0m		
+list size(): 12
+May
+the
+Force
+be
+with
+you!
+!
+!
+!
+!
+
+
+
+[33mResize list to 5 by default values[0m		
+list size(): 5
+May
+the
+Force
+be
+with
+
+[33mResize list to 3 with "!" value[0m		
+list size(): 3
+May
+the
+Force
+
+The list is not empty
+
+[91m>>>>>>>>>>>>>>>>> [ Element access test ] <<<<<<<<<<<<<<<<<<[0m		
+12.021 42 42.042 2.1 21.42 
+[33mUsing 'front' and 'back' member-function:[0m		
+front: 12.021 | end: 21.42
+
+[91m>>>>>>>>> [ Modifiers test: push_back & pop_back & push_front & pop_front ] <<<<<<<<<[0m		
+[33mUsing 'push_front' & 'push_back' member-functions:[0m		
+1 2 3 4 5 
+[33mUsing 'pop_back' 2 times & 'pop_front 1 time:[0m		
+2 3 
+
+[91m>>>>>>>>> [ Modifiers test: assign range ] <<<<<<<<<[0m		
+Initial array:
+1 2 3 4 5 6 7 8 9 10 
+[33mUsing 'assign' range member-function:[0m		
+v1 size: 5
+1 2 3 4 5 
+[33mUsing 'assign' range with equal params member-function:[0m		
+v1 size: 0
+
+[91m>>>>>>>>> [ Modifiers test: assign fill ] <<<<<<<<<[0m		
+Initial array:
+1 2 3 4 5 
+[33mUsing 'assign' fill member-function:[0m		
+v0 size: 7
+42 42 42 42 42 42 42 
+[33mUsing 'assign' fill member-function with 0:[0m		
+v0 size: 0
+
+[91m>>>>>>>>> [ Modifiers test: insert (single) ] <<<<<<<<<[0m		
+Initial array:
+1 2 3 4 5 
+[33mInsert 1 element on 3 position:[0m		
+1 2 3 42 4 5 
+v0 size: 6
+
+[91m>>>>>>>>> [ Modifiers test: insert (fill) ] <<<<<<<<<[0m		
+Initial array:
+1 2 3 4 5 6 7 8 9 10 
+[33mInsert 5 element on 3 position:[0m		
+1 2 3 42 42 42 42 42 4 5 6 7 8 9 10 
+v0 size: 15
+
+[91m>>>>>>>>> [ Modifiers test: insert (range) ] <<<<<<<<<[0m		
+Initial array 1 (src):
+1 2 3 4 5 6 7 8 9 10 
+Initial array 2 (dest):
+42 42 42 42 42 42 42 42 42 42 
+v1 size: 10
+[33mInsert elements on 3 position:[0m		
+42 42 42 6 7 8 9 10 42 42 42 42 42 42 42 
+v1 size: 15
+[33mInsert elements on 2 position:[0m		
+42 42 42 6 7 8 9 1 2 3 4 5 6 7 8 9 10 10 42 42 42 42 42 42 42 
+v1 size: 25
+
+[91m>>>>>>>>> [ Modifiers test: erase (single) ] <<<<<<<<<[0m		
+Initial array:
+1 2 3 4 5 6 7 8 9 10 
+[33mErase element at 5th position[0m		
+1 2 3 4 5 7 8 9 10 
+v0 size: 9
+[33mErase element at the last position[0m		
+1 2 3 4 5 7 8 9 
+v0 size: 8
+
+[91m>>>>>>>>> [ Modifiers test: erase (range) ] <<<<<<<<<[0m		
+Initial array:
+1 2 3 4 5 6 7 8 9 10 
+[33mErase element from 1 to 4 position[0m		
+1 5 6 7 8 9 10 
+v0 size: 7
+[33mErase element with same iterators[0m		
+ret: 5
+
+[91m>>>>>>>>> [ Modifiers test: swap ] <<<<<<<<<[0m		
+Initial array 1:
+1 2 3 4 5 6 7 8 9 10 
+Initial array 2:
+42 42 42 42 42 42 42 42 42 42 42 
+v1 size: 11
+[33mSwap:[0m		
+Array 1 after swap:
+42 42 42 42 42 42 42 42 42 42 42 
+Array 2 after swap:
+1 2 3 4 5 6 7 8 9 10 
+v1 size: 10
+
+[91m>>>>>>>>> [ Modifiers test: clear ] <<<<<<<<<[0m		
+Initial array:
+42 42 42 42 42 42 42 42 42 42 
+v1 size: 10
+[33mClear:[0m		
+Array after clear:
+
+v1 size: 0
+
+[91m>>>>>>>>> [ Non-member functions ] <<<<<<<<<[0m		
+Initial array 1:
+21 21 21 21 21 
+Initial array 2:
+42 42 42 42 42 42 42 42 42 42 
+[33mOperator '==':[0m		
+v0 is NOT equal to v1
+[33mOperator '!=':[0m		
+v0 is NOT equal to v1
+[33mOperator '<=':[0m		
+v0 is less than or equal to v1
+[33mOperator '>':[0m		
+v0 is NOT greater than v1
+[33moperator '>=':[0m		
+v1 is greater than or equal to v2
+[33mSwap v0 & v1:[0m		
+Array 1 after swap:
+42 42 42 42 42 42 42 42 42 42 
+Array 2 after swap:
+21 21 21 21 21 

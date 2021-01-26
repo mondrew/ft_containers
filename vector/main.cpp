@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/19 11:40:18 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/26 00:56:12 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/26 19:56:19 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,7 +221,7 @@ void	ft_test6(void)
 	if (it2 <= ite2)
 		std::cout << "it2 is less than or equal to ite2" << std::endl;
 	if (it2 >= ite2)
-		std::cout << "it2 is more than or equal to ite2" << std::endl;
+		std::cout << "it2 is greater than or equal to ite2" << std::endl;
 
 	std::cout << "\x1B[33m";
 	std::cout << "Reverse iterator comparison operators test:";
@@ -235,7 +235,7 @@ void	ft_test6(void)
 	if (rit2 <= rite2)
 		std::cout << "rit2 is less than or equal to rite2" << std::endl;
 	if (rit2 >= rite2)
-		std::cout << "rit2 is more than or equal to rite2" << std::endl;
+		std::cout << "rit2 is greater than or equal to rite2" << std::endl;
 
 	std::cout << std::endl;
 }
