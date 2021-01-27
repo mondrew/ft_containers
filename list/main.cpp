@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:58:32 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/27 01:39:03 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 10:41:08 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1333,7 +1333,7 @@ void	ft_test22(void)
 	mylist.push_back(1);
 
 	std::cout << "\x1b[33m";
-	std::cout << "Initial list";
+	std::cout << "Initial list:";
 	std::cout << "\033[0m\t\t" << std::endl;
 	for (ft::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
 		std::cout << *it << ' ';
@@ -1380,7 +1380,7 @@ void	ft_test23(void)
 	ft::list<double>	mylist(mydoubles, mydoubles + 10);
 
 	std::cout << "\x1b[33m";
-	std::cout << "Initial list";
+	std::cout << "Initial list:";
 	std::cout << "\033[0m\t\t" << std::endl;
 	for (ft::list<double>::iterator it = mylist.begin(); it != mylist.end(); ++it)
 		std::cout << *it << ' ';
@@ -1406,6 +1406,79 @@ void	ft_test23(void)
 	std::cout << std::endl;
 }
 
+bool	mycomparison(double first, double second)
+{
+	return (int(first) < int(second));
+}
+
+void	ft_test24(void)
+{
+	// Merge
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Merge functions test ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	ft::list<double>	first, second;
+
+	first.push_back(2.2);
+	first.push_back(2.9);
+	first.push_back(3.1);
+
+	second.push_back(1.4);
+	second.push_back(3.7);
+	second.push_back(7.1);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial 'first' list";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<double>::iterator it = first.begin(); it != first.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial 'second' list";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<double>::iterator it = second.begin(); it!=second.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	first.merge(second);
+
+	std::cout << "\x1b[33m";
+	std::cout << "List 'first' after merge function:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<double>::iterator it = first.begin(); it != first.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "List 'second' after merge function:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<double>::iterator it = second.begin(); it!=second.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "Added 2.1 to the 'second' list";
+   	std::cout << " and merge it to 'first' with pointer to comparison function";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<double>::iterator it = first.begin(); it != first.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	second.push_back(2.1);
+
+	first.merge(second, mycomparison);
+
+	std::cout << "\x1b[33m";
+	std::cout << "List 'first' after merge (comp) function:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (ft::list<double>::iterator it = first.begin(); it != first.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+}
 
 int		main(void)
 {
@@ -1479,13 +1552,13 @@ int		main(void)
 	// Unique
 	ft_test23();
 
-	/*
 	// Merge
 	ft_test24();
 
 	// Sort
 	ft_test25();
 
+	/*
 	// Reverse
 	ft_test26();
 	*/

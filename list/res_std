@@ -207,3 +207,69 @@ Array 1 after swap:
 42 42 42 42 42 42 42 42 42 42 
 Array 2 after swap:
 21 21 21 21 21 
+
+[91m>>>>>>>>> [ Splice functions test ] <<<<<<<<<[0m		
+[33mInitial mylist1 list: [0m		
+1 2 3 4 
+mylist1 size: 4
+[33mInitial mylist2 list: [0m		
+10 20 30 
+mylist2 size: 3
+[32mSPLICE (entire list) mylist2 to mylist1 at the 1st position:[0m		
+[33m'it' still points to: [0m		
+2
+[33mmylist1 after splicing mylist2 to it at 1st position:[0m		
+1 10 20 30 2 3 4 
+mylist1 size: 7
+[33mmylist2 after being spliced to mylist1 at 1st position:[0m		
+
+mylist2 size: 0
+[32mSPLICE (single) mylist2 to mylist1 at the 1st position:[0m		
+[33m'it' is invalid now[0m		
+2
+[33mmylist1 after splicing[0m		
+1 10 20 30 3 4 
+mylist1 size: 6
+[33mmylist2 after splicing[0m		
+2 
+mylist2 size: 1
+IT: 30
+[32mSPLICE (elem range) mylist1 3 last elements to the begining:[0m		
+mylist1 contains: 30 3 4 1 10 20
+mylist2 contains: 2
+
+[91m>>>>>>>>> [ Remove functions test ] <<<<<<<<<[0m		
+[33mInitial list:[0m		
+17 89 7 14 
+
+[33mList after removing element '89':[0m		
+17 7 14 
+
+[91m>>>>>>>>> [ Remove_if functions test ] <<<<<<<<<[0m		
+[33mInitial list:[0m		
+15 36 7 17 20 39 4 1 
+
+[33mList after remove_if:[0m		
+36 20 
+
+[91m>>>>>>>>> [ Unique functions test ] <<<<<<<<<[0m		
+[33mInitial list:[0m		
+2.72 3.14 12.15 12.77 12.77 15.3 72.25 72.25 73 73.35 
+
+[33mList after unique function:[0m		
+2.72 12.15 72.25 
+
+[91m>>>>>>>>> [ Merge functions test ] <<<<<<<<<[0m		
+[33mInitial 'first' list[0m		
+2.2 2.9 3.1 
+[33mInitial 'second' list[0m		
+1.4 3.7 7.1 
+[33mList 'first' after merge function:[0m		
+1.4 2.2 2.9 3.1 3.7 7.1 
+[33mList 'second' after merge function:[0m		
+
+[33mAdded 2.1 to the 'second' list and merge it to 'first' with pointer to comparison function[0m		
+1.4 2.2 2.9 3.1 3.7 7.1 
+[33mList 'first' after merge (comp) function:[0m		
+1.4 2.2 2.9 2.1 3.1 3.7 7.1 
+

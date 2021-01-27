@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/27 01:40:05 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 10:41:19 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1672,6 +1672,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 						dest = dest->next;
 					src->prev->next = src->next;
 					src->next->prev = src->prev;
+					x._head = x._tail->next;
 					x._size--;
 
 					src->prev = dest->prev;
@@ -1679,6 +1680,9 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 
 					dest->prev->next = src;
 					dest->prev = src;
+
+					this->_head = this->_tail->next;
+
 					this->_size++;
 
 					src = tmp;
@@ -1698,10 +1702,11 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				while (src != x._tail)
 				{
 					tmp = src->next;
-					while (dest != this->_tail && !comp(dest->val, src->val))
+					while (dest != this->_tail && !comp(src->val, dest->val))
 						dest = dest->next;
 					src->prev->next = src->next;
 					src->next->prev = src->prev;
+					x._head = x._tail->next;
 					x._size--;
 
 					src->prev = dest->prev;
@@ -1709,6 +1714,9 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 
 					dest->prev->next = src;
 					dest->prev = src;
+
+					this->_head = this->_tail->next;
+
 					this->_size++;
 
 					src = tmp;
