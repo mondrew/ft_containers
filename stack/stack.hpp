@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/27 19:00:15 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/27 22:01:03 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 22:40:37 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ namespace ft
 			}
 
 			// Empty
-			bool		empty(void) const {
+			bool			empty(void) const {
 
 				return (this->_ctnr.empty());
 			}
@@ -45,18 +45,18 @@ namespace ft
 			}
 
 			// Top
-			T			&top(void) {
+			T				&top(void) {
 
 				return (this->_ctnr.back());
 			}
 
-			T const		&top(void) const {
+			T const			&top(void) const {
 
 				return (this->_ctnr.back());
 			}
 
 			// Push
-			void		push(T const &val) {
+			void			push(T const &val) {
 
 				this->_ctnr.push_back(val);
 
@@ -64,7 +64,7 @@ namespace ft
 			}
 
 			// Pop
-			void		pop(void) {
+			void			pop(void) {
 
 				this->_ctnr.pop_back();
 
@@ -72,37 +72,37 @@ namespace ft
 			}
 
 			// Non-member functions overloads
-			friend bool	operator==(stack<T, Container> const &lhs, \
+			friend bool		operator==(stack<T, Container> const &lhs, \
 											stack<T, Container> const &rhs) {
 				
 				return (lhs._ctnr == rhs._ctnr);
 			}
 
-			friend bool	operator!=(stack<T, Container> const &lhs, \
+			friend bool		operator!=(stack<T, Container> const &lhs, \
 											stack<T, Container> const &rhs) {
 
 				return (lhs._ctnr != rhs._ctnr);
 			}
 
-			friend bool	operator<(stack<T, Container> const &lhs, \
+			friend bool		operator<(stack<T, Container> const &lhs, \
 											stack<T, Container> const &rhs) {
 
 				return (lhs._ctnr < rhs._ctnr);
 			}
 
-			friend bool	operator<=(stack<T, Container> const &lhs, \
+			friend bool		operator<=(stack<T, Container> const &lhs, \
 											stack<T, Container> const &rhs) {
 
 				return (lhs._ctnr <= rhs._ctnr);
 			}
 
-			friend bool	operator>(stack<T, Container> const &lhs, \
+			friend bool		operator>(stack<T, Container> const &lhs, \
 											stack<T, Container> const &rhs) {
 
 				return (lhs._ctnr > rhs._ctnr);
 			}
 
-			friend bool	operator>=(stack<T, Container> const &lhs, \
+			friend bool		operator>=(stack<T, Container> const &lhs, \
 											stack<T, Container> const &rhs) {
 
 				return (lhs._ctnr >= rhs._ctnr);
