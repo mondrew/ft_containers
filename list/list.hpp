@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/27 10:41:19 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 11:45:05 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1747,6 +1747,8 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 						fst->prev->next = snd;
 						fst->prev = snd;
 
+						this->_head = this->_tail->next;
+
 						// swap ptrs
 						fst = snd;
 						snd = fst->next;
@@ -1759,6 +1761,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					{
 						fst = this->_head;
 						snd = this->_head->next;
+						swapped = false;
 					}
 				}
 			}
@@ -1788,6 +1791,8 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 						fst->prev->next = snd;
 						fst->prev = snd;
 
+						this->_head = this->_tail->next;
+
 						// swap ptrs
 						fst = snd;
 						snd = fst->next;
@@ -1800,42 +1805,52 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 					{
 						fst = this->_head;
 						snd = this->_head->next;
+						swapped = false;
 					}
 				}
 			}
 
-			// Reverse
+			// Reverse new
 			void				reverse(void) {
 
 				t_list		*fst = this->_head;
-				t_list		*snd = this->_head->next;
+				t_list		*snd = this->_tail->prev;
 				t_list		*tmp;
+				size_t		i = 0;
 
-				while (snd != this->_tail)
+				while (i < this->_size / 2)
 				{
-					// link to neightbours
-					snd->prev = fst->prev;
-					fst->next = snd->next;
-
-					// link from neightbours
-					snd->next->prev = fst;
+					// Neightbours relink
 					fst->prev->next = snd;
+					fst->next->prev = snd;
+					snd->prev->next = fst;
+					snd->next->prev = fst;
 
-					// re-link each-other
-					snd->next = fst;
-					fst->prev = snd;
+					tmp = fst->next;
+					fst->next = snd->next;
+					snd->next = tmp;
 
-					// rename
+					tmp = fst->prev;
+					fst->prev = snd->prev;
+					snd->prev = tmp;
+
+					this->_head = this->_tail->next;
+
+					// Swap ptrs
+					tmp = fst;
 					fst = snd;
-					snd = fst->next;
+					snd = tmp;
 
-					// move fwd
+					// Get closer
 					fst = fst->next;
-					snd = snd->next;
+					snd = snd->prev;
+
+					i++;
 				}
 			}
 	};
 }
+
 // NON-MEMBER FUNCTION OVERLOADS
 // Relational operators
 /*

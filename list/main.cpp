@@ -6,13 +6,14 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 11:58:32 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/27 10:41:08 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/27 12:02:29 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "list.hpp"
 #include <list>
 #include <iostream>
+#include <string>
 
 // DO IT (see test21)
 
@@ -1062,6 +1063,15 @@ void	ft_test19(void)
 		std::cout << "v0 is equal to v1" << std::endl;
 
 	std::cout << "\x1B[33m";
+	std::cout << "Operator '<':";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	if (v0 < v1)
+		std::cout << "v0 is less than v1" << std::endl;
+	else
+		std::cout << "v0 is NOT less than v1" << std::endl;
+
+	std::cout << "\x1B[33m";
 	std::cout << "Operator '<=':";
 	std::cout << "\033[0m\t\t" << std::endl;
 
@@ -1480,6 +1490,103 @@ void	ft_test24(void)
 	std::cout << std::endl;
 }
 
+bool	compare_nocase(const std::string &first, const std::string &second)
+{
+	unsigned int	i = 0;
+	while ((i < first.length()) && (i < second.length()))
+	{
+		if (tolower(first[i]) < tolower(second[i]))
+			return (true);
+		else if (tolower(first[i]) > tolower(second[i]))
+			return (false);
+		++i;
+	}
+	return (first.length() < second.length());
+}
+
+void	ft_test25(void)
+{
+	// Sort
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Sort functions test ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	ft::list<std::string>				mylist;
+	ft::list<std::string>::iterator		it;
+
+	mylist.push_back("one");
+	mylist.push_back("two");
+	mylist.push_back("Three");
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial list:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for(it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+
+	// Sort
+	mylist.sort();
+
+	std::cout << "\x1b[33m";
+	std::cout << "List after sort:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for(it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+
+	// Sort with comparison function ptr
+	mylist.sort(compare_nocase);
+
+	std::cout << "\x1b[33m";
+	std::cout << "List after sort with comparison function:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for(it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test26(void)
+{
+	// Reverse
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>> [ Reverse functions test ] <<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	ft::list<int>				mylist;
+	ft::list<int>::iterator	it;
+
+	for (int i = 1; i < 10; ++i)
+		mylist.push_back(i);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Initial list:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for(it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+
+	// Reverse list
+	mylist.reverse();
+
+	std::cout << "\x1b[33m";
+	std::cout << "Inverted list:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for(it = mylist.begin(); it != mylist.end(); ++it)
+		std::cout << *it << ' ';
+	std::cout << std::endl;
+
+	std::cout << std::endl;
+}
+
 int		main(void)
 {
 	// Default constructor
@@ -1558,9 +1665,7 @@ int		main(void)
 	// Sort
 	ft_test25();
 
-	/*
 	// Reverse
 	ft_test26();
-	*/
 	return (0);
 }
