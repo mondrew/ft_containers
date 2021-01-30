@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/27 18:53:03 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/30 23:41:26 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,13 @@ namespace ft
 
 		private:
 
-			typedef struct		s_list
+			struct		t_list
 			{
-				T				val;
-				struct s_list	*prev;
-				struct s_list	*next;
+				T		val;
+				t_list	*prev;
+				t_list	*next;
 
-			}					t_list;
+			};
 
 			t_list				*_head;
 			t_list				*_tail; // null-tail
@@ -1186,7 +1186,7 @@ friend void	swap(ft::list<T, A> &x, list<T, A> &y) {
 				else
 					arch = 16;
 
-				return (static_cast<std::size_t>(pow(2, arch) / sizeof(T)) - 1);
+				return (static_cast<std::size_t>(pow(2, arch) / sizeof(t_list)) - 1);
 			}
 
 			// ELEMENT ACCESS
