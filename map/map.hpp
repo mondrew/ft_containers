@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/30 23:34:50 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/31 02:41:12 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,43 @@ namespace ft
 					}
 				}
 				return (root);
+			}
+
+			BSTNode		*insertNode(BSTNode *root, Key key, T val) {
+
+				if (!root)
+					return (0);
+				if (key < root->first)
+				{
+					insertNode(root->left, key, val);
+
+					BSTNode		*node = new BSTNode();
+
+					node->first = key;
+					node->second = val;
+					node->left = 0;
+					node->right = 0;
+					root->left = node;
+
+					return (node);
+				}
+				else if (key > root->first)
+				{
+					insertNode(root->right, key, val);
+
+					BSTNode		*node = new BSTNode();
+
+					node->first = key;
+					node->second = val;
+					node->left = 0;
+					node->right = 0;
+
+					root->right = node;
+
+					return (node);
+				}
+				else
+					return (root); // Check the original
 			}
 
 			BSTNode		*copyBST(BSTNode *root) {
@@ -440,6 +477,39 @@ namespace ft
 
 						return (tmp);
 					}
+
+					BSTNode		*getNode(void) {
+
+						return (this->_node);
+					}
+
+					// *a++ overloading - check
+					T		*operator++(int) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
+
+					// *a-- overloading - check
+					T		*operator--(int) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getAncestor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
 			};
 
 			class reverse_iterator {
@@ -650,6 +720,39 @@ namespace ft
 															this->_node->first);
 						return (tmp);
 					}
+
+					BSTNode		*getNode(void) {
+
+						return (this->_node);
+					}
+
+					// *a++ overload - check
+					T		*operator++(int) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getAncestor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
+
+					// *a-- overload - check
+					T		*operator--(int) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
 			};
 
 			// Iterators
@@ -708,8 +811,128 @@ namespace ft
 				else if (sizeof(void *) == 2)
 					arch = 16;
 
-				return (static_cast<std::size_t>(pow(2, arch) / sizeof(BSTNode)) - 1);
+				return (static_cast<std::size_t>(pow(2, arch) / \
+														sizeof(BSTNode)) - 1);
 			}
+
+			// Element access
+			T		&operator[](Key const &k) {
+
+				BSTNode		*tmp = this->findNode(this->_root, k);
+
+				if (!tmp)
+					tmp = this->insertNode(this->_root, k, 0);
+				return (tmp->second);
+			}
+
+			// Modifiers
+			// Insert #1 (single element)
+			std::pair<iterator, bool>	insert(value_type const &val) {
+
+				BSTNode		*tmp = this->findNode(this->_root, val.first);
+				ft::map<Key, T, Compare, Alloc>::iterator	it;
+				bool		res = false;
+
+				if (!tmp)
+				{
+					tmp = this->insertNode(this->_root, val.first, \
+																val.second);
+					res = true;
+				}
+				it = iterator(tmp, this->_root);
+
+				return (std::pair(it, res));
+			}
+
+			// Insert #2 (with hint)
+			iterator	insert(iterator position, value_type const &val) {
+
+				BSTNode		*node = position.getNode();
+				BSTNode		*tmp = this->findNode(node, val.first);
+				ft::map<Key, T, Compare, Alloc>::iterator	it;
+
+				if (!node)
+					return (iterator());
+				if (!tmp)
+					tmp = this->insertNode(node, val.first, val.second);
+				it = iterator(tmp, this->_root);
+
+				return (it);
+			}
+
+			// Insert #3 (range)
+			void		insert(iterator first, iterator last) {
+
+				BSTNode		*node;
+				BSTNode		*tmp;
+
+				while (first != last)
+				{
+					if (!first->_root)
+						return ;
+					if (!this->find(this->_root, first->_node->first))
+						this->insertNode(this->_root, \
+									first->_node->first, first->_node->second);
+					first++;
+				}
+			}
+
+			// Erase #1 (single)
+			void		erase(iterator position) {
+
+				if (!position.getNode())
+					return ;
+				this->deleteNode(this->_root, position.getNode()->first);
+
+				return ;
+			}
+
+			// Erase #2 (key)
+			std::size_t		erase(Key const &k) {
+
+				BSTNode		*tmp = deleteNode(this->_root, k);
+
+				if (!tmp)
+					return (0);
+				return (1);
+			}
+
+			// Erase #3 (range)
+			void		erase(iterator first, iterator last) {
+
+				while (first != last)
+				{
+					if (!first.getNode())
+						return ;
+					this->deleteNode(this->_root, first.getNode()->first);
+					first++;
+				}
+			}
+
+			// Swap
+			void		swap(map<Key, T, Compare, Alloc> &x) {
+
+				BSTNode		*tmp = this->_root;
+
+				this->_root = x->_root;
+				x->_root = tmp;
+			}
+
+			// Clear
+			void		clear(void) {
+
+				this->deleteBST(this->_root);
+			}
+
+			// Observers
+			// Key_comp
+			// Create key_compare class
+			class key_compare {
+
+				private:
+
+				public:
+			};
 	};
 }
 
