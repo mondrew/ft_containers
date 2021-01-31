@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/31 02:41:12 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/01/31 20:41:19 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include <utility>
 # include <memory>
+
+// Try to change in iterator class private to protected
 
 typedef std::pair<const Key, T> value_type;
 
@@ -39,6 +41,8 @@ namespace ft
 			};
 
 			BSTNode			*_root;
+			Compare			_comp;
+			Alloc			_alloc;
 
 			// Private functions
 			std::size_t		countNodes(BSTNode *root) {
@@ -239,15 +243,24 @@ namespace ft
 
 			// Constructor #1 (empty)
 			explicit map(Compare const &comp = Compare(), \
-						Alloc const &alloc = std::allocator<value_type>()) {
-
+						Alloc const &alloc = std::allocator<value_type>()) :
+										_root(0), _comp(comp), _alloc(alloc) {
 				return ;
 			}
 
 			// Constructor #2 (range)
 			map(iterator first, iterator last, \
 						Compare const &comp = Compare(), \
-						Alloc const &alloc = std::allocator<value_type>()) {
+						Alloc const &alloc = std::allocator<value_type>()) :
+										_root(0), _comp(comp), _alloc(alloc) {
+
+				while (first != last)
+				{
+					this->insert(first, second);
+					first++;
+				}
+
+				return ;
 			}
 
 			// Constructor #3 (copy)
@@ -276,7 +289,8 @@ namespace ft
 
 			class iterator {
 
-				private:
+				//private:
+				protected:
 
 					BSTNode		*_node;
 					BSTNode		*_root;
@@ -512,9 +526,253 @@ namespace ft
 					}
 			};
 
+			class const_iterator {
+
+				//private:
+				protected:
+
+					BSTNode		*_node;
+					BSTNode		*_root;
+
+					BSTNode			*findNode(BSTNode *root, Key key) {
+
+						BSTNode		*current = root;
+
+						while (current && current->first != first)
+						{
+							if (current->first < key)
+								current = current->left;
+							else
+								current = current->right;
+						}
+						return (current);
+					}
+
+					BSTNode			*findMin(BSTNode *node) {
+
+						if (!node)
+							return (0);
+						while (node->left)
+							node = node->left;
+						return (node);
+					}
+
+					BSTNode			*getSuccessor(BSTNode *root, Key key) {
+
+						BSTNode		*current = findNode(root, key);
+						BSTNode		*ancestor;
+						BSTNode		*successor;
+
+						if (!current)
+							return (0);
+						// Case 1: there is right subtree
+						if (current->right)
+							return (findMin(current->right));
+						else // Case 2: there are no right subtree - O(h)
+						{
+							successor = NULL;
+							ancestor = root;
+							while (ancestor != current)
+							{
+								if (current->first < ancestor->first)
+								{
+									successor = ancestor; // the deepest node for which curr is in left
+									ancestor = ancestor->left;
+								}
+								else
+									ancestor = ancestor->right;
+							}
+						}
+						return (successor);
+					}
+
+					BSTNode			*getAncestor(BSTNode *root, Key key) {
+
+						BSTNode		*current = getNode(root, key);
+						BSTNode		*ancestor = 0;
+						BSTNode		*tmp = root;
+
+						if (!root || !current)
+							return (0);
+						// Case 1: left child exists
+						if (current->left)
+							return (current->left);
+						// Case 2: no left child
+						else
+						{
+							while (tmp->left != current && tmp->right != current)
+							{
+								if (current->first > ancestor->first)
+								{
+									ancestor = tmp;
+									tmp = ancestor->right;
+								}
+								else
+									tmp = tmp->left;
+							}
+							return (ancestor);
+						}
+					}
+
+				public:
+
+					// Constructor #1 (empty)
+					const_iterator(void) : _node(0), _root(0) { return ; }
+
+					// Constructor #2 (init)
+					const_iterator(map<Key, T, Compare, Alloc> const &rhs) {
+
+						BSTNode		*tmp;
+						this->_node = rhs.begin();
+						this->_root = this->_node;
+
+						tmp = getAncestor(this->_node);
+						while (tmp)
+						{
+							this->_root = tmp;
+							tmp = getAncestor(tmp);
+						}
+
+						return ;
+					}
+
+					// Constructor #3 (for begin & end)
+					const_iterator(BSTNode *node, BSTNode *root) :
+													_node(node), _root(root) {
+
+						return ;
+					}
+
+					// Copy constructor
+					const_iterator(const_iterator const &src) {
+						*this = src;
+						return ;
+					}
+
+					// Destructor
+					~const_iterator(void) { return ; }
+
+					// Assignment operation
+					const_iterator	&operator=(const_iterator const &rhs) {
+
+						this->_node = rhs._node;
+						this->_root = rhs._root;
+
+						return ;
+					}
+
+					// Comparison operator
+					bool		operator==(const_iterator const &rhs) {
+
+						return (this->_node->first == rhs._node->first);
+					}
+
+					bool		operator!=(const_iterator const &rhs) {
+
+						return (this->_node->first != rhs._node->first);
+					}
+
+					// Dereferencing operator
+					T const			&operator*(void) {
+
+						return (this->_node->second);
+					}
+
+					// Field access operator (arrow operator)
+					BSTNode	const	*operator->(void) {
+
+						return (this->_node);
+					}
+
+					// Increment prefix
+					const_iterator	&operator++(void) {
+
+						// Change everywhere
+						this->_node = map::getSuccessor(this->_root, this->_node->first);
+						//this->_node = this->getSuccessor(this->_root, this->_node->first);
+
+						return (this->_node);
+					}
+
+					// Increment postfix
+					const_iterator	operator++(int) {
+
+						const_iterator	tmp(*this);
+
+						this->_node = this->_getSuccessor(this->_root, this->_node->first);
+
+						return (tmp);
+					}
+
+					// Decrement prefix
+					const_iterator	&operator--(void) {
+
+						if (this->_node == 0 && this->_root)
+						{
+							this->_node = this->_root;
+							while (this->_node->right)
+								this->_node = this->_node->right;
+						}
+						else
+							this->_node = this->getAncestor(this->_root, this->_node->first);
+
+						return (this->_node);
+					}
+
+					const_iterator	operator--(int) {
+
+						const_iterator	tmp(*this);
+
+						if (this->_node == 0 && this->_root)
+						{
+							this->_node = this->_root;
+							while (this->_node->right)
+								this->_node = this->_node->right;
+						}
+						else
+							this->_node = this->getAncestor(this->_root, this->_node->first);
+
+						return (tmp);
+					}
+
+					BSTNode		*getNode(void) {
+
+						return (this->_node);
+					}
+
+					// *a++ overloading - check
+					T const		*operator++(int) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
+
+					// *a-- overloading - check
+					T const		*operator--(int) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getAncestor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
+			};
+
 			class reverse_iterator {
 
-				private:
+				//private:
+				protected:
 
 					BSTNode		*_node;
 					BSTNode		*_root;
@@ -924,15 +1182,117 @@ namespace ft
 				this->deleteBST(this->_root);
 			}
 
-			// Observers
-			// Key_comp
-			// Create key_compare class
-			class key_compare {
-
+			/*
+			// Functor key_compare
+			template <typename Key, typename T, typename Compare, typename Alloc>
+			class map<Key, T, Compare, Alloc>::key_compare
+			{
 				private:
 
+					friend class map;
+
+				protected:
+
+					Compare		comp;
+					key_compare(Compare c) : comp(c) { return ; }
+
 				public:
-			};
+					typedef bool result_type;
+					typedef key_type first_argument_type;
+					typedef key_type second_argument_type;
+					bool	operator()(key_type const &x, \
+													key_type const &y) const {
+						return comp(x.first, y.first);
+					}
+			}
+			*/
+
+			// Functor value_compare
+			template <typename Key, typename T, typename Compare, typename Alloc>
+			class map<Key, T, Compare, Alloc>::value_compare
+			{
+				private:
+
+					friend class map;
+
+				protected:
+
+					Compare		comp;
+					value_compare(Compare c) : comp(c) { return ; }
+
+				public:
+					typedef bool result_type;
+					typedef value_type first_argument_type;
+					typedef value_type second_argument_type;
+					bool	operator()(value_type const &x, \
+													value_type const &y) const
+					{
+						return comp(x.first, y.first);
+					}
+			}
+
+			// Observers
+			// Key_comp
+			Compare			key_comp(void) const {
+
+				return (this->_comp);
+			}
+
+			// Value_comp
+			value_compare	value_comp(void) const {
+
+				map<Key, T, Compare, Alloc>::value_compare	value_comp(this->_comp);
+
+				return (value_comp);
+			}
+
+			// Operations
+			// Find
+			iterator		find(Key const &k) {
+
+				map<Key, T, Compare, Alloc>::iterator	it = this->begin();
+				map<Key, T, Compare, Alloc>::iterator	ite = this->end();
+
+				while (it != ite)
+				{
+					if (this->_comp(it._node->first, k) == false)
+						return (it);
+					it++;
+				}
+				return (this->end());
+			}
+
+			const_iterator	find(Key const &k) const {
+
+				map<Key, T, Compare, Alloc>::const_iterator		it = this->begin();
+				map<Key, T, Compare, Alloc>::const_iterator		ite = this->end();
+				while (it != ite)
+				{
+					if (this->_comp(it._node->first, k) == false)
+						return (it);
+					it++;
+				}
+				return (this->end());
+			}
+
+			// Count
+			std::size_t		count(Key const &k) const {
+
+				map<Key, T, Compare, Alloc>::iterator	it = this->begin();
+				map<Key, T, Compare, Alloc>::iterator	ite = this->end();
+
+				while (it != ite)
+				{
+					if (this->_comp(it._node->first, k) == false)
+						return (1);
+					it++;
+				}
+				return (0);
+			}
+
+			// Lower_bound
+			iterator		lower_bound(Key const &k) {
+			}
 	};
 }
 
