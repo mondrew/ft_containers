@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/01/31 20:41:19 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/02 00:10:43 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,21 @@
 
 # include <utility>
 # include <memory>
+# include <functional>
+# include <cmath>
+# include <iostream>
 
 // Try to change in iterator class private to protected
 
-typedef std::pair<const Key, T> value_type;
-
 namespace ft
 {
-	template < typename Key, 
-			 	typename T,
-				typename Compare = less<Key>,
-				typename Alloc = std::allocator<std::pair<const Key, T> >
+	template < typename Key, \
+			 	typename T, \
+				typename Compare = std::less<Key>, \
+				typename Alloc = std::allocator<std::pair<const Key, T> > >
 	class map {
 
-		class iterator;
+		typedef std::pair<const Key, T> value_type;
 
 		private:
 
@@ -47,17 +48,17 @@ namespace ft
 			// Private functions
 			std::size_t		countNodes(BSTNode *root) {
 
-				if (this->empty())
+				if (root->empty())
 					return (0);
-				return (1 + countNodes(this->_root->left) + \
-												countNodes(this->_root->right));
+				return (1 + countNodes(root->left) + \
+										countNodes(root->right));
 			}
 
 			BSTNode			*findNode(BSTNode *root, Key key) {
 
 				BSTNode		*current = root;
 
-				while (current && current->first != first)
+				while (current && current->first != key)
 				{
 					if (current->first < key)
 						current = current->left;
@@ -189,13 +190,22 @@ namespace ft
 				return (root);
 			}
 
-			BSTNode		*insertNode(BSTNode *root, Key key, T val) {
+			BSTNode		*insertNode(BSTNode **root, Key const &key, T const &val) {
 
-				if (!root)
-					return (0);
-				if (key < root->first)
+				if (!*root)
 				{
-					insertNode(root->left, key, val);
+					*root = new BSTNode();
+
+					(*root)->first = key;
+					(*root)->second = val;
+					(*root)->left = 0;
+					(*root)->right = 0;
+
+					return (*root);
+				}
+				if (key < (*root)->first)
+				{
+					insertNode(&(*root)->left, key, val);
 
 					BSTNode		*node = new BSTNode();
 
@@ -203,13 +213,13 @@ namespace ft
 					node->second = val;
 					node->left = 0;
 					node->right = 0;
-					root->left = node;
+					(*root)->left = node;
 
 					return (node);
 				}
-				else if (key > root->first)
+				else if (key > (*root)->first)
 				{
-					insertNode(root->right, key, val);
+					insertNode(&(*root)->right, key, val);
 
 					BSTNode		*node = new BSTNode();
 
@@ -218,12 +228,12 @@ namespace ft
 					node->left = 0;
 					node->right = 0;
 
-					root->right = node;
+					(*root)->right = node;
 
 					return (node);
 				}
 				else
-					return (root); // Check the original
+					return (*root); // Check the original
 			}
 
 			BSTNode		*copyBST(BSTNode *root) {
@@ -241,6 +251,8 @@ namespace ft
 
 		public:
 
+			class iterator;
+
 			// Constructor #1 (empty)
 			explicit map(Compare const &comp = Compare(), \
 						Alloc const &alloc = std::allocator<value_type>()) :
@@ -256,7 +268,11 @@ namespace ft
 
 				while (first != last)
 				{
-					this->insert(first, second);
+					if (!first.getRoot())
+						return ;
+					if (!this->findNode(this->_root, first.getNode()->first))
+						this->insertNode(&this->_root, \
+							first.getNode()->first, first.getNode()->second);
 					first++;
 				}
 
@@ -282,7 +298,7 @@ namespace ft
 
 				if (this->_root)
 					deleteBST(this->_root);
-				this->_root = this->copyBST(rhs->_root);
+				this->_root = this->copyBST(rhs._root);
 
 				return (*this);
 			}
@@ -299,7 +315,7 @@ namespace ft
 
 						BSTNode		*current = root;
 
-						while (current && current->first != first)
+						while (current && current->first != key)
 						{
 							if (current->first < key)
 								current = current->left;
@@ -415,7 +431,7 @@ namespace ft
 						this->_node = rhs._node;
 						this->_root = rhs._root;
 
-						return ;
+						return (*this);
 					}
 
 					// Comparison operator
@@ -445,8 +461,7 @@ namespace ft
 					iterator	&operator++(void) {
 
 						// Change everywhere
-						this->_node = map::getSuccessor(this->_root, this->_node->first);
-						//this->_node = this->getSuccessor(this->_root, this->_node->first);
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
 
 						return (this->_node);
 					}
@@ -456,7 +471,7 @@ namespace ft
 
 						iterator	tmp(*this);
 
-						this->_node = this->_getSuccessor(this->_root, this->_node->first);
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
 
 						return (tmp);
 					}
@@ -497,8 +512,14 @@ namespace ft
 						return (this->_node);
 					}
 
+					BSTNode		*getRoot(void) {
+
+						return (this->_root);
+					}
+
+					/*
 					// *a++ overloading - check
-					T		*operator++(int) {
+					T		*operator++(void) {
 
 						BSTNode		*tmp = this->_node;
 
@@ -512,7 +533,7 @@ namespace ft
 					}
 
 					// *a-- overloading - check
-					T		*operator--(int) {
+					T		*operator--(void) {
 
 						BSTNode		*tmp = this->_node;
 
@@ -524,6 +545,7 @@ namespace ft
 							return (0);
 						return (&(this->_node->second));
 					}
+					*/
 			};
 
 			class const_iterator {
@@ -538,7 +560,7 @@ namespace ft
 
 						BSTNode		*current = root;
 
-						while (current && current->first != first)
+						while (current && current->first != key)
 						{
 							if (current->first < key)
 								current = current->left;
@@ -658,7 +680,7 @@ namespace ft
 						this->_node = rhs._node;
 						this->_root = rhs._root;
 
-						return ;
+						return (*this);
 					}
 
 					// Comparison operator
@@ -688,8 +710,7 @@ namespace ft
 					const_iterator	&operator++(void) {
 
 						// Change everywhere
-						this->_node = map::getSuccessor(this->_root, this->_node->first);
-						//this->_node = this->getSuccessor(this->_root, this->_node->first);
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
 
 						return (this->_node);
 					}
@@ -740,6 +761,7 @@ namespace ft
 						return (this->_node);
 					}
 
+					/*
 					// *a++ overloading - check
 					T const		*operator++(int) {
 
@@ -767,6 +789,7 @@ namespace ft
 							return (0);
 						return (&(this->_node->second));
 					}
+					*/
 			};
 
 			class reverse_iterator {
@@ -781,7 +804,7 @@ namespace ft
 
 						BSTNode		*current = root;
 
-						while (current && current->first != first)
+						while (current && current->first != key)
 						{
 							if (current->first < key)
 								current = current->left;
@@ -902,7 +925,7 @@ namespace ft
 						this->_node = rhs._node;
 						this->_root = rhs._root;
 
-						return ;
+						return (*this);
 					}
 
 					// Comparison operator
@@ -984,6 +1007,7 @@ namespace ft
 						return (this->_node);
 					}
 
+					/*
 					// *a++ overload - check
 					T		*operator++(int) {
 
@@ -1011,6 +1035,7 @@ namespace ft
 							return (0);
 						return (&(this->_node->second));
 					}
+					*/
 			};
 
 			// Iterators
@@ -1079,7 +1104,7 @@ namespace ft
 				BSTNode		*tmp = this->findNode(this->_root, k);
 
 				if (!tmp)
-					tmp = this->insertNode(this->_root, k, 0);
+					tmp = this->insertNode(&this->_root, k, 0);
 				return (tmp->second);
 			}
 
@@ -1099,7 +1124,7 @@ namespace ft
 				}
 				it = iterator(tmp, this->_root);
 
-				return (std::pair(it, res));
+				return (std::pair<iterator, bool>(it, res));
 			}
 
 			// Insert #2 (with hint)
@@ -1126,11 +1151,11 @@ namespace ft
 
 				while (first != last)
 				{
-					if (!first->_root)
+					if (!first.getRoot())
 						return ;
-					if (!this->find(this->_root, first->_node->first))
+					if (!this->findNode(this->_root, first.getNode()->first))
 						this->insertNode(this->_root, \
-									first->_node->first, first->_node->second);
+							first.getNode()->first, first.getNode()->second);
 					first++;
 				}
 			}
@@ -1208,8 +1233,8 @@ namespace ft
 			*/
 
 			// Functor value_compare
-			template <typename Key, typename T, typename Compare, typename Alloc>
-			class map<Key, T, Compare, Alloc>::value_compare
+			//template <typename Key, typename T, typename Compare, typename Alloc>
+			class value_compare
 			{
 				private:
 
@@ -1229,7 +1254,7 @@ namespace ft
 					{
 						return comp(x.first, y.first);
 					}
-			}
+			};
 
 			// Observers
 			// Key_comp
@@ -1292,6 +1317,79 @@ namespace ft
 
 			// Lower_bound
 			iterator		lower_bound(Key const &k) {
+
+				map<Key, T, Compare, Alloc>::iterator	it = this->begin();
+				map<Key, T, Compare, Alloc>::iterator	ite = this->end();
+
+				while (it != ite)
+				{
+					if (this->_comp(it._node->first, k) == false)
+						return (it);
+					it++;
+				}
+				return (this->end());
+			}
+
+			// Lower_bound
+			const_iterator		lower_bound(Key const &k) const{
+
+				map<Key, T, Compare, Alloc>::const_iterator	it = this->begin();
+				map<Key, T, Compare, Alloc>::const_iterator	ite = this->end();
+
+				while (it != ite)
+				{
+					if (this->_comp(it._node->first, k) == false)
+						return (it);
+					it++;
+				}
+				return (this->end());
+			}
+
+			// Upper_bound
+			iterator		upper_bound(Key const &k) {
+
+				map<Key, T, Compare, Alloc>::iterator	it = this->begin();
+				map<Key, T, Compare, Alloc>::iterator	ite = this->end();
+
+				while (it != ite)
+				{
+					if (this->_comp(it._node->first, k) == false)
+						return (++it);
+					it++;
+				}
+				return (this->end());
+			}
+
+			// Upper_bound
+			const_iterator		upper_bound(Key const &k) const {
+
+				map<Key, T, Compare, Alloc>::const_iterator	it = this->begin();
+				map<Key, T, Compare, Alloc>::const_iterator	ite = this->end();
+
+				while (it != ite)
+				{
+					if (this->_comp(it._node->first, k) == false)
+						return (++it);
+					it++;
+				}
+				return (this->end());
+			}
+
+			// Equal range
+			std::pair<iterator, iterator>	equal_range(Key const &k) {
+
+				map<Key, T, Compare, Alloc>::iterator	it = lower_bound(k);
+				map<Key, T, Compare, Alloc>::iterator	ite = upper_bound(k);
+
+				return (std::pair<iterator, iterator>(it, ite));
+			}
+
+			std::pair<const_iterator, const_iterator>	equal_range(Key const &k) const {
+
+				map<Key, T, Compare, Alloc>::const_iterator	it = lower_bound(k);
+				map<Key, T, Compare, Alloc>::const_iterator	ite = upper_bound(k);
+
+				return (std::pair<iterator, iterator>(it, ite));
 			}
 	};
 }
