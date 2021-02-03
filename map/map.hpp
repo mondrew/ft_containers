@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/02 00:10:43 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 12:06:51 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,14 @@ namespace ft
 
 			BSTNode			*findNode(BSTNode *root, Key key) {
 
-				BSTNode		*current = root;
-
-				while (current && current->first != key)
+				while (root && root->first != key)
 				{
-					if (current->first < key)
-						current = current->left;
+					if (key < root->first)
+						root = root->left;
 					else
-						current = current->right;
+						root = root->right;
 				}
-				return (current);
+				return (root);
 			}
 
 			BSTNode			*findMin(BSTNode *node) {
@@ -77,9 +75,19 @@ namespace ft
 				return (node);
 			}
 
+			BSTNode			*findMax(BSTNode *node) {
+
+				if (!node)
+					return (0);
+				while (node->right)
+					node = node->right;
+				return (node);
+			}
+
 			BSTNode			*getSuccessor(BSTNode *root, Key key) {
 
 				BSTNode		*current = findNode(root, key);
+				//std::cout << "Current: " << root->first << ": " << root->second << std::endl; // test
 				BSTNode		*ancestor;
 				BSTNode		*successor;
 
@@ -108,7 +116,7 @@ namespace ft
 
 			BSTNode			*getAncestor(BSTNode *root, Key key) {
 
-				BSTNode		*current = getNode(root, key);
+				BSTNode		*current = findNode(root, key);
 				BSTNode		*ancestor = 0;
 				BSTNode		*tmp = root;
 
@@ -138,10 +146,9 @@ namespace ft
 
 				if (!root)
 					return ;
-				deleteBST(this->_root->left);
-				deleteBST(this->_root->right);
-				delete (this->_root);
-				this->_root = 0;
+				deleteBST(root->left);
+				deleteBST(root->right);
+				delete (root);
 
 				return ;
 			}
@@ -192,7 +199,7 @@ namespace ft
 
 			BSTNode		*insertNode(BSTNode **root, Key const &key, T const &val) {
 
-				if (!*root)
+				if (*root == 0)
 				{
 					*root = new BSTNode();
 
@@ -205,32 +212,15 @@ namespace ft
 				}
 				if (key < (*root)->first)
 				{
-					insertNode(&(*root)->left, key, val);
+					(*root)->left = insertNode(&((*root)->left), key, val);
 
-					BSTNode		*node = new BSTNode();
-
-					node->first = key;
-					node->second = val;
-					node->left = 0;
-					node->right = 0;
-					(*root)->left = node;
-
-					return (node);
+					return ((*root)->left);
 				}
 				else if (key > (*root)->first)
 				{
-					insertNode(&(*root)->right, key, val);
+					(*root)->right = insertNode(&((*root)->right), key, val);
 
-					BSTNode		*node = new BSTNode();
-
-					node->first = key;
-					node->second = val;
-					node->left = 0;
-					node->right = 0;
-
-					(*root)->right = node;
-
-					return (node);
+					return ((*root)->right);
 				}
 				else
 					return (*root); // Check the original
@@ -280,7 +270,7 @@ namespace ft
 			}
 
 			// Constructor #3 (copy)
-			map(map const &src) {
+			map(map const &src) : _root(0) {
 
 				*this = src;
 
@@ -295,6 +285,9 @@ namespace ft
 			}
 
 			map<Key, T, Compare, Alloc>		&operator=(map<Key, T, Compare, Alloc> const &rhs) {
+
+				this->_comp = rhs._comp;
+				this->_alloc = rhs._alloc;
 
 				if (this->_root)
 					deleteBST(this->_root);
@@ -313,16 +306,14 @@ namespace ft
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
-						BSTNode		*current = root;
-
-						while (current && current->first != key)
+						while (root && root->first != key)
 						{
-							if (current->first < key)
-								current = current->left;
+							if (key < root->first)
+								root = root->left;
 							else
-								current = current->right;
+								root = root->right;
 						}
-						return (current);
+						return (root);
 					}
 
 					BSTNode			*findMin(BSTNode *node) {
@@ -334,21 +325,31 @@ namespace ft
 						return (node);
 					}
 
+					BSTNode			*findMax(BSTNode *node) {
+
+						if (!node)
+							return (0);
+						while (node->right)
+							node = node->right;
+						return (node);
+					}
+
 					BSTNode			*getSuccessor(BSTNode *root, Key key) {
 
 						BSTNode		*current = findNode(root, key);
-						BSTNode		*ancestor;
-						BSTNode		*successor;
+						BSTNode		*ancestor = root;
+						BSTNode		*successor = 0;
 
 						if (!current)
 							return (0);
 						// Case 1: there is right subtree
 						if (current->right)
+						{
+							std::cout << "+_+_+_+_+_+_++_" << std::endl; // test
 							return (findMin(current->right));
+						}
 						else // Case 2: there are no right subtree - O(h)
 						{
-							successor = NULL;
-							ancestor = root;
 							while (ancestor != current)
 							{
 								if (current->first < ancestor->first)
@@ -363,29 +364,28 @@ namespace ft
 						return (successor);
 					}
 
-					BSTNode			*getAncestor(BSTNode *root, Key key) {
+					BSTNode			*getAncestor(BSTNode *root, Key key) { // CHANGE EVERYWHERE
 
-						BSTNode		*current = getNode(root, key);
+						BSTNode		*current = findNode(root, key);
 						BSTNode		*ancestor = 0;
-						BSTNode		*tmp = root;
 
 						if (!root || !current)
 							return (0);
 						// Case 1: left child exists
 						if (current->left)
-							return (current->left);
+							return (findMax(current->left));
 						// Case 2: no left child
 						else
 						{
-							while (tmp->left != current && tmp->right != current)
+							while (root != current)
 							{
-								if (current->first > ancestor->first)
+								if (current->first > root->first)
 								{
-									ancestor = tmp;
-									tmp = ancestor->right;
+									ancestor = root;
+									root = ancestor->right;
 								}
 								else
-									tmp = tmp->left;
+									root = root->left;
 							}
 							return (ancestor);
 						}
@@ -437,33 +437,51 @@ namespace ft
 					// Comparison operator
 					bool		operator==(iterator const &rhs) {
 
+						if (this->_node != rhs._node)
+							return (false);
+						if (!this->_node && !rhs._node)
+							return (true);
+						if (!this->_node || !rhs._node)
+							return (false);
 						return (this->_node->first == rhs._node->first);
 					}
 
 					bool		operator!=(iterator const &rhs) {
 
+						if (this->_node == rhs._node)
+							return (false);
+						if (!this->_node && !rhs._node)
+							return (false);
+						if (!this->_node || !rhs._node)
+							return (true);
 						return (this->_node->first != rhs._node->first);
 					}
 
 					// Dereferencing operator
 					T			&operator*(void) {
 
+						if (this->_node == 0)
+							throw (std::out_of_range("Error: out of range"));
 						return (this->_node->second);
 					}
 
 					// Field access operator (arrow operator)
 					BSTNode			*operator->(void) {
 
+						if (this->_node == 0)
+							throw (std::out_of_range("Error: out of range"));
 						return (this->_node);
 					}
 
 					// Increment prefix
 					iterator	&operator++(void) {
 
+						if (this->_root == 0)
+							throw (std::out_of_range("error: out of range"));
 						// Change everywhere
 						this->_node = this->getSuccessor(this->_root, this->_node->first);
 
-						return (this->_node);
+						return (*this);
 					}
 
 					// Increment postfix
@@ -471,7 +489,10 @@ namespace ft
 
 						iterator	tmp(*this);
 
-						this->_node = this->getSuccessor(this->_root, this->_node->first);
+						if (this->_root == 0)
+							throw (std::out_of_range("error: out of range"));
+						if (this->_node != 0)
+							this->_node = this->getSuccessor(this->_root, this->_node->first);
 
 						return (tmp);
 					}
@@ -479,7 +500,9 @@ namespace ft
 					// Decrement prefix
 					iterator	&operator--(void) {
 
-						if (this->_node == 0 && this->_root)
+						if (this->_root == 0)
+							throw (std::out_of_range("error: out of range"));
+						if (this->_node == 0)
 						{
 							this->_node = this->_root;
 							while (this->_node->right)
@@ -488,14 +511,16 @@ namespace ft
 						else
 							this->_node = this->getAncestor(this->_root, this->_node->first);
 
-						return (this->_node);
+						return (*this);
 					}
 
 					iterator	operator--(int) {
 
 						iterator	tmp(*this);
 
-						if (this->_node == 0 && this->_root)
+						if (this->_root == 0)
+							throw (std::out_of_range("error: out of range"));
+						if (this->_node == 0)
 						{
 							this->_node = this->_root;
 							while (this->_node->right)
@@ -558,16 +583,14 @@ namespace ft
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
-						BSTNode		*current = root;
-
-						while (current && current->first != key)
+						while (root && root->first != key)
 						{
-							if (current->first < key)
-								current = current->left;
+							if (key < root->first)
+								root = root->left;
 							else
-								current = current->right;
+								root = root->right;
 						}
-						return (current);
+						return (root);
 					}
 
 					BSTNode			*findMin(BSTNode *node) {
@@ -576,6 +599,15 @@ namespace ft
 							return (0);
 						while (node->left)
 							node = node->left;
+						return (node);
+					}
+
+					BSTNode			*findMax(BSTNode *node) {
+
+						if (!node)
+							return (0);
+						while (node->right)
+							node = node->right;
 						return (node);
 					}
 
@@ -802,16 +834,14 @@ namespace ft
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
-						BSTNode		*current = root;
-
-						while (current && current->first != key)
+						while (root && root->first != key)
 						{
-							if (current->first < key)
-								current = current->left;
+							if (key < root->first)
+								root = root->left;
 							else
-								current = current->right;
+								root = root->right;
 						}
-						return (current);
+						return (root);
 					}
 
 					BSTNode			*findMin(BSTNode *node) {
@@ -820,6 +850,15 @@ namespace ft
 							return (0);
 						while (node->left)
 							node = node->left;
+						return (node);
+					}
+
+					BSTNode			*findMax(BSTNode *node) {
+
+						if (!node)
+							return (0);
+						while (node->right)
+							node = node->right;
 						return (node);
 					}
 
@@ -1104,7 +1143,10 @@ namespace ft
 				BSTNode		*tmp = this->findNode(this->_root, k);
 
 				if (!tmp)
-					tmp = this->insertNode(&this->_root, k, 0);
+				{
+					this->insertNode(&this->_root, k, 0);
+					tmp = this->findNode(this->_root, k);
+				}
 				return (tmp->second);
 			}
 
@@ -1118,8 +1160,8 @@ namespace ft
 
 				if (!tmp)
 				{
-					tmp = this->insertNode(this->_root, val.first, \
-																val.second);
+					this->insertNode(this->_root, val.first, val.second);
+					tmp = findNode(this->_root, val.first);
 					res = true;
 				}
 				it = iterator(tmp, this->_root);
@@ -1137,7 +1179,10 @@ namespace ft
 				if (!node)
 					return (iterator());
 				if (!tmp)
-					tmp = this->insertNode(node, val.first, val.second);
+				{
+					this->insertNode(node, val.first, val.second);
+					tmp = findNode(this->_root, val.first);
+				}
 				it = iterator(tmp, this->_root);
 
 				return (it);

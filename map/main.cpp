@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:25:56 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/02 00:14:34 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 11:57:39 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,24 @@ void	ft_test1(void)
 	first['c'] = 50;
 	first['d'] = 70;
 
+	ft::map<char, int>::iterator	it = first.begin();
+	ft::map<char, int>::iterator	ite = first.end();
+
+	std::cout << it->first << ": " << it->second << std::endl;
+	std::cout << it->right->first << ": " << it->right->second << std::endl;
+
+	std::cout << "--------------------------------------------------" << std::endl;
+	it = first.begin();// test
+
+	while (it != ite)
+	{
+		std::cout << it->first << ": " << it->second << std::endl;
+		it++;
+	}
+	std::cout << "--------------------------------------------------" << std::endl;
+
+
 	ft::map<char, int>				second(first.begin(), first.end());
-	std::cout << "!!!!!!!!!!!!!!!!!!!!!!" << std::endl; // test
 	ft::map<char, int>				third(second);
 
 	ft::map<char, int, classcomp>	fourth;
@@ -47,13 +63,51 @@ void	ft_test1(void)
 	ft::map<char, int, bool(*)(char, char)>		fifth(fn_pt); // function pointer as Compare
 }
 
+/*
+void	ft_test2(void)
+{
+	// Constructors
+	std::map<char, int>				first;
+
+	first['a'] = 10;
+	first['b'] = 30;
+	first['c'] = 50;
+	first['d'] = 70;
+
+	std::map<char, int>::iterator	it = first.begin();
+	std::map<char, int>::iterator	ite = first.end();
+
+	while (it != ite)
+	{
+		std::cout << it->first << ": " << it->second << std::endl;
+		it++;
+	}
+	std::cout << "--------------------------------------------------" << std::endl;
+
+	it = first.begin();
+	it--;
+	std::cout << it->first << ": " << it->second << std::endl;
+
+	std::cout << "--------------------------------------------------" << std::endl;
+
+
+	std::map<char, int>				second(first.begin(), first.end());
+	std::map<char, int>				third(second);
+
+	std::map<char, int, classcomp>	fourth;
+
+	bool	(*fn_pt)(char, char) = fncomp;
+	std::map<char, int, bool(*)(char, char)>		fifth(fn_pt); // function pointer as Compare
+}
+*/
+
 int		main(void)
 {
 	// Constructors
 	ft_test1();
 
+	//ft_test2();
 	/*
-	ft_test2();
 
 	ft_test3();
 
