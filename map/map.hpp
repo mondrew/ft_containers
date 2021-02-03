@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/03 15:51:11 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 23:15:49 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,48 +149,48 @@ namespace ft
 				return ;
 			}
 
-			BSTNode		*deleteNode(BSTNode *root, Key key) {
+			BSTNode		*deleteNode(BSTNode **root, Key key) {
 
 				// For erase(2) -> call this function until find in erase return NULL. Return?
-				if (!root)
+				if (!(*root))
 					return (0);
-				if (key < root->first)
-					deleteNode(root->left, key);
-				else if (key > root->first)
-					deleteNode(root->right, key);
+				if (key < (*root)->first)
+					deleteNode(&((*root)->left), key);
+				else if (key > (*root)->first)
+					deleteNode(&((*root)->right), key);
 				else
 				{
 					// Element if found!
 					// Case 1: no children
-					if (!root->left && !root->right)
+					if (!(*root)->left && !(*root)->right)
 					{
-						delete (root);
-						root = 0;
+						delete (*root);
+						*root = 0;
 						return (0);
 					}
 					// Case 2: one child
-					else if (!root->left)
+					else if (!(*root)->left)
 					{
-						BSTNode		*tmp = root;
-						root = root->right;
+						BSTNode		*tmp = *root;
+						*root = (*root)->right;
 						delete tmp;
 					}
-					else if (!root->right)
+					else if (!(*root)->right)
 					{
-						BSTNode		*tmp = root;
-						root = root->left;
+						BSTNode		*tmp = *root;
+						*root = (*root)->left;
 						delete tmp;
 					}
 					// Case 3: two children
 					else
 					{
-						BSTNode		*tmp = findMin(root->right); // or max in left :-)
-						root->first = tmp->first;
-						root->second = tmp->second;
-						deleteNode(root->right, root->first);
+						BSTNode		*tmp = findMin((*root)->right); // or max in left :-)
+						(*root)->first = tmp->first;
+						(*root)->second = tmp->second;
+						deleteNode(&((*root)->right), (*root)->first);
 					}
 				}
-				return (root);
+				return (*root);
 			}
 
 			BSTNode		*insertNode(BSTNode **root, Key const &key, T const &val) {
@@ -1218,7 +1218,7 @@ namespace ft
 
 				if (!tmp)
 				{
-					this->insertNode(this->_root, val.first, val.second);
+					this->insertNode(&this->_root, val.first, val.second);
 					tmp = findNode(this->_root, val.first);
 					res = true;
 				}
@@ -1238,7 +1238,7 @@ namespace ft
 					return (iterator());
 				if (!tmp)
 				{
-					this->insertNode(node, val.first, val.second);
+					this->insertNode(&node, val.first, val.second);
 					tmp = findNode(this->_root, val.first);
 				}
 				it = iterator(tmp, this->_root);
@@ -1257,7 +1257,7 @@ namespace ft
 					if (!first.getRoot())
 						return ;
 					if (!this->findNode(this->_root, first.getNode()->first))
-						this->insertNode(this->_root, \
+						this->insertNode(&this->_root, \
 							first.getNode()->first, first.getNode()->second);
 					first++;
 				}
@@ -1268,7 +1268,7 @@ namespace ft
 
 				if (!position.getNode())
 					return ;
-				this->deleteNode(this->_root, position.getNode()->first);
+				this->deleteNode(&this->_root, position.getNode()->first);
 
 				return ;
 			}
@@ -1276,7 +1276,7 @@ namespace ft
 			// Erase #2 (key)
 			std::size_t		erase(Key const &k) {
 
-				BSTNode		*tmp = deleteNode(this->_root, k);
+				BSTNode		*tmp = deleteNode(&this->_root, k);
 
 				if (!tmp)
 					return (0);
@@ -1286,12 +1286,16 @@ namespace ft
 			// Erase #3 (range)
 			void		erase(iterator first, iterator last) {
 
+				iterator	tmp;
+
 				while (first != last)
 				{
+					tmp = ++first;
+					first--;
 					if (!first.getNode())
 						return ;
-					this->deleteNode(this->_root, first.getNode()->first);
-					first++;
+					this->deleteNode(&this->_root, first.getNode()->first);
+					first = tmp;
 				}
 			}
 
@@ -1383,7 +1387,7 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it._node->first, k) == false)
+					if (this->_comp(it.getNode()->first, k) == false)
 						return (it);
 					it++;
 				}

@@ -6,13 +6,14 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:25:56 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/03 15:58:51 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 23:29:02 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "map.hpp"
 #include <map>
 #include <iostream>
+#include <utility>
 
 bool	fncomp(char lhs, char rhs)
 {
@@ -234,9 +235,149 @@ void	ft_test3(void)
 	std::cout << "mymap max_size is: " << mymap.max_size() << std::endl;
 
 	std::cout << std::endl;
+}
 
-	std::cout << "existing element: " << mymap['e'] << std::endl;
-	std::cout << "non-existing element: " << mymap['x'] << std::endl;
+void	ft_test4(void)
+{
+	// Element access operator []
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>> [ Element access operator [] test ] <<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	ft::map<char, int>				mymap;
+
+	mymap['a'] = 10;
+	mymap['b'] = 30;
+	mymap['c'] = 50;
+	mymap['d'] = 70;
+
+	std::cout << "Print 'mymap' map elements using indexes:" << std::endl;
+	std::cout << "mymap [a] is: " << mymap['a'] << std::endl;
+	std::cout << "mymap [b] is: " << mymap['b'] << std::endl;
+	std::cout << "mymap [c] is: " << mymap['c'] << std::endl;
+	std::cout << "mymap [d] is: " << mymap['d'] << std::endl;
+
+	std::cout << "mymap contains " << mymap.size() << " elements." << std::endl;
+
+	std::cout << "Trying to access to non-existing element: " << mymap['x'];
+   	std::cout << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test5(void)
+{
+	// Insert
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>> [ Insert function test ] <<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	ft::map<char, int>		mymap;
+
+	// First insert function version (single parameter):
+	mymap.insert(std::pair<char, int>('a', 100));
+	mymap.insert(std::pair<char, int>('z', 200));
+
+	std::pair<ft::map<char, int>::iterator, bool>	ret;
+
+	ret = mymap.insert(std::pair<char, int>('z', 500));
+	if (ret.second == false)
+	{
+		std::cout << "Element 'z' already existed";
+		std::cout << " with a value of " << ret.first->second << std::endl;
+	}
+
+	// Second insert function version (with hint position):
+	ft::map<char, int>::iterator	it = mymap.begin();
+	mymap.insert(it, std::pair<char, int>('b', 300)); // max efficiency inserting
+	mymap.insert(it, std::pair<char, int>('c', 400)); // no max efficiency inserting
+
+	// Third insert function version (range insertion):
+	ft::map<char, int>	anothermap;
+	anothermap.insert(mymap.begin(), mymap.find('c'));
+
+	// Showing contents:
+	std::cout << "\x1b[33m";
+	std::cout << "mymap contains:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "anothermap contains:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (it = anothermap.begin(); it != anothermap.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	std::cout << std::endl;
+}
+
+void	ft_test6(void)
+{
+	// Erase
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>> [ Erase function test ] <<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::map<char, int>				mymap;
+	ft::map<char, int>::iterator	it;
+
+	// Insert some values:
+	mymap['a'] = 10;
+	mymap['b'] = 20;
+	mymap['c'] = 30;
+	mymap['d'] = 40;
+	mymap['e'] = 50;
+	mymap['f'] = 60;
+
+	// Print initial map
+	std::cout << "\x1b[33m";
+	std::cout << "Initial map:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	// Erasing by iterator
+	it = mymap.find('b');
+	std::cout << "\x1b[33m";
+	std::cout << "Erase by iterator pointing to 'b':";
+	std::cout << "\033[0m\t\t" << std::endl;
+	mymap.erase(it);
+	// Print map
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	// Erasing by key
+	std::cout << "\x1b[33m";
+	std::cout << "Erase by key with value 'c':";
+	std::cout << "\033[0m\t\t" << std::endl;
+	mymap.erase('c');
+	// Print map
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	// Erasing by range
+	std::cout << "\x1b[33m";
+	std::cout << "Erase by range from iterator pointing to 'e' to the end:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	it = mymap.find('e');
+	mymap.erase(it, mymap.end());
+	// Print map
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	std::cout << "mymap size(): " << mymap.size() << std::endl; // test
+
+	std::cout << std::endl;
+}
+
+void	ft_test7(void)
+{
+	// Swap
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>> [ Swap function test ] <<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::map<char, int>				mymap;
+	ft::map<char, int>::iterator	it;
 }
 
 int		main(void)
@@ -250,13 +391,19 @@ int		main(void)
 	// Capacity
 	ft_test3();
 
-	/*
+	// Element access operator []
 	ft_test4();
 
+	// Insert
 	ft_test5();
 
+	// Erase
 	ft_test6();
 
+	// Swap
+	ft_test7();
+
+	/*
 	ft_test7();
 
 	ft_test8();
