@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/03 12:28:37 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 13:28:23 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ namespace ft
 			BSTNode			*getSuccessor(BSTNode *root, Key key) {
 
 				BSTNode		*current = findNode(root, key);
-				//std::cout << "Current: " << root->first << ": " << root->second << std::endl; // test
 				BSTNode		*ancestor;
 				BSTNode		*successor;
 
@@ -344,10 +343,7 @@ namespace ft
 							return (0);
 						// Case 1: there is right subtree
 						if (current->right)
-						{
-							std::cout << "+_+_+_+_+_+_++_" << std::endl; // test
 							return (findMin(current->right));
-						}
 						else // Case 2: there are no right subtree - O(h)
 						{
 							while (ancestor != current)
@@ -1078,7 +1074,7 @@ namespace ft
 			};
 
 			// Iterators
-			iterator	begin(void) {
+			ft::map<Key, T, Compare, Alloc>::iterator	begin(void) {
 
 				BSTNode		*first = this->_root;
 
@@ -1087,7 +1083,7 @@ namespace ft
 				while (first->left)
 					first = first->left;
 
-				return (iterator(first, this->_root));
+				return (ft::map<Key, T, Compare, Alloc>::iterator(first, this->_root));
 			}
 
 			iterator	end(void) {
