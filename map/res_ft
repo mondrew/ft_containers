@@ -1,0 +1,67 @@
+[91m>>>>>>>>>>>>>>> [ Constructors test ] <<<<<<<<<<<<<<<[0m		
+[33mDefault constructor:[0m		
+Print 'first' map elements using indexes:
+[a]: 10
+[b]: 30
+[c]: 50
+[d]: 70
+Print 'first' map elements using iterator:
+a: 10
+b: 30
+c: 50
+d: 70
+[33mRange constructor[0m		
+Print 'second' map elements using iterator:
+a: 10
+b: 30
+c: 50
+d: 70
+[33mCopy constructor[0m		
+Print 'third' map elements using iterator:
+a: 10
+b: 30
+c: 50
+d: 70
+[33mDefault constructor with non-default Compare template type (classcomp)[0m		
+Print 'fourth' map elements using iterator:
+d: 41
+e: 21
+i: 22
+j: 42
+[33mDefault constructor with non-default compare function ptr[0m		
+Print 'fifth' map elements using iterator
+a: 3
+i: 5
+k: 4
+n: 6
+
+[91m>>>>>>>>>>>>>>> [ Iterators test ] <<<<<<<<<<<<<<<[0m		
+[33mPrint 'first' map elements using iterator:[0m		
+a: 300
+d: 500
+e: 900
+m: 700
+p: 100
+[33mPrint 'first' map elements using reverse_iterator:[0m		
+p: 100
+m: 700
+e: 900
+d: 500
+a: 300
+
+[91m>>>>>>>>>>>>>>> [ Capacity functions test ] <<<<<<<<<<<<<<<[0m		
+[33mPrint 'mymap' map elements:[0m		
+a: 300
+d: 500
+e: 900
+m: 700
+p: 100
+[33mEmpty function test[0m		
+map 'mymap' is not empty
+[33mSize function test[0m		
+mymap size is: 5
+[33mMax_size function test[0m		
+mymap max_size is: 768614336404564607
+
+existing element: 900
+non-existing element: 0

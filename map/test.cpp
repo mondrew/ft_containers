@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/03 15:51:11 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 15:26:17 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ namespace ft
 			// Private functions
 			std::size_t		countNodes(BSTNode *root) {
 
-				if (root == 0)
+				if (root->empty())
 					return (0);
 				return (1 + countNodes(root->left) + \
 										countNodes(root->right));
@@ -472,8 +472,7 @@ namespace ft
 						if (this->_root == 0)
 							throw (std::out_of_range("error: out of range"));
 						// Change everywhere
-						this->_node = this->getSuccessor(this->_root, \
-															this->_node->first);
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
 
 						return (*this);
 					}
@@ -486,8 +485,7 @@ namespace ft
 						if (this->_root == 0)
 							throw (std::out_of_range("error: out of range"));
 						if (this->_node != 0)
-							this->_node = this->getSuccessor(this->_root, \
-															this->_node->first);
+							this->_node = this->getSuccessor(this->_root, this->_node->first);
 
 						return (tmp);
 					}
@@ -504,8 +502,7 @@ namespace ft
 								this->_node = this->_node->right;
 						}
 						else
-							this->_node = this->getAncestor(this->_root, \
-															this->_node->first);
+							this->_node = this->getAncestor(this->_root, this->_node->first);
 
 						return (*this);
 					}
@@ -523,8 +520,7 @@ namespace ft
 								this->_node = this->_node->right;
 						}
 						else
-							this->_node = this->getAncestor(this->_root, \
-															this->_node->first);
+							this->_node = this->getAncestor(this->_root, this->_node->first);
 
 						return (tmp);
 					}
@@ -722,64 +718,41 @@ namespace ft
 					// Comparison operator
 					bool		operator==(const_iterator const &rhs) {
 
-						if (this->_node != rhs._node)
-							return (false);
-						if (!this->_node && !rhs._node)
-							return (true);
-						if (!this->_node || !rhs._node)
-							return (false);
 						return (this->_node->first == rhs._node->first);
 					}
 
 					bool		operator!=(const_iterator const &rhs) {
 
-						if (this->_node == rhs._node)
-							return (false);
-						if (!this->_node && !rhs._node)
-							return (false);
-						if (!this->_node || !rhs._node)
-							return (true);
 						return (this->_node->first != rhs._node->first);
 					}
 
 					// Dereferencing operator
-					T			&operator*(void) {
+					T const			&operator*(void) {
 
-						if (this->_node == 0)
-							throw (std::out_of_range("Error: out of range"));
 						return (this->_node->second);
 					}
 
 					// Field access operator (arrow operator)
-					BSTNode			*operator->(void) {
+					BSTNode	const	*operator->(void) {
 
-						if (this->_node == 0)
-							throw (std::out_of_range("Error: out of range"));
 						return (this->_node);
 					}
 
 					// Increment prefix
 					const_iterator	&operator++(void) {
 
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
 						// Change everywhere
-						this->_node = this->getSuccessor(this->_root, \
-															this->_node->first);
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
 
-						return (*this);
+						return (this->_node);
 					}
 
 					// Increment postfix
 					const_iterator	operator++(int) {
 
-						iterator	tmp(*this);
+						const_iterator	tmp(*this);
 
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node != 0)
-							this->_node = this->getSuccessor(this->_root, \
-															this->_node->first);
+						this->_node = this->_getSuccessor(this->_root, this->_node->first);
 
 						return (tmp);
 					}
@@ -787,36 +760,30 @@ namespace ft
 					// Decrement prefix
 					const_iterator	&operator--(void) {
 
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node == 0)
+						if (this->_node == 0 && this->_root)
 						{
 							this->_node = this->_root;
 							while (this->_node->right)
 								this->_node = this->_node->right;
 						}
 						else
-							this->_node = this->getAncestor(this->_root, \
-															this->_node->first);
+							this->_node = this->getAncestor(this->_root, this->_node->first);
 
-						return (*this);
+						return (this->_node);
 					}
 
 					const_iterator	operator--(int) {
 
-						iterator	tmp(*this);
+						const_iterator	tmp(*this);
 
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node == 0)
+						if (this->_node == 0 && this->_root)
 						{
 							this->_node = this->_root;
 							while (this->_node->right)
 								this->_node = this->_node->right;
 						}
 						else
-							this->_node = this->getAncestor(this->_root, \
-															this->_node->first);
+							this->_node = this->getAncestor(this->_root, this->_node->first);
 
 						return (tmp);
 					}
@@ -1005,52 +972,33 @@ namespace ft
 					// Comparison operator
 					bool		operator==(reverse_iterator const &rhs) {
 
-						if (this->_node != rhs._node)
-							return (false);
-						if (!this->_node && !rhs._node)
-							return (true);
-						if (!this->_node || !rhs._node)
-							return (false);
 						return (this->_node->first == rhs._node->first);
 					}
 
 					bool		operator!=(reverse_iterator const &rhs) {
 
-						if (this->_node == rhs._node)
-							return (false);
-						if (!this->_node && !rhs._node)
-							return (false);
-						if (!this->_node || !rhs._node)
-							return (true);
 						return (this->_node->first != rhs._node->first);
 					}
 
 					// Dereferencing operator
 					T			&operator*(void) {
 
-						if (this->_node == 0)
-							throw (std::out_of_range("Error: out of range"));
 						return (this->_node->second);
 					}
 
 					// Field access operator (arrow operator)
 					BSTNode			*operator->(void) {
 
-						if (this->_node == 0)
-							throw (std::out_of_range("Error: out of range"));
 						return (this->_node);
 					}
 
 					// Increment prefix
 					reverse_iterator	&operator++(void) {
 
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						// Change everywhere
 						this->_node = this->getAncestor(this->_root, \
 															this->_node->first);
 
-						return (*this);
+						return (this->_node);
 					}
 
 					// Increment postfix
@@ -1058,10 +1006,7 @@ namespace ft
 
 						reverse_iterator	tmp(*this);
 
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node != 0)
-							this->_node = this->getAncestor(this->_root, \
+						this->_node = this->getAncestor(this->_root, \
 															this->_node->first);
 
 						return (tmp);
@@ -1070,37 +1015,31 @@ namespace ft
 					// Decrement prefix
 					reverse_iterator	&operator--(void) {
 
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node == 0)
+						if (this->_node == 0 && this->_root)
 						{
 							this->_node = this->_root;
-							while (this->_node->right)
-								this->_node = this->_node->right;
+							while (this->_node->left)
+								this->_node = this->_node->left;
 						}
 						else
 							this->_node = this->getSuccessor(this->_root, \
 															this->_node->first);
-
-						return (*this);
+						return (this->_node);
 					}
 
 					reverse_iterator	operator--(int) {
 
-						iterator	tmp(*this);
+						reverse_iterator	tmp(*this);
 
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node == 0)
+						if (this->_node == 0 && this->_root)
 						{
 							this->_node = this->_root;
-							while (this->_node->right)
-								this->_node = this->_node->right;
+							while (this->_node->left)
+								this->_node = this->_node->left;
 						}
 						else
-							this->_node = this->getSuccessor(this->_root, \
+							this->_node = this->_getSuccessor(this->_root, \
 															this->_node->first);
-
 						return (tmp);
 					}
 

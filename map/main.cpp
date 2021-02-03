@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:25:56 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/03 13:41:20 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 15:58:51 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	ft_test1(void)
 	std::cout << "[c]: " << first['c'] << std::endl;
 	std::cout << "[d]: " << first['d'] << std::endl;
 
-	std::cout << "Print 'first' map elements using iterators:" << std::endl;
+	std::cout << "Print 'first' map elements using iterator:" << std::endl;
 	ft::map<char, int>::iterator	it = first.begin();
 	ft::map<char, int>::iterator	ite = first.end();
 	while (it != ite)
@@ -68,7 +68,7 @@ void	ft_test1(void)
 
 	ft::map<char, int>				second(first.begin(), first.end());
 
-	std::cout << "Print 'second' map elements using iterators:" << std::endl;
+	std::cout << "Print 'second' map elements using iterator:" << std::endl;
 	it = second.begin();
 	ite = second.end();
 	while (it != ite)
@@ -84,7 +84,7 @@ void	ft_test1(void)
 
 	ft::map<char, int>				third(second);
 
-	std::cout << "Print 'third' map elements using iterators:" << std::endl;
+	std::cout << "Print 'third' map elements using iterator:" << std::endl;
 	it = third.begin();
 	ite = third.end();
 	while (it != ite)
@@ -107,7 +107,7 @@ void	ft_test1(void)
 	fourth['d'] = 41;
 	fourth['i'] = 22;
 
-	std::cout << "Print 'fourth' map elements using iterators:" << std::endl;
+	std::cout << "Print 'fourth' map elements using iterator:" << std::endl;
 	ft::map<char, int, classcomp>::iterator	it1 = fourth.begin();
 	ft::map<char, int, classcomp>::iterator	ite1 = fourth.end();
 	while (it1 != ite1)
@@ -124,7 +124,7 @@ void	ft_test1(void)
 	bool(*fn_pt)(char, char) = fncomp;
 	ft::map<char, int, bool(*)(char, char)>		fifth(fn_pt); // function pointer as Compare
 
-	std::cout << "Print 'fifth' map elements using iterators" << std::endl;
+	std::cout << "Print 'fifth' map elements using iterator" << std::endl;
 	// Add elements
 	fifth['a'] = 1;
 	fifth['n'] = 2;
@@ -140,10 +140,103 @@ void	ft_test1(void)
 		std::cout << it2->first << ": " << it2->second << std::endl;
 		it2++;
 	}
+
+	std::cout << std::endl;
 }
 
 void	ft_test2(void)
 {
+	// Iterators
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>>>>> [ Iterators test ] <<<<<<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	ft::map<char, int>				first;
+
+	first['p'] = 100;
+	first['a'] = 300;
+	first['d'] = 500;
+	first['m'] = 700;
+	first['e'] = 900;
+
+	std::cout << "\x1b[33m";
+	std::cout << "Print 'first' map elements using iterator:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::map<char, int>::iterator	it = first.begin();
+	ft::map<char, int>::iterator	ite = first.end();
+	while (it != ite)
+	{
+		std::cout << it->first << ": " << it->second << std::endl;
+		it++;
+	}
+
+	std::cout << "\x1b[33m";
+	std::cout << "Print 'first' map elements using reverse_iterator:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::map<char, int>::reverse_iterator	rit = first.rbegin();
+	ft::map<char, int>::reverse_iterator	rite = first.rend();
+	while (rit != rite)
+	{
+		std::cout << rit->first << ": " << rit->second << std::endl;
+		rit++;
+	}
+
+	std::cout << std::endl;
+}
+
+// Capacity
+void	ft_test3(void)
+{
+	// Capacity
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>>>>> [ Capacity functions test ] <<<<<<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	ft::map<char, int>				mymap;
+
+	mymap['p'] = 100;
+	mymap['a'] = 300;
+	mymap['d'] = 500;
+	mymap['m'] = 700;
+	mymap['e'] = 900;
+
+	std::cout << "\x1b[33m";
+	std::cout << "Print 'mymap' map elements:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	ft::map<char, int>::iterator	it = mymap.begin();
+	ft::map<char, int>::iterator	ite = mymap.end();
+	while (it != ite)
+	{
+		std::cout << it->first << ": " << it->second << std::endl;
+		it++;
+	}
+
+	// Empty function
+	std::cout << "\x1b[33m";
+	std::cout << "Empty function test";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	if (mymap.empty())
+		std::cout << "map 'mymap' is empty" << std::endl;
+	else
+		std::cout << "map 'mymap' is not empty" << std::endl;
+
+	// Size function
+	std::cout << "\x1b[33m";
+	std::cout << "Size function test";
+	std::cout << "\033[0m\t\t" << std::endl;
+	std::cout << "mymap size is: " << mymap.size() << std::endl;
+
+	// Max_size function
+	std::cout << "\x1b[33m";
+	std::cout << "Max_size function test";
+	std::cout << "\033[0m\t\t" << std::endl;
+	std::cout << "mymap max_size is: " << mymap.max_size() << std::endl;
+
+	std::cout << std::endl;
+
+	std::cout << "existing element: " << mymap['e'] << std::endl;
+	std::cout << "non-existing element: " << mymap['x'] << std::endl;
 }
 
 int		main(void)
@@ -151,11 +244,13 @@ int		main(void)
 	// Constructors
 	ft_test1();
 
+	// Iterators
 	ft_test2();
 
-	/*
+	// Capacity
 	ft_test3();
 
+	/*
 	ft_test4();
 
 	ft_test5();
