@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/03 12:06:51 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 12:28:37 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,13 +214,13 @@ namespace ft
 				{
 					(*root)->left = insertNode(&((*root)->left), key, val);
 
-					return ((*root)->left);
+					return (*root);
 				}
 				else if (key > (*root)->first)
 				{
 					(*root)->right = insertNode(&((*root)->right), key, val);
 
-					return ((*root)->right);
+					return (*root);
 				}
 				else
 					return (*root); // Check the original

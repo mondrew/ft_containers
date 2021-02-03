@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:25:56 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/03 11:57:39 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/03 12:23:57 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@ void	ft_test1(void)
 	first['b'] = 30;
 	first['c'] = 50;
 	first['d'] = 70;
+
+	std::cout << "[a]: " << first['a'] << std::endl;
+	std::cout << "[b]: " << first['b'] << std::endl;
+	std::cout << "[c]: " << first['c'] << std::endl;
+	std::cout << "[d]: " << first['d'] << std::endl;
 
 	ft::map<char, int>::iterator	it = first.begin();
 	ft::map<char, int>::iterator	ite = first.end();
