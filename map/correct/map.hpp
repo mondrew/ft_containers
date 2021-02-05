@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/05 16:09:06 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/06 00:33:36 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,6 @@ namespace ft
 					// Case 3: two children
 					else
 					{
-						BSTNode		*tmp = findMin((*root)->right); // or max in left :-)
 						BSTNode		*replace = new BSTNode((*root)->val);
 						BSTNode		*parent = getAncestor(this->_root, (*root)->val.first);
 						int			dir = 0; // left
@@ -319,6 +318,7 @@ namespace ft
 
 					BSTNode		*_node;
 					BSTNode		*_root;
+					BSTNode		*_last;
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
@@ -407,7 +407,14 @@ namespace ft
 				public:
 
 					// Constructor #1 (empty)
-					iterator(void) : _node(0), _root(0) { return ; }
+					iterator(void) : _node(0), _root(0) {
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
+						return ;
+					}
 
 					// Constructor #2 (init)
 					iterator(map<Key, T, Compare, Alloc> const &rhs) {
@@ -415,6 +422,10 @@ namespace ft
 						BSTNode		*tmp;
 						this->_node = rhs.begin();
 						this->_root = this->_node;
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
 
 						tmp = getAncestor(this->_node);
 						while (tmp)
@@ -429,6 +440,10 @@ namespace ft
 					// Constructor #3 (for begin & end)
 					iterator(BSTNode *node, BSTNode *root) : _node(node), _root(root) {
 
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
 						return ;
 					}
 
@@ -436,13 +451,21 @@ namespace ft
 					iterator(iterator const &src) { *this = src; return ; }
 
 					// Destructor
-					~iterator(void) { return ; }
+					~iterator(void) {
+						
+						delete this->_last;
+						return ;
+					}
 
 					// Assignment operation
 					iterator	&operator=(iterator const &rhs) {
 
 						this->_node = rhs._node;
 						this->_root = rhs._root;
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
 
 						return (*this);
 					}
@@ -474,9 +497,7 @@ namespace ft
 					value_type	&operator*(void) {
 
 						if (this->_node == 0)
-						{
-							throw (std::out_of_range("Error: out of range"));
-						}
+							return (this->_last->val);
 						return (this->_node->val);
 					}
 
@@ -485,11 +506,7 @@ namespace ft
 
 						// Возвращать нулевой value_type, чтобы его можно было разыменовать
 						if (this->_node == 0)
-						{
-							Нулевой элемент должен быть всегда!!!
-							//return (&(this->_node->val));
-							throw (std::out_of_range("Error: out of range"));
-						}
+							return (&(this->_last->val));
 						return (&(this->_node->val));
 					}
 
@@ -573,6 +590,7 @@ namespace ft
 
 					BSTNode		*_node;
 					BSTNode		*_root;
+					BSTNode		*_last;
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
@@ -661,7 +679,14 @@ namespace ft
 				public:
 
 					// Constructor #1 (empty)
-					const_iterator(void) : _node(0), _root(0) { return ; }
+					const_iterator(void) : _node(0), _root(0) {
+						
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
+						return ;
+					}
 
 					// Constructor #2 (init)
 					const_iterator(map<Key, T, Compare, Alloc> const &rhs) {
@@ -669,6 +694,10 @@ namespace ft
 						BSTNode		*tmp;
 						this->_node = rhs.begin();
 						this->_root = this->_node;
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
 
 						tmp = getAncestor(this->_node);
 						while (tmp)
@@ -684,6 +713,10 @@ namespace ft
 					const_iterator(BSTNode *node, BSTNode *root) :
 													_node(node), _root(root) {
 
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
 						return ;
 					}
 
@@ -691,13 +724,21 @@ namespace ft
 					const_iterator(const_iterator const &src) { *this = src; return ; }
 
 					// Destructor
-					~const_iterator(void) { return ; }
+					~const_iterator(void) {
+
+						delete this->_last;
+						return ;
+					}
 
 					// Assignment operation
-					const_iterator	&operator=(const_iterator const &rhs) {
+					const_iterator const	&operator=(const_iterator const &rhs) {
 
 						this->_node = rhs._node;
 						this->_root = rhs._root;
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
 
 						return (*this);
 					}
@@ -726,10 +767,10 @@ namespace ft
 					}
 
 					// Dereferencing operator
-					value_type	&operator*(void) {
+					value_type const	&operator*(void) {
 
 						if (this->_node == 0)
-							throw (std::out_of_range("Error: out of range"));
+							return (this->_last->val);
 						return (this->_node->val);
 					}
 
@@ -737,12 +778,12 @@ namespace ft
 					value_type	*operator->(void) {
 
 						if (this->_node == 0)
-							throw (std::out_of_range("Error: out of range"));
+							return (&(this->_last->val));
 						return (&(this->_node->val));
 					}
 
 					// Increment prefix
-					const_iterator	&operator++(void) {
+					const_iterator const	&operator++(void) {
 
 						if (this->_root == 0)
 							throw (std::out_of_range("error: out of range"));
@@ -768,7 +809,7 @@ namespace ft
 					}
 
 					// Decrement prefix
-					const_iterator	&operator--(void) {
+					const_iterator const	&operator--(void) {
 
 						if (this->_root == 0)
 							throw (std::out_of_range("error: out of range"));
@@ -821,6 +862,7 @@ namespace ft
 
 					BSTNode		*_node;
 					BSTNode		*_root;
+					BSTNode		*_last;
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
@@ -919,7 +961,14 @@ namespace ft
 				public:
 
 					// Constructor #1 (empty)
-					reverse_iterator(void) : _node(0), _root(0) { return ; }
+					reverse_iterator(void) : _node(0), _root(0) {
+						
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
+						return ;
+					}
 
 					// Constructor #2 (init)
 					reverse_iterator(map<Key, T, Compare, Alloc> const &rhs) {
@@ -928,6 +977,10 @@ namespace ft
 
 						this->_node = rhs.rbegin();
 						this->_root = this->_node;
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
 
 						tmp = getAncestor(this->_node);
 						while (tmp)
@@ -942,6 +995,11 @@ namespace ft
 					// Constructor #3 (for begin & end)
 					reverse_iterator(BSTNode *node, BSTNode *root) : 
 													_node(node), _root(root) {
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
 						return ;
 					}
 
@@ -953,13 +1011,21 @@ namespace ft
 					}
 
 					// Destructor
-					~reverse_iterator(void) { return ; }
+					~reverse_iterator(void) {
+						
+						delete this->_last;
+						return ;
+					}
 
 					// Assignment operation
 					reverse_iterator	&operator=(reverse_iterator const &rhs){
 
 						this->_node = rhs._node;
 						this->_root = rhs._root;
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
 
 						return (*this);
 					}
@@ -991,7 +1057,7 @@ namespace ft
 					value_type	&operator*(void) {
 
 						if (this->_node == 0)
-							throw (std::out_of_range("Error: out of range"));
+							return (this->_last->val);
 						return (this->_node->val);
 					}
 
@@ -999,7 +1065,7 @@ namespace ft
 					value_type	*operator->(void) {
 
 						if (this->_node == 0)
-							throw (std::out_of_range("Error: out of range"));
+							return (&(this->_last->val));
 						return (&(this->_node->val));
 					}
 
@@ -1083,6 +1149,23 @@ namespace ft
 			iterator	end(void) {
 
 				return (iterator(0, this->_root));
+			}
+
+			ft::map<Key, T, Compare, Alloc>::const_iterator		cbegin(void) const {
+
+				BSTNode		*first = this->_root;
+
+				if (!first)
+					return (const_iterator());
+				while (first->left)
+					first = first->left;
+
+				return (ft::map<Key, T, Compare, Alloc>::const_iterator(first, this->_root));
+			}
+
+			ft::map<Key, T, Compare, Alloc>::const_iterator		cend(void) const {
+
+				return (const_iterator(0, this->_root));
 			}
 
 			reverse_iterator	rbegin(void) {
@@ -1180,9 +1263,6 @@ namespace ft
 
 			// Insert #3 (range)
 			void		insert(iterator first, iterator last) {
-
-				BSTNode		*node;
-				BSTNode		*tmp;
 
 				while (first != last)
 				{
@@ -1318,7 +1398,8 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it.getNode()->val.first, k) == false)
+					if (this->_comp(it.getNode()->val.first, k) == false && \
+							this->_comp(k, it.getNode()->val.first) == false)
 						return (it);
 					it++;
 				}
@@ -1327,11 +1408,12 @@ namespace ft
 
 			const_iterator	find(Key const &k) const {
 
-				map<Key, T, Compare, Alloc>::const_iterator		it = this->begin();
-				map<Key, T, Compare, Alloc>::const_iterator		ite = this->end();
+				map<Key, T, Compare, Alloc>::const_iterator		it = this->cbegin();
+				map<Key, T, Compare, Alloc>::const_iterator		ite = this->cend();
 				while (it != ite)
 				{
-					if (this->_comp(it._node->val.first, k) == false)
+					if (this->_comp(it.getNode()->val.first, k) == false && \
+							this->_comp(k, it.getNode()->val.first) == false)
 						return (it);
 					it++;
 				}
@@ -1341,12 +1423,13 @@ namespace ft
 			// Count
 			std::size_t		count(Key const &k) const {
 
-				map<Key, T, Compare, Alloc>::iterator	it = this->begin();
-				map<Key, T, Compare, Alloc>::iterator	ite = this->end();
+				map<Key, T, Compare, Alloc>::const_iterator	it = this->cbegin();
+				map<Key, T, Compare, Alloc>::const_iterator	ite = this->cend();
 
 				while (it != ite)
 				{
-					if (this->_comp(it._node->val.first, k) == false)
+					if (this->_comp(it.getNode()->val.first, k) == false && \
+							this->_comp(k, it.getNode()->val.first) == false)
 						return (1);
 					it++;
 				}
@@ -1361,7 +1444,7 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it._node->val.first, k) == false)
+					if (this->_comp(it.getNode()->val.first, k) == false)
 						return (it);
 					it++;
 				}
@@ -1391,7 +1474,7 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it._node->val.first, k) == false)
+					if (this->_comp(it.getNode()->val.first, k) == false)
 						return (++it);
 					it++;
 				}

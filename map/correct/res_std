@@ -1,0 +1,203 @@
+[91m>>>>>>>>>>>>>>> [ Constructors test ] <<<<<<<<<<<<<<<[0m		
+[33mDefault constructor:[0m		
+Print 'first' map elements using indexes:
+[a]: 10
+[b]: 30
+[c]: 50
+[d]: 70
+Print 'first' map elements using iterator:
+a: 10
+b: 30
+c: 50
+d: 70
+[33mRange constructor[0m		
+Print 'second' map elements using iterator:
+a: 10
+b: 30
+c: 50
+d: 70
+[33mCopy constructor[0m		
+Print 'third' map elements using iterator:
+a: 10
+b: 30
+c: 50
+d: 70
+[33mDefault constructor with non-default Compare template type (classcomp)[0m		
+Print 'fourth' map elements using iterator:
+d: 41
+e: 21
+i: 22
+j: 42
+[33mDefault constructor with non-default compare function ptr[0m		
+Print 'fifth' map elements using iterator
+a: 3
+i: 5
+k: 4
+n: 6
+
+[91m>>>>>>>>>>>>>>> [ Iterators test ] <<<<<<<<<<<<<<<[0m		
+[33mPrint 'first' map elements using iterator:[0m		
+a: 300
+d: 500
+e: 900
+m: 700
+p: 100
+[33mPrint 'first' map elements using reverse_iterator:[0m		
+p: 100
+m: 700
+e: 900
+d: 500
+a: 300
+
+[91m>>>>>>>>>>>>>>> [ Capacity functions test ] <<<<<<<<<<<<<<<[0m		
+[33mPrint 'mymap' map elements:[0m		
+a: 300
+d: 500
+e: 900
+m: 700
+p: 100
+[33mEmpty function test[0m		
+map 'mymap' is not empty
+[33mSize function test[0m		
+mymap size is: 5
+[33mMax_size function test[0m		
+mymap max_size is: 461168601842738790
+
+[91m>>>>>>>>>>>> [ Element access operator [] test ] <<<<<<<<<<<[0m		
+Print 'mymap' map elements using indexes:
+mymap [a] is: 10
+mymap [b] is: 30
+mymap [c] is: 50
+mymap [d] is: 70
+mymap contains 4 elements.
+Trying to access to non-existing element: 0
+
+[91m>>>>>>>>>>>> [ Insert function test ] <<<<<<<<<<<[0m		
+Element 'z' already existed with a value of 200
+[33mmymap contains:[0m		
+a => 100
+b => 300
+c => 400
+z => 200
+[33manothermap contains:[0m		
+a => 100
+b => 300
+
+[91m>>>>>>>>>>>> [ Erase function test ] <<<<<<<<<<<[0m		
+[33mInitial map:[0m		
+a => 10
+b => 20
+c => 30
+d => 40
+e => 50
+f => 60
+[33mErase by iterator pointing to 'b':[0m		
+a => 10
+c => 30
+d => 40
+e => 50
+f => 60
+[33mErase by key with value 'c':[0m		
+a => 10
+d => 40
+e => 50
+f => 60
+[33mErase by range from iterator pointing to 'e' to the end:[0m		
+a => 10
+d => 40
+mymap size(): 2
+
+[91m>>>>>>>>>>>> [ Swap function test ] <<<<<<<<<<<[0m		
+[33mInitial map 'foo':[0m		
+x => 100
+y => 200
+[33mInitial map 'bar':[0m		
+a => 11
+b => 22
+c => 33
+
+[33m[ Swap 'foo' and 'bar' ]
+[0m		
+[33mMap 'foo' after swap:[0m		
+a => 11
+b => 22
+c => 33
+[33mMap 'bar' after swap:[0m		
+x => 100
+y => 200
+
+[91m>>>>>>>>>>>> [ Clear function test ] <<<<<<<<<<<[0m		
+[33mInitial map:[0m		
+x => 100
+y => 200
+z => 300
+[33mMap after clear function:[0m		
+[33mMap after adding two new elements:[0m		
+a => 1101
+b => 2202
+
+[91m>>>>>>>>>>>> [ Key_comp function test ] <<<<<<<<<<<[0m		
+[33mPrint map using key_comp as a condition:[0m		
+a => 100
+b => 200
+c => 300
+
+[91m>>>>>>>>>>>> [ Value_comp function test ] <<<<<<<<<<<[0m		
+[33mPrint map using key_comp as a condition:[0m		
+x => 1001
+y => 2002
+z => 3003
+
+[91m>>>>>>>>>>>> [ Find function test ] <<<<<<<<<<<[0m		
+[33mInitial map:[0m		
+a => 50
+b => 100
+c => 150
+d => 200
+[33mFind 'b' and erase it:[0m		
+[33mLeft elements in mymap: [0m		
+a => 50
+b => 0
+c => 150
+d => 200
+
+[91m>>>>>>>>>>>> [ Count function test ] <<<<<<<<<<<[0m		
+[33mInitial map:[0m		
+a => 101
+b => 202
+c => 303
+[33mChecking element existence using 'count' function:[0m		
+a is an element of mymap.
+b is an element of mymap.
+c is an element of mymap.
+d is not an element of mymap.
+e is not an element of mymap.
+f is not an element of mymap.
+g is not an element of mymap.
+
+[91m>>>>>>> [ Lower_bound & upper_bound functions test ] <<<<<<<[0m		
+[33mInitial map:[0m		
+a => 20
+b => 40
+c => 60
+d => 80
+e => 100
+[33mitlow after lower_bound('b'): [0m		
+b => 40
+[33mitup after upper_bound('d'): [0m		
+e => 100
+[33mMap after erase [itlow, itup):[0m		
+a => 20
+e => 100
+
+[91m>>>>>>> [ Equal_range functions test ] <<<<<<<[0m		
+[33mInitial map:[0m		
+a => 10
+b => 20
+c => 30
+[33m[ Find equal_range('b') ][0m		
+[33mlower bound points to:[0m		
+b => 20
+[33mupper bound points to:[0m		
+c => 30
+
