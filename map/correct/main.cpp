@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:25:56 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/05 08:07:01 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/05 16:09:11 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -512,7 +512,6 @@ void	ft_test10(void)
 	std::cout << "\033[0m\t\t" << std::endl;
 
 	ft::map<char, int>					mymap;
-	ft::map<char, int>::key_compare		mycomp = mymap.key_comp();
 
 	// Insert some values:
 	mymap['x'] = 1001;
@@ -527,15 +526,102 @@ void	ft_test10(void)
 	// Last element
 	std::pair<char, int>	highest = *mymap.rbegin();
 
-	char	highest = mymap.rbegin()->first; // key value of lst element
-
 	ft::map<char, int>::iterator	it = mymap.begin();
 
 	do {
 		std::cout << it->first << " => " << it->second << std::endl;
-	} while (mycomp((*it++).first, highest));
+	} while (mymap.value_comp()(*it++, highest));
 
 	std::cout << std::endl;
+}
+
+void	ft_test11(void)
+{
+	// Find
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>> [ Find function test ] <<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	ft::map<char, int>				mymap;
+	ft::map<char, int>::iterator	it;
+
+	std::cout << "----------------------------------------------" << std::endl;
+	std::cout << "c => " << mymap.find('c')->second << std::endl;
+	std::cout << "----------------------------------------------" << std::endl;
+
+
+	mymap['a'] = 50;
+	mymap['b'] = 100;
+	mymap['c'] = 150;
+	mymap['d'] = 200;
+
+	// Print initial map
+	std::cout << "\x1b[33m";
+	std::cout << "Initial map:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "Find 'b' and erase it:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	it = mymap.find('b');
+	if (it != mymap.end())
+		mymap.erase(it);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Left elements in mymap: " << std::endl;
+	std::cout << "\033[0m\t\t" << std::endl;
+	// print content:
+	std::cout << "a => " << mymap.find('a')->second << std::endl;
+	std::cout << "b => " << mymap.find('b')->second << std::endl;//////
+	std::cout << "c => " << mymap.find('c')->second << std::endl;
+	std::cout << "d => " << mymap.find('d')->second << std::endl;
+}
+
+void	ft_test12(void)
+{
+	// Find
+	std::cout << "\x1B[91m";
+	std::cout << ">>>>>>>>>>>> [ Find function test ] <<<<<<<<<<<";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	std::map<char, int>				mymap;
+	std::map<char, int>::iterator	it;
+
+	std::cout << "----------------------------------------------" << std::endl;
+	std::cout << "c => " << mymap.find('c')->second << std::endl;
+	std::cout << "----------------------------------------------" << std::endl;
+
+	mymap['a'] = 50;
+	mymap['b'] = 100;
+	mymap['c'] = 150;
+	mymap['d'] = 200;
+
+	// Print initial map
+	std::cout << "\x1b[33m";
+	std::cout << "Initial map:";
+	std::cout << "\033[0m\t\t" << std::endl;
+	for (it = mymap.begin(); it != mymap.end(); ++it)
+		std::cout << it->first << " => " << it->second << std::endl;
+
+	std::cout << "\x1b[33m";
+	std::cout << "Find 'b' and erase it:";
+	std::cout << "\033[0m\t\t" << std::endl;
+
+	it = mymap.find('b');
+	if (it != mymap.end())
+		mymap.erase(it);
+
+	std::cout << "\x1b[33m";
+	std::cout << "Left elements in mymap: " << std::endl;
+	std::cout << "\033[0m\t\t" << std::endl;
+	// print content:
+	std::cout << "a => " << mymap.find('a')->second << std::endl;
+	std::cout << "b => " << mymap.find('b')->second << std::endl;
+	std::cout << "c => " << mymap.find('c')->second << std::endl;
+	std::cout << "d => " << mymap.find('d')->second << std::endl;
 }
 
 int		main(void)
@@ -570,9 +656,11 @@ int		main(void)
 	// value_comp
 	ft_test10();
 
-	/*
+	// Find
 	ft_test11();
+	ft_test12();
 
+	/*
 	ft_test12();
 	*/
 
