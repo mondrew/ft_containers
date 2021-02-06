@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/06 10:25:02 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/05 08:17:56 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <functional>
 # include <cmath>
 # include <iostream>
+
+// Try to change in iterator class private to protected
 
 namespace ft
 {
@@ -33,14 +35,10 @@ namespace ft
 
 			struct		BSTNode {
 
-				value_type	val;
-				//Key		first; // key
-				//T			second; // val
+				Key			first; // key
+				T			second; // val
 				BSTNode		*left;
 				BSTNode		*right;
-
-				BSTNode(void) {}
-				BSTNode(value_type const &a_val) : val(a_val) {}
 			};
 
 			BSTNode			*_root;
@@ -58,9 +56,9 @@ namespace ft
 
 			BSTNode			*findNode(BSTNode *root, Key key) {
 
-				while (root && root->val.first != key)
+				while (root && root->first != key)
 				{
-					if (key < root->val.first)
+					if (key < root->first)
 						root = root->left;
 					else
 						root = root->right;
@@ -101,7 +99,7 @@ namespace ft
 				{
 					while (ancestor != current)
 					{
-						if (current->val.first < ancestor->val.first)
+						if (current->first < ancestor->first)
 						{
 							successor = ancestor; // the deepest node for which curr is in left
 							ancestor = ancestor->left;
@@ -128,7 +126,7 @@ namespace ft
 				{
 					while (root != current)
 					{
-						if (current->val.first > root->val.first)
+						if (current->first > root->first)
 						{
 							ancestor = root;
 							root = ancestor->right;
@@ -156,9 +154,9 @@ namespace ft
 				// For erase(2) -> call this function until find in erase return NULL. Return?
 				if (!(*root))
 					return (0);
-				if (key < (*root)->val.first)
+				if (key < (*root)->first)
 					deleteNode(&((*root)->left), key);
-				else if (key > (*root)->val.first)
+				else if (key > (*root)->first)
 					deleteNode(&((*root)->right), key);
 				else
 				{
@@ -186,27 +184,10 @@ namespace ft
 					// Case 3: two children
 					else
 					{
-						BSTNode		*replace = new BSTNode((*root)->val);
-						BSTNode		*parent = getAncestor(this->_root, (*root)->val.first);
-						int			dir = 0; // left
-						if (parent->right == (*root))
-							dir = 1; // right
-
-						//(*root)->val.first = tmp->val.first;
-						//(*root)->val.second = tmp->val.second;
-						replace->left = (*root)->left;
-						replace->right = (*root)->right;
-
-						// Delete tmp
-						deleteNode(&((*root)->right), (*root)->val.first);
-
-						// Replace *root parent link
-						if (dir == 0)
-							parent->left = replace;
-						else
-							parent->right = replace;
-
-						delete (*root);
+						BSTNode		*tmp = findMin((*root)->right); // or max in left :-)
+						(*root)->first = tmp->first;
+						(*root)->second = tmp->second;
+						deleteNode(&((*root)->right), (*root)->first);
 					}
 				}
 				return (*root);
@@ -216,23 +197,22 @@ namespace ft
 
 				if (*root == 0)
 				{
-					value_type	n_val(key, val);
-					*root = new BSTNode(n_val);
+					*root = new BSTNode();
 
-					//(*root)->val.first = key;
-					//(*root)->val.second = val;
+					(*root)->first = key;
+					(*root)->second = val;
 					(*root)->left = 0;
 					(*root)->right = 0;
 
 					return (*root);
 				}
-				if (key < (*root)->val.first)
+				if (key < (*root)->first)
 				{
 					(*root)->left = insertNode(&((*root)->left), key, val);
 
 					return (*root);
 				}
-				else if (key > (*root)->val.first)
+				else if (key > (*root)->first)
 				{
 					(*root)->right = insertNode(&((*root)->right), key, val);
 
@@ -244,12 +224,12 @@ namespace ft
 
 			BSTNode		*copyBST(BSTNode *root) {
 
+				BSTNode		*node = new BSTNode();
+
 				if (!root)
 					return (0);
-
-				BSTNode		*node = new BSTNode(root->val);
-				//node->val.first = root->val.first;
-				//node->val.second = root->val.second;
+				node->first = root->first;
+				node->second = root->second;
 				node->left = copyBST(root->left);
 				node->right = copyBST(root->right);
 				return (node);
@@ -276,9 +256,9 @@ namespace ft
 				{
 					if (!first.getRoot())
 						return ;
-					if (!this->findNode(this->_root, first.getNode()->val.first))
+					if (!this->findNode(this->_root, first.getNode()->first))
 						this->insertNode(&this->_root, \
-							first.getNode()->val.first, first.getNode()->val.second);
+							first.getNode()->first, first.getNode()->second);
 					first++;
 				}
 
@@ -314,17 +294,17 @@ namespace ft
 
 			class iterator {
 
+				//private:
 				protected:
 
 					BSTNode		*_node;
 					BSTNode		*_root;
-					BSTNode		*_last;
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
-						while (root && root->val.first != key)
+						while (root && root->first != key)
 						{
-							if (key < root->val.first)
+							if (key < root->first)
 								root = root->left;
 							else
 								root = root->right;
@@ -365,7 +345,7 @@ namespace ft
 						{
 							while (ancestor != current)
 							{
-								if (current->val.first < ancestor->val.first)
+								if (current->first < ancestor->first)
 								{
 									successor = ancestor; // the deepest node for which curr is in left
 									ancestor = ancestor->left;
@@ -392,7 +372,7 @@ namespace ft
 						{
 							while (root != current)
 							{
-								if (current->val.first > root->val.first)
+								if (current->first > root->first)
 								{
 									ancestor = root;
 									root = ancestor->right;
@@ -407,14 +387,7 @@ namespace ft
 				public:
 
 					// Constructor #1 (empty)
-					iterator(void) : _node(0), _root(0) {
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
-						return ;
-					}
+					iterator(void) : _node(0), _root(0) { return ; }
 
 					// Constructor #2 (init)
 					iterator(map<Key, T, Compare, Alloc> const &rhs) {
@@ -422,10 +395,6 @@ namespace ft
 						BSTNode		*tmp;
 						this->_node = rhs.begin();
 						this->_root = this->_node;
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
 
 						tmp = getAncestor(this->_node);
 						while (tmp)
@@ -440,44 +409,20 @@ namespace ft
 					// Constructor #3 (for begin & end)
 					iterator(BSTNode *node, BSTNode *root) : _node(node), _root(root) {
 
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
 						return ;
 					}
 
 					// Copy constructor
-					iterator(iterator const &src) : _last(0) {
-						
-						*this = src;
-						
-						return ;
-					}
+					iterator(iterator const &src) { *this = src; return ; }
 
 					// Destructor
-					~iterator(void) {
-						
-						if (this->_last)
-						{
-							delete this->_last;
-							this->_last = 0;
-						}
-						return ;
-					}
+					~iterator(void) { return ; }
 
 					// Assignment operation
 					iterator	&operator=(iterator const &rhs) {
 
 						this->_node = rhs._node;
 						this->_root = rhs._root;
-
-						// Last element
-						if (!this->_last)
-						{
-							value_type	n_val(0, 0);
-							this->_last = new BSTNode(n_val);
-						}
 
 						return (*this);
 					}
@@ -491,7 +436,7 @@ namespace ft
 							return (true);
 						if (!this->_node || !rhs._node)
 							return (false);
-						return (this->_node->val.first == rhs._node->val.first);
+						return (this->_node->first == rhs._node->first);
 					}
 
 					bool		operator!=(iterator const &rhs) {
@@ -502,24 +447,23 @@ namespace ft
 							return (false);
 						if (!this->_node || !rhs._node)
 							return (true);
-						return (this->_node->val.first != rhs._node->val.first);
+						return (this->_node->first != rhs._node->first);
 					}
 
 					// Dereferencing operator
-					value_type	&operator*(void) {
+					BSTNode			&operator*(void) {
 
 						if (this->_node == 0)
-							return (this->_last->val);
-						return (this->_node->val);
+							throw (std::out_of_range("Error: out of range"));
+						return (*(this->_node));
 					}
 
 					// Field access operator (arrow operator)
-					value_type	*operator->(void) {
+					BSTNode			*operator->(void) {
 
-						// Возвращать нулевой value_type, чтобы его можно было разыменовать
 						if (this->_node == 0)
-							return (&(this->_last->val));
-						return (&(this->_node->val));
+							throw (std::out_of_range("Error: out of range"));
+						return (this->_node);
 					}
 
 					// Increment prefix
@@ -529,7 +473,7 @@ namespace ft
 							throw (std::out_of_range("error: out of range"));
 						// Change everywhere
 						this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (*this);
 					}
@@ -543,7 +487,7 @@ namespace ft
 							throw (std::out_of_range("error: out of range"));
 						if (this->_node != 0)
 							this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (tmp);
 					}
@@ -561,7 +505,7 @@ namespace ft
 						}
 						else
 							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (*this);
 					}
@@ -580,7 +524,7 @@ namespace ft
 						}
 						else
 							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (tmp);
 					}
@@ -594,21 +538,51 @@ namespace ft
 
 						return (this->_root);
 					}
+
+					/*
+					// *a++ overloading - check
+					T		*operator++(void) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
+
+					// *a-- overloading - check
+					T		*operator--(void) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getAncestor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
+					*/
 			};
 
 			class const_iterator {
 
+				//private:
 				protected:
 
 					BSTNode		*_node;
 					BSTNode		*_root;
-					BSTNode		*_last;
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
-						while (root && root->val.first != key)
+						while (root && root->first != key)
 						{
-							if (key < root->val.first)
+							if (key < root->first)
 								root = root->left;
 							else
 								root = root->right;
@@ -649,7 +623,7 @@ namespace ft
 						{
 							while (ancestor != current)
 							{
-								if (current->val.first < ancestor->val.first)
+								if (current->first < ancestor->first)
 								{
 									successor = ancestor; // the deepest node for which curr is in left
 									ancestor = ancestor->left;
@@ -676,7 +650,7 @@ namespace ft
 						{
 							while (root != current)
 							{
-								if (current->val.first > root->val.first)
+								if (current->first > root->first)
 								{
 									ancestor = root;
 									root = ancestor->right;
@@ -688,17 +662,20 @@ namespace ft
 						}
 					}
 
+					BSTNode		*getNode(void) {
+
+						return (this->_node);
+					}
+
+					BSTNode		*getRoot(void) {
+
+						return (this->_root);
+					}
+
 				public:
 
 					// Constructor #1 (empty)
-					const_iterator(void) : _node(0), _root(0) {
-						
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
-						return ;
-					}
+					const_iterator(void) : _node(0), _root(0) { return ; }
 
 					// Constructor #2 (init)
 					const_iterator(map<Key, T, Compare, Alloc> const &rhs) {
@@ -706,10 +683,6 @@ namespace ft
 						BSTNode		*tmp;
 						this->_node = rhs.begin();
 						this->_root = this->_node;
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
 
 						tmp = getAncestor(this->_node);
 						while (tmp)
@@ -725,44 +698,23 @@ namespace ft
 					const_iterator(BSTNode *node, BSTNode *root) :
 													_node(node), _root(root) {
 
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
 						return ;
 					}
 
 					// Copy constructor
-					const_iterator(const_iterator const &src) : _last(0) {
-						
+					const_iterator(const_iterator const &src) {
 						*this = src;
-						
 						return ;
 					}
 
 					// Destructor
-					~const_iterator(void) {
-
-						if (this->_last)
-						{
-							delete this->_last;
-							this->_last = 0;
-						}
-						return ;
-					}
+					~const_iterator(void) { return ; }
 
 					// Assignment operation
-					const_iterator const	&operator=(const_iterator const &rhs) {
+					const_iterator	&operator=(const_iterator const &rhs) {
 
 						this->_node = rhs._node;
 						this->_root = rhs._root;
-
-						// Last element
-						if (!this->_last)
-						{
-							value_type	n_val(0, 0);
-							this->_last = new BSTNode(n_val);
-						}
 
 						return (*this);
 					}
@@ -776,7 +728,7 @@ namespace ft
 							return (true);
 						if (!this->_node || !rhs._node)
 							return (false);
-						return (this->_node->val.first == rhs._node->val.first);
+						return (this->_node->first == rhs._node->first);
 					}
 
 					bool		operator!=(const_iterator const &rhs) {
@@ -787,33 +739,33 @@ namespace ft
 							return (false);
 						if (!this->_node || !rhs._node)
 							return (true);
-						return (this->_node->val.first != rhs._node->val.first);
+						return (this->_node->first != rhs._node->first);
 					}
 
 					// Dereferencing operator
-					value_type const	&operator*(void) {
+					T			&operator*(void) {
 
 						if (this->_node == 0)
-							return (this->_last->val);
-						return (this->_node->val);
+							throw (std::out_of_range("Error: out of range"));
+						return (this->_node->second);
 					}
 
 					// Field access operator (arrow operator)
-					value_type	*operator->(void) {
+					BSTNode			*operator->(void) {
 
 						if (this->_node == 0)
-							return (&(this->_last->val));
-						return (&(this->_node->val));
+							throw (std::out_of_range("Error: out of range"));
+						return (this->_node);
 					}
 
 					// Increment prefix
-					const_iterator const	&operator++(void) {
+					const_iterator	&operator++(void) {
 
 						if (this->_root == 0)
 							throw (std::out_of_range("error: out of range"));
 						// Change everywhere
 						this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (*this);
 					}
@@ -821,19 +773,19 @@ namespace ft
 					// Increment postfix
 					const_iterator	operator++(int) {
 
-						const_iterator	tmp(*this);
+						iterator	tmp(*this);
 
 						if (this->_root == 0)
 							throw (std::out_of_range("error: out of range"));
 						if (this->_node != 0)
 							this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (tmp);
 					}
 
 					// Decrement prefix
-					const_iterator const	&operator--(void) {
+					const_iterator	&operator--(void) {
 
 						if (this->_root == 0)
 							throw (std::out_of_range("error: out of range"));
@@ -845,14 +797,14 @@ namespace ft
 						}
 						else
 							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (*this);
 					}
 
 					const_iterator	operator--(int) {
 
-						const_iterator	tmp(*this);
+						iterator	tmp(*this);
 
 						if (this->_root == 0)
 							throw (std::out_of_range("error: out of range"));
@@ -864,35 +816,55 @@ namespace ft
 						}
 						else
 							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (tmp);
 					}
 
-					BSTNode		*getNode(void) {
+					/*
+					// *a++ overloading - check
+					T const		*operator++(int) {
 
-						return (this->_node);
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
 					}
 
-					BSTNode		*getRoot(void) {
+					// *a-- overloading - check
+					T const		*operator--(int) {
 
-						return (this->_root);
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getAncestor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
 					}
+					*/
 			};
 
 			class reverse_iterator {
 
+				//private:
 				protected:
 
 					BSTNode		*_node;
 					BSTNode		*_root;
-					BSTNode		*_last;
 
 					BSTNode			*findNode(BSTNode *root, Key key) {
 
-						while (root && root->val.first != key)
+						while (root && root->first != key)
 						{
-							if (key < root->val.first)
+							if (key < root->first)
 								root = root->left;
 							else
 								root = root->right;
@@ -933,7 +905,7 @@ namespace ft
 						{
 							while (ancestor != current)
 							{
-								if (current->val.first < ancestor->val.first)
+								if (current->first < ancestor->first)
 								{
 									successor = ancestor; // the deepest node for which curr is in left
 									ancestor = ancestor->left;
@@ -960,7 +932,7 @@ namespace ft
 						{
 							while (root != current)
 							{
-								if (current->val.first > root->val.first)
+								if (current->first > root->first)
 								{
 									ancestor = root;
 									root = ancestor->right;
@@ -985,14 +957,7 @@ namespace ft
 				public:
 
 					// Constructor #1 (empty)
-					reverse_iterator(void) : _node(0), _root(0) {
-						
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
-						return ;
-					}
+					reverse_iterator(void) : _node(0), _root(0) { return ; }
 
 					// Constructor #2 (init)
 					reverse_iterator(map<Key, T, Compare, Alloc> const &rhs) {
@@ -1001,10 +966,6 @@ namespace ft
 
 						this->_node = rhs.rbegin();
 						this->_root = this->_node;
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
 
 						tmp = getAncestor(this->_node);
 						while (tmp)
@@ -1019,44 +980,24 @@ namespace ft
 					// Constructor #3 (for begin & end)
 					reverse_iterator(BSTNode *node, BSTNode *root) : 
 													_node(node), _root(root) {
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
 						return ;
 					}
 
 					// Copy constructor
-					reverse_iterator(reverse_iterator const &src) : _last(0) {
+					reverse_iterator(reverse_iterator const &src) {
 						
 						*this = src;
 						return ;
 					}
 
 					// Destructor
-					~reverse_iterator(void) {
-						
-						if (this->_last)
-						{
-							delete this->_last;
-							this->_last = 0;
-						}
-						return ;
-					}
+					~reverse_iterator(void) { return ; }
 
 					// Assignment operation
 					reverse_iterator	&operator=(reverse_iterator const &rhs){
 
 						this->_node = rhs._node;
 						this->_root = rhs._root;
-
-						// Last element
-						if (!this->_last)
-						{
-							value_type	n_val(0, 0);
-							this->_last = new BSTNode(n_val);
-						}
 
 						return (*this);
 					}
@@ -1070,7 +1011,7 @@ namespace ft
 							return (true);
 						if (!this->_node || !rhs._node)
 							return (false);
-						return (this->_node->val.first == rhs._node->val.first);
+						return (this->_node->first == rhs._node->first);
 					}
 
 					bool		operator!=(reverse_iterator const &rhs) {
@@ -1081,23 +1022,31 @@ namespace ft
 							return (false);
 						if (!this->_node || !rhs._node)
 							return (true);
-						return (this->_node->val.first != rhs._node->val.first);
+						return (this->_node->first != rhs._node->first);
+					}
+
+					// Dereferencing operator
+					T			&operator*(void) {
+
+						if (this->_node == 0)
+							throw (std::out_of_range("Error: out of range"));
+						return (this->_node->second);
 					}
 
 					// Dereferencing operator for pair
-					value_type	&operator*(void) {
+					value_type	operator*(void) {
 
 						if (this->_node == 0)
-							return (this->_last->val);
-						return (this->_node->val);
+							throw (std::out_of_range("Error: out of range"));
+						return (value_type(this->_node->first, this->_node->second);
 					}
 
 					// Field access operator (arrow operator)
-					value_type	*operator->(void) {
+					BSTNode			*operator->(void) {
 
 						if (this->_node == 0)
-							return (&(this->_last->val));
-						return (&(this->_node->val));
+							throw (std::out_of_range("Error: out of range"));
+						return (this->_node);
 					}
 
 					// Increment prefix
@@ -1107,7 +1056,7 @@ namespace ft
 							throw (std::out_of_range("error: out of range"));
 						// Change everywhere
 						this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (*this);
 					}
@@ -1121,7 +1070,7 @@ namespace ft
 							throw (std::out_of_range("error: out of range"));
 						if (this->_node != 0)
 							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (tmp);
 					}
@@ -1139,7 +1088,7 @@ namespace ft
 						}
 						else
 							this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (*this);
 					}
@@ -1158,10 +1107,40 @@ namespace ft
 						}
 						else
 							this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+															this->_node->first);
 
 						return (tmp);
 					}
+
+					/*
+					// *a++ overload - check
+					T		*operator++(int) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getAncestor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
+
+					// *a-- overload - check
+					T		*operator--(int) {
+
+						BSTNode		*tmp = this->_node;
+
+						if (this->_node == 0 && this->_root) // end()
+							return (0); // check original. May be throw sm exception
+
+						this->_node = this->getSuccessor(this->_root, this->_node->first);
+						if (!this->_node)
+							return (0);
+						return (&(this->_node->second));
+					}
+					*/
 			};
 
 			// Iterators
@@ -1180,23 +1159,6 @@ namespace ft
 			iterator	end(void) {
 
 				return (iterator(0, this->_root));
-			}
-
-			ft::map<Key, T, Compare, Alloc>::const_iterator		cbegin(void) const {
-
-				BSTNode		*first = this->_root;
-
-				if (!first)
-					return (const_iterator());
-				while (first->left)
-					first = first->left;
-
-				return (ft::map<Key, T, Compare, Alloc>::const_iterator(first, this->_root));
-			}
-
-			ft::map<Key, T, Compare, Alloc>::const_iterator		cend(void) const {
-
-				return (const_iterator(0, this->_root));
 			}
 
 			reverse_iterator	rbegin(void) {
@@ -1251,7 +1213,7 @@ namespace ft
 					this->insertNode(&this->_root, k, 0);
 					tmp = this->findNode(this->_root, k);
 				}
-				return (tmp->val.second);
+				return (tmp->second);
 			}
 
 			// Modifiers
@@ -1295,13 +1257,16 @@ namespace ft
 			// Insert #3 (range)
 			void		insert(iterator first, iterator last) {
 
+				BSTNode		*node;
+				BSTNode		*tmp;
+
 				while (first != last)
 				{
 					if (!first.getRoot())
 						return ;
-					if (!this->findNode(this->_root, first.getNode()->val.first))
+					if (!this->findNode(this->_root, first.getNode()->first))
 						this->insertNode(&this->_root, \
-							first.getNode()->val.first, first.getNode()->val.second);
+							first.getNode()->first, first.getNode()->second);
 					first++;
 				}
 			}
@@ -1311,7 +1276,7 @@ namespace ft
 
 				if (!position.getNode())
 					return ;
-				this->deleteNode(&this->_root, position.getNode()->val.first);
+				this->deleteNode(&this->_root, position.getNode()->first);
 
 				return ;
 			}
@@ -1337,7 +1302,7 @@ namespace ft
 					first--;
 					if (!first.getNode())
 						return ;
-					this->deleteNode(&this->_root, first.getNode()->val.first);
+					this->deleteNode(&this->_root, first.getNode()->first);
 					first = tmp;
 				}
 			}
@@ -1429,8 +1394,7 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it.getNode()->val.first, k) == false && \
-							this->_comp(k, it.getNode()->val.first) == false)
+					if (this->_comp(it.getNode()->first, k) == false)
 						return (it);
 					it++;
 				}
@@ -1439,12 +1403,11 @@ namespace ft
 
 			const_iterator	find(Key const &k) const {
 
-				map<Key, T, Compare, Alloc>::const_iterator		it = this->cbegin();
-				map<Key, T, Compare, Alloc>::const_iterator		ite = this->cend();
+				map<Key, T, Compare, Alloc>::const_iterator		it = this->begin();
+				map<Key, T, Compare, Alloc>::const_iterator		ite = this->end();
 				while (it != ite)
 				{
-					if (this->_comp(it.getNode()->val.first, k) == false && \
-							this->_comp(k, it.getNode()->val.first) == false)
+					if (this->_comp(it._node->first, k) == false)
 						return (it);
 					it++;
 				}
@@ -1454,13 +1417,12 @@ namespace ft
 			// Count
 			std::size_t		count(Key const &k) const {
 
-				map<Key, T, Compare, Alloc>::const_iterator	it = this->cbegin();
-				map<Key, T, Compare, Alloc>::const_iterator	ite = this->cend();
+				map<Key, T, Compare, Alloc>::iterator	it = this->begin();
+				map<Key, T, Compare, Alloc>::iterator	ite = this->end();
 
 				while (it != ite)
 				{
-					if (this->_comp(it.getNode()->val.first, k) == false && \
-							this->_comp(k, it.getNode()->val.first) == false)
+					if (this->_comp(it._node->first, k) == false)
 						return (1);
 					it++;
 				}
@@ -1475,7 +1437,7 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it.getNode()->val.first, k) == false)
+					if (this->_comp(it._node->first, k) == false)
 						return (it);
 					it++;
 				}
@@ -1490,7 +1452,7 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it._node->val.first, k) == false)
+					if (this->_comp(it._node->first, k) == false)
 						return (it);
 					it++;
 				}
@@ -1505,7 +1467,7 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it.getNode()->val.first, k) == false)
+					if (this->_comp(it._node->first, k) == false)
 						return (++it);
 					it++;
 				}
@@ -1520,7 +1482,7 @@ namespace ft
 
 				while (it != ite)
 				{
-					if (this->_comp(it._node->val.first, k) == false)
+					if (this->_comp(it._node->first, k) == false)
 						return (++it);
 					it++;
 				}

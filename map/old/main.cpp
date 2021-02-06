@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/01 19:25:56 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/06 10:09:23 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/05 22:37:12 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -512,6 +512,7 @@ void	ft_test10(void)
 	std::cout << "\033[0m\t\t" << std::endl;
 
 	ft::map<char, int>					mymap;
+	ft::map<char, int>::key_compare		mycomp = mymap.key_comp();
 
 	// Insert some values:
 	mymap['x'] = 1001;
@@ -526,185 +527,13 @@ void	ft_test10(void)
 	// Last element
 	std::pair<char, int>	highest = *mymap.rbegin();
 
+	char	highest = mymap.rbegin()->first; // key value of lst element
+
 	ft::map<char, int>::iterator	it = mymap.begin();
 
 	do {
 		std::cout << it->first << " => " << it->second << std::endl;
-	} while (mymap.value_comp()(*it++, highest));
-
-	std::cout << std::endl;
-}
-
-void	ft_test11(void)
-{
-	// Find
-	std::cout << "\x1B[91m";
-	std::cout << ">>>>>>>>>>>> [ Find function test ] <<<<<<<<<<<";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	ft::map<char, int>				mymap;
-	ft::map<char, int>::iterator	it;
-
-	mymap['a'] = 50;
-	mymap['b'] = 100;
-	mymap['c'] = 150;
-	mymap['d'] = 200;
-
-	// Print initial map
-	std::cout << "\x1b[33m";
-	std::cout << "Initial map:";
-	std::cout << "\033[0m\t\t" << std::endl;
-	for (it = mymap.begin(); it != mymap.end(); ++it)
-		std::cout << it->first << " => " << it->second << std::endl;
-
-	std::cout << "\x1b[33m";
-	std::cout << "Find 'b' and erase it:";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	it = mymap.find('b');
-	if (it != mymap.end())
-		mymap.erase(it);
-
-	std::cout << "\x1b[33m";
-	std::cout << "Left elements in mymap: ";
-	std::cout << "\033[0m\t\t" << std::endl;
-	// print content:
-	std::cout << "a => " << mymap.find('a')->second << std::endl;
-	std::cout << "b => " << mymap.find('b')->second << std::endl;
-	std::cout << "c => " << mymap.find('c')->second << std::endl;
-	std::cout << "d => " << mymap.find('d')->second << std::endl;
-
-	std::cout << std::endl;
-}
-
-void	ft_test12(void)
-{
-	// Count
-	std::cout << "\x1B[91m";
-	std::cout << ">>>>>>>>>>>> [ Count function test ] <<<<<<<<<<<";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	ft::map<char, int>				mymap;
-	ft::map<char, int>::iterator	it;
-	char							c;
-
-	mymap['a'] = 101;
-	mymap['b'] = 202;
-	mymap['c'] = 303;
-
-	// Print initial map
-	std::cout << "\x1b[33m";
-	std::cout << "Initial map:";
-	std::cout << "\033[0m\t\t" << std::endl;
-	for (it = mymap.begin(); it != mymap.end(); ++it)
-		std::cout << it->first << " => " << it->second << std::endl;
-
-	std::cout << "\x1b[33m";
-	std::cout << "Checking element existence using 'count' function:";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	for (c = 'a'; c < 'h'; c++)
-	{
-		std::cout << c;
-		if (mymap.count(c) > 0)
-			std::cout << " is an element of mymap." << std::endl;
-		else
-			std::cout << " is not an element of mymap." << std::endl;
-	}
-
-	std::cout << std::endl;
-}
-
-void	ft_test13(void)
-{
-	// Lower_bound & Upper_bound
-	std::cout << "\x1B[91m";
-	std::cout << ">>>>>>> [ Lower_bound & upper_bound functions test ] <<<<<<<";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	ft::map<char, int>				mymap;
-	ft::map<char, int>::iterator	it;
-	ft::map<char, int>::iterator	itlow;
-	ft::map<char, int>::iterator	itup;
-
-	mymap['a'] = 20;
-	mymap['b'] = 40;
-	mymap['c'] = 60;
-	mymap['d'] = 80;
-	mymap['e'] = 100;
-
-	// Print initial map
-	std::cout << "\x1b[33m";
-	std::cout << "Initial map:";
-	std::cout << "\033[0m\t\t" << std::endl;
-	for (it = mymap.begin(); it != mymap.end(); ++it)
-		std::cout << it->first << " => " << it->second << std::endl;
-
-	// itlow points to 'b'
-	itlow = mymap.lower_bound('b');
-
-	std::cout << "\x1b[33m";
-	std::cout << "itlow after lower_bound('b'): ";
-	std::cout << "\033[0m\t\t" << std::endl;
-	std::cout << itlow->first << " => " << itlow->second << std::endl;
-
-	// itup points to 'e' (not 'd'!)
-	itup = mymap.upper_bound('d');
-
-	std::cout << "\x1b[33m";
-	std::cout << "itup after upper_bound('d'): ";
-	std::cout << "\033[0m\t\t" << std::endl;
-	std::cout << itup->first << " => " << itup->second << std::endl;
-
-	// Erase [itlow, itup)
-	std::cout << "\x1b[33m";
-	std::cout << "Map after erase [itlow, itup):";
-	std::cout << "\033[0m\t\t" << std::endl;
-	mymap.erase(itlow, itup);
-
-	// Print initial map
-	for (it = mymap.begin(); it != mymap.end(); ++it)
-		std::cout << it->first << " => " << it->second << std::endl;
-
-	std::cout << std::endl;
-}
-
-void	ft_test14(void)
-{
-	// Equal_range
-	std::cout << "\x1B[91m";
-	std::cout << ">>>>>>> [ Equal_range functions test ] <<<<<<<";
-	std::cout << "\033[0m\t\t" << std::endl;
-
-	ft::map<char, int>				mymap;
-	ft::map<char, int>::iterator	it;
-
-	mymap['a'] = 10;
-	mymap['b'] = 20;
-	mymap['c'] = 30;
-
-	// Print initial map
-	std::cout << "\x1b[33m";
-	std::cout << "Initial map:";
-	std::cout << "\033[0m\t\t" << std::endl;
-	for (it = mymap.begin(); it != mymap.end(); ++it)
-		std::cout << it->first << " => " << it->second << std::endl;
-
-	std::pair<ft::map<char, int>::iterator, ft::map<char, int>::iterator>	ret;
-	std::cout << "\x1b[33m";
-	std::cout << "[ Find equal_range('b') ]";
-	std::cout << "\033[0m\t\t" << std::endl;
-	ret = mymap.equal_range('b');
-
-	std::cout << "\x1b[33m";
-	std::cout << "lower bound points to:";
-	std::cout << "\033[0m\t\t" << std::endl;
-	std::cout << ret.first->first << " => " << ret.first->second << std::endl;
-
-	std::cout << "\x1b[33m";
-	std::cout << "upper bound points to:";
-	std::cout << "\033[0m\t\t" << std::endl;
-	std::cout << ret.second->first << " => " << ret.second->second << std::endl;
+	} while (mycomp((*it++).first, highest));
 
 	std::cout << std::endl;
 }
@@ -741,19 +570,11 @@ int		main(void)
 	// value_comp
 	ft_test10();
 
-	// Find
+	/*
 	ft_test11();
 
-	// Count
 	ft_test12();
-
-	// Lower_bound & upper_bound
-	ft_test13();
-
-	// Equal_range
-	ft_test14();
-	
-	// test VALGRIND!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	*/
 
 	return (0);
 }
