@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/08 14:03:54 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/07 16:33:31 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,9 @@ namespace ft
 			}
 
 			// #2 fill constructor (n elements, each is a copy of val)
-			// explicit vector<T, A>(size_t n, T const &val) {
-			explicit vector<T, A>(int n, T const &val) {
+			explicit vector<T, A>(size_t n, T const &val) {
 
-				int		i = 0;
-
-				if (n < 0)
-					throw (std::bad_alloc());
-				n = static_cast<int>(n);
+				size_t	i = 0;
 
 				if (n == 0)
 				{
@@ -76,41 +71,9 @@ namespace ft
 				}
 			}
 
-			/*
 			// #3 range constructor [first, last)
 			vector<T, A>(vector<T, A>::iterator first, \
 												vector<T, A>::iterator last) {
-
-				size_t	i = 0;
-
-				if (&(*last) == &(*first))
-				{
-					this->_array = 0;
-					this->_size = 0;
-					this->_capacity = 0;
-					return ;
-				}
-				if (&(*last) < &(*first))
-					throw (std::bad_alloc());
-
-				size_t	n = static_cast<size_t>(&(*last) - &(*first));
-
-				this->_array = new T[n];
-				this->_size = n;
-				this->_capacity = n;
-
-				while (i < n)
-				{
-					this->_array[i] = *first;
-					i++;
-					first++;
-				}
-			}
-			*/
-
-			// #3.1 range constructor [first, last) for any Iterator template
-			template <typename InputIterator>
-			vector<T, A>(InputIterator first, InputIterator last) {
 
 				size_t	i = 0;
 
@@ -221,7 +184,6 @@ namespace ft
 					// DESTRUCTOR
 					~iterator(void) { return ; }
 
-					// Assignment operation
 					iterator	&operator=(iterator const &rhs) {
 
 						this->_ptr = rhs._ptr;
@@ -231,7 +193,6 @@ namespace ft
 						return (*this);
 					}
 
-					// INCREMENT
 					// Increment prefix
 					iterator	&operator++(void) {
 
@@ -250,7 +211,6 @@ namespace ft
 						return (tmp);
 					}
 
-					// DECREMENT
 					// Decrement prefix
 					iterator	&operator--(void) {
 
@@ -269,7 +229,6 @@ namespace ft
 						return (tmp);
 					}
 
-					// Arithmetic operations
 					// Addiction operator
 					iterator	operator+(size_t n) {
 
@@ -302,12 +261,6 @@ namespace ft
 						this->_ptr -= n;
 
 						return (*this);
-					}
-
-					// Subtracting iterator from iterator
-					int			operator-(iterator const &rhs) {
-
-						return (this->_ptr - rhs._ptr);
 					}
 
 					// Comparison operators
@@ -359,11 +312,6 @@ namespace ft
 						return (*(this->_ptr));
 					}
 
-					T			*operator->(void) {
-
-						return (this->_ptr);
-					}
-
 					// Offset dereference operator (index operator)
 					T			&operator[](size_t idx) {
 
@@ -371,197 +319,6 @@ namespace ft
 					}
 			};
 
-			// Const iterator
-			class const_iterator {
-
-				private:
-
-					T		*_ptr;
-					T		*_first;
-					size_t	_size;
-
-				public:
-
-					// CONSTRUCTORS (4 kinds)
-					// #1 default constructor
-					const_iterator(void) : _ptr(0), _first(0), _size(0) { return ; }
-
-					// #2 param constructor (for iterator init: begin, end, etc)
-					const_iterator(T *ptr, T *first, size_t size) : 
-							_ptr(ptr), _first(first), _size(size) { return ; }
-
-					// #3 parameterized constructor
-					const_iterator(vector<T, A> const &src) {
-
-						this->_ptr = &src._array[0];
-						this->_first = &src._array[0];
-						this->_size = src.size();
-
-						return ;
-					}
-
-					// #4 copy constructor
-					const_iterator(const_iterator const &src) {
-
-						*this = src;
-
-						return ;
-					}
-
-					// DESTRUCTOR
-					~const_iterator(void) { return ; }
-
-					// Assignment operation
-					const_iterator	&operator=(const_iterator const &rhs) {
-
-						this->_ptr = rhs._ptr;
-						this->_first = rhs._first;
-						this->_size = rhs._size;
-
-						return (*this);
-					}
-
-					// INCREMENT
-					// Increment prefix
-					const_iterator	&operator++(void) {
-
-						this->_ptr++;
-
-						return (*this);
-					}
-
-					// Increment postfix
-					const_iterator	operator++(int) {
-
-						const_iterator	tmp(*this);
-
-						this->_ptr++;
-
-						return (tmp);
-					}
-
-					// DECREMENT
-					// Decrement prefix
-					const_iterator	&operator--(void) {
-
-						this->_ptr--;
-
-						return (*this);
-					}
-
-					// Decrement postfix
-					const_iterator	operator--(int) {
-
-						const_iterator	tmp(*this);
-
-						this->_ptr--;
-
-						return (tmp);
-					}
-
-					// Arithmetic operations
-					// Addiction operator
-					const_iterator	operator+(size_t n) {
-
-						const_iterator	tmp(*this);
-
-						tmp._ptr += n;
-
-						return (tmp);
-					}
-
-					const_iterator	&operator+=(size_t n) {
-
-						this->_ptr += n;
-
-						return (*this);
-					}
-
-					// Substruction operator
-					const_iterator	operator-(size_t n) {
-
-						const_iterator	tmp(*this);
-
-						tmp._ptr -= n;
-
-						return (tmp);
-					}
-
-					const_iterator	&operator-=(size_t n) {
-
-						this->_ptr -= n;
-
-						return (*this);
-					}
-
-					// Subtracting iterator from iterator
-					int			operator-(const_iterator const &rhs) {
-
-						return (this->_ptr - rhs._ptr);
-					}
-
-					// Comparison operators
-					bool		operator==(const_iterator const &rhs) {
-
-						if (this->_ptr == rhs._ptr)
-							return (true);
-						return (false);
-					}
-
-					bool		operator!=(const_iterator const &rhs) {
-
-						if (this->_ptr != rhs._ptr)
-							return (true);
-						return (false);
-					}
-
-					bool		operator<(const_iterator const &rhs) {
-
-						if (this->_ptr < rhs._ptr)
-							return (true);
-						return (false);
-					}
-
-					bool		operator<=(const_iterator const &rhs) {
-
-						if (this->_ptr <= rhs._ptr)
-							return (true);
-						return (false);
-					}
-
-					bool		operator>(const_iterator const &rhs) {
-
-						if (this->_ptr > rhs._ptr)
-							return (true);
-						return (false);
-					}
-
-					bool		operator>=(const_iterator const &rhs) {
-
-						if (this->_ptr >= rhs._ptr)
-							return (true);
-						return (false);
-					}
-
-					// Dereference operator
-					T const		&operator*(void) {
-
-						return (*(this->_ptr));
-					}
-
-					T const		*operator->(void) {
-
-						return (this->_ptr);
-					}
-
-					// Offset dereference operator (index operator)
-					T			&operator[](size_t idx) {
-
-						return (this->_first[idx]);
-					}
-			};
-
-			// Reverse iterator
 			class reverse_iterator {
 
 				private:
@@ -678,12 +435,6 @@ namespace ft
 						return (*this);
 					}
 
-					// Subtracting iterator from iterator
-					int			operator-(reverse_iterator const &rhs) {
-
-						return (rhs._ptr - this->_ptr);
-					}
-
 					// Comparison operators
 					bool		operator==(reverse_iterator const &rhs) {
 
@@ -721,184 +472,6 @@ namespace ft
 						return (*(this->_ptr));
 					}
 
-					T const		*operator->(void) {
-
-						return (this->_ptr);
-					}
-
-					// Offset dereference operator
-					T			&operator[](size_t idx) {
-
-						return (this->_first[this->_size - 1 - idx]);
-					}
-			};
-
-			// Const reverse iterator
-			class const_reverse_iterator {
-
-				private:
-
-					T		*_ptr;
-					T		*_first;
-					size_t	_size;
-
-				public:
-
-					// CONSTRUCTORS (4 kinds)
-					// #1 default constructor
-					const_reverse_iterator(void) : 
-									_ptr(0), _first(0), _size(0) { return ; }
-
-					// #2 param constructor (for iterator init: begin, end, etc)
-					const_reverse_iterator(T *ptr, T *first, size_t size) : 
-							_ptr(ptr), _first(first), _size(size) { return ; }
-
-					// #3 parameterized constructor
-					const_reverse_iterator(vector<T, A> const &src) {
-
-						this->_ptr = &src._array[src._size - 1];
-						this->_first = &src._array[src._size - 1];
-						this->_size = src.size();
-
-						return ;
-					}
-
-					// #4 copy constructor
-					const_reverse_iterator(reverse_iterator const &src) {
-
-						*this = src;
-
-						return ;
-					}
-
-					// DESTRUCTOR
-					~const_reverse_iterator(void) { return ; }
-
-					// ASSIGNMENT OPERATION OVERLOAD
-					const_reverse_iterator	&operator=(const_reverse_iterator \
-																const &rhs) {
-
-						this->_ptr = rhs._ptr;
-						this->_first = rhs._first;
-						this->_size = rhs._size;
-
-						return (*this);
-					}
-
-					// Increment prefix
-					const_reverse_iterator	&operator++(void) {
-
-						this->_ptr--;
-
-						return (*this);
-					}
-
-					// Increment postfix
-					const_reverse_iterator	operator++(int) {
-
-						const_reverse_iterator	tmp(*this);
-
-						this->_ptr--;
-
-						return (tmp);
-					}
-
-					// Decrement prefix
-					const_reverse_iterator	&operator--(void) {
-
-						this->_ptr++;
-
-						return (*this);
-					}
-
-					// Decrement postfix
-					const_reverse_iterator	operator--(int) {
-
-						const_reverse_iterator	tmp(*this);
-
-						this->_ptr++;
-
-						return (tmp);
-					}
-
-					// Addiction operator
-					const_reverse_iterator	&operator+(size_t n) {
-
-						this->_ptr -= n;
-
-						return (*this);
-					}
-
-					const_reverse_iterator	&operator+=(size_t n) {
-
-						this->_ptr -= n;
-
-						return (*this);
-					}
-
-					// Substruction operator
-					const_reverse_iterator	&operator-(size_t n) {
-
-						this->_ptr += n;
-
-						return (*this);
-					}
-
-					const_reverse_iterator	&operator-=(size_t n) {
-
-						this->_ptr += n;
-
-						return (*this);
-					}
-
-					// Subtracting iterator from iterator
-					int			operator-(const_reverse_iterator const &rhs) {
-
-						return (rhs._ptr - this->_ptr);
-					}
-
-					// Comparison operators
-					bool		operator==(const_reverse_iterator const &rhs) {
-
-						return (this->_ptr == rhs._ptr);
-					}
-
-					bool		operator!=(const_reverse_iterator const &rhs) {
-
-						return (this->_ptr != rhs._ptr);
-					}
-
-					bool		operator<(const_reverse_iterator const &rhs) {
-
-						return (this->_ptr > rhs._ptr);
-					}
-
-					bool		operator<=(const_reverse_iterator const &rhs) {
-
-						return (this->_ptr >= rhs._ptr);
-					}
-
-					bool		operator>(const_reverse_iterator const &rhs) {
-
-						return (this->_ptr < rhs._ptr);
-					}
-
-					bool		operator>=(const_reverse_iterator const &rhs) {
-
-						return (this->_ptr <= rhs._ptr);
-					}
-
-					// Dereference operator
-					T			&operator*(void) {
-
-						return (*(this->_ptr));
-					}
-
-					T const		*operator->(void) {
-
-						return (this->_ptr);
-					}
-
 					// Offset dereference operator
 					T			&operator[](size_t idx) {
 
@@ -907,7 +480,6 @@ namespace ft
 			};
 
 			// ITERATORS
-			// Simple
 			iterator			begin(void) {
 
 				return (iterator(&this->_array[0], &this->_array[0], \
@@ -920,20 +492,6 @@ namespace ft
 												&this->_array[0], this->_size));
 			}
 
-			// Const
-			const_iterator			begin(void) const {
-
-				return (const_iterator(&this->_array[0], &this->_array[0], \
-																this->_size));
-			}
-
-			const_iterator			end(void) const {
-
-				return (const_iterator(&this->_array[this->_size], \
-												&this->_array[0], this->_size));
-			}
-
-			// Reverse
 			reverse_iterator	rbegin(void) {
 
 				return (reverse_iterator(&this->_array[this->_size - 1], \
@@ -946,18 +504,6 @@ namespace ft
 												&this->_array[0], this->_size));
 			}
 
-			// Const reverse
-			const_reverse_iterator	rbegin(void) const {
-
-				return (const_reverse_iterator(&this->_array[this->_size - 1], \
-												&this->_array[0], this->_size));
-			}
-
-			const_reverse_iterator	rend(void) const {
-
-				return (const_reverse_iterator(&this->_array[0] - 1, \
-												&this->_array[0], this->_size));
-			}
 			// CAPACITY
 			size_t				size(void) const {
 
@@ -1105,8 +651,7 @@ namespace ft
 
 			// MODIFIERS
 			// Assign range
-			template <typename InputIterator>
-			void				assign(InputIterator first, InputIterator last) {
+			void				assign(iterator first, iterator last) {
 
 				int		i = 0;
 				int		new_size = &(*last) - &(*first);
@@ -1147,14 +692,9 @@ namespace ft
 			}
 
 			// Assign fill
-			// void				assign(size_t n, T const &val) {
-			void				assign(int n, T const &val) {
+			void				assign(size_t n, T const &val) {
 
-				int		i = 0;
-
-				if (n < 0)
-					throw (std::bad_alloc());
-				n = static_cast<int>(n);
+				size_t		i = 0;
 
 				if (n > this->_capacity)
 				{
@@ -1296,9 +836,7 @@ namespace ft
 			}
 
 			// Insert #2 fill
-			// void				insert(iterator position, size_t n, \
-			//													T const &val) {
-			void				insert(iterator position, int n, \
+			void				insert(iterator position, size_t n, \
 																T const &val) {
 
 				int			i = 0;
@@ -1306,10 +844,6 @@ namespace ft
 				int			k = 0;
 				iterator	it = this->begin();
 				iterator	ite = this->end();
-
-				if (n < 0)
-					throw (std::bad_alloc());
-
 				n = static_cast<int>(n);
 
 				if (position < it || position > ite)
@@ -1389,9 +923,8 @@ namespace ft
 			}
 
 			// Insert #3 range
-			template <typename InputIterator>
-			void			insert(iterator position, InputIterator first, \
-																InputIterator last) {
+			void			insert(iterator position, iterator first, \
+																iterator last) {
 
 				int			i = 0;
 				int			j = 0;
@@ -1480,7 +1013,6 @@ namespace ft
 				}
 			}
 
-			/*
 			// Insert #3 range
 			void			insert(iterator position, T *first, \
 																T *last) {
@@ -1571,7 +1103,6 @@ namespace ft
 					this->_size += n;
 				}
 			}
-			*/
 
 			// Erase #1 single
 			iterator			erase(iterator position) {

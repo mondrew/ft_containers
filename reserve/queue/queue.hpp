@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   stack.hpp                                          :+:      :+:    :+:   */
+/*   queue.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/27 19:00:15 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/07 16:40:51 by mondrew          ###   ########.fr       */
+/*   Created: 2021/01/27 22:03:26 by mondrew           #+#    #+#             */
+/*   Updated: 2021/01/27 23:46:14 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STACK_HPP
-# define STACK_HPP
+#ifndef QUEUE_HPP
+# define QUEUE_HPP
 
 # include <deque>
 
 namespace ft
 {
 	template < typename T, typename Container = std::deque<T> >
-	class stack {
+	class queue {
 
 		private:
 
@@ -27,13 +27,13 @@ namespace ft
 		public:
 
 			// Constructor
-			explicit stack(Container const &ctnr = Container()) : _ctnr(ctnr) {
+			explicit queue(Container const &ctnr = Container()) : _ctnr(ctnr) {
 
 				return ;
 			}
 
 			// Empty
-			bool			empty(void) const {
+			bool		empty(void) const {
 
 				return (this->_ctnr.empty());
 			}
@@ -44,13 +44,24 @@ namespace ft
 				return (this->_ctnr.size());
 			}
 
-			// Top
-			T				&top(void) {
+			// Front
+			T				&front(void) {
+
+				return (this->_ctnr.front());
+			}
+
+			T const			&front(void) const {
+
+				return (this->_ctnr.front());
+			}
+
+			// Back
+			T				&back(void) {
 
 				return (this->_ctnr.back());
 			}
 
-			T const			&top(void) const {
+			T const			&back(void) const {
 
 				return (this->_ctnr.back());
 			}
@@ -66,44 +77,44 @@ namespace ft
 			// Pop
 			void			pop(void) {
 
-				this->_ctnr.pop_back();
+				this->_ctnr.pop_front();
 
 				return ;
 			}
 
-			// Non-member functions overloads
-			friend bool		operator==(stack<T, Container> const &lhs, \
-											stack<T, Container> const &rhs) {
-				
+			// Non-member functions
+			friend bool		operator==(Container const &lhs, \
+														Container const &rhs) {
+
 				return (lhs._ctnr == rhs._ctnr);
 			}
 
-			friend bool		operator!=(stack<T, Container> const &lhs, \
-											stack<T, Container> const &rhs) {
+			friend bool		operator!=(Container const &lhs, \
+														Container const &rhs) {
 
 				return (lhs._ctnr != rhs._ctnr);
 			}
 
-			friend bool		operator<(stack<T, Container> const &lhs, \
-											stack<T, Container> const &rhs) {
+			friend bool		operator<(Container const &lhs, \
+														Container const &rhs) {
 
 				return (lhs._ctnr < rhs._ctnr);
 			}
 
-			friend bool		operator<=(stack<T, Container> const &lhs, \
-											stack<T, Container> const &rhs) {
+			friend bool		operator<=(Container const &lhs, \
+														Container const &rhs) {
 
 				return (lhs._ctnr <= rhs._ctnr);
 			}
 
-			friend bool		operator>(stack<T, Container> const &lhs, \
-											stack<T, Container> const &rhs) {
+			friend bool		operator>(Container const &lhs, \
+														Container const &rhs) {
 
 				return (lhs._ctnr > rhs._ctnr);
 			}
 
-			friend bool		operator>=(stack<T, Container> const &lhs, \
-											stack<T, Container> const &rhs) {
+			friend bool		operator>=(Container const &lhs, \
+														Container const &rhs) {
 
 				return (lhs._ctnr >= rhs._ctnr);
 			}

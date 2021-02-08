@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/07 16:38:05 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/07 16:25:45 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -671,6 +671,8 @@ namespace ft
 				this->_tail->prev = tmp;
 
 				this->_head = this->_tail->next;
+				//if (this->_size == 0)
+				//	this->_head = tmp;
 				return ;
 			}
 
@@ -759,7 +761,7 @@ namespace ft
 				if (position == ite)
 					throw (std::out_of_range("Out of range error"));
 
-				if (this->_size == 0)
+				if (this->_size == 0) // check the original
 					return (position);
 
 				pre->next = post;
@@ -780,7 +782,7 @@ namespace ft
 				list<T, A>::iterator	it = first;
 				list<T, A>::iterator	ite = this->end();
 
-				if (first == last)
+				if (first == last) // check original
 					return (last);
 
 				while (first != last)
@@ -834,6 +836,11 @@ namespace ft
 
 				while (this->_size)
 					this->pop_back();
+				// Don't delete null-tail
+				//this->_head->val.~T();
+				//delete this->_head;
+				//this->_head = 0;
+				//this->_tail = 0;
 			}
 
 			// OPERATIONS
@@ -882,6 +889,10 @@ namespace ft
 
 				after->prev = tmp;
 				tmp->next = after;
+				/*
+				if (this->_size == 0)
+					this->_head = tmp;
+				*/
 
 				this->_head = this->_tail->next;
 				this->_size++;
@@ -897,6 +908,7 @@ namespace ft
 
 				while (first != last)
 				{
+					//std::cout << "first: " << *first << std::endl;//test
 					tmp = first.getNode();
 					first++;
 					tmp->prev->next = tmp->next;
@@ -1006,6 +1018,7 @@ namespace ft
 				{
 					tmp = ++it;
 					it--;
+					// if (binary_pred(*it, *(it - 1)))
 					if (binary_pred(*it, it.getNode()->prev->val))
 						erase(it);
 					it = tmp;

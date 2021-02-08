@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/28 11:04:03 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/06 00:33:36 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/07 17:40:32 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ namespace ft
 
 		private:
 
+			class const_iterator;
+
 			struct		BSTNode {
 
 				value_type	val;
-				//Key		first; // key
-				//T			second; // val
 				BSTNode		*left;
 				BSTNode		*right;
 
@@ -103,7 +103,8 @@ namespace ft
 					{
 						if (current->val.first < ancestor->val.first)
 						{
-							successor = ancestor; // the deepest node for which curr is in left
+							successor = ancestor; // the deepest node for
+												// which curr is in left
 							ancestor = ancestor->left;
 						}
 						else
@@ -113,7 +114,7 @@ namespace ft
 				return (successor);
 			}
 
-			BSTNode			*getAncestor(BSTNode *root, Key key) { // CHANGE EVERYWHERE
+			BSTNode			*getAncestor(BSTNode *root, Key key) {
 
 				BSTNode		*current = findNode(root, key);
 				BSTNode		*ancestor = 0;
@@ -153,7 +154,6 @@ namespace ft
 
 			BSTNode		*deleteNode(BSTNode **root, Key key) {
 
-				// For erase(2) -> call this function until find in erase return NULL. Return?
 				if (!(*root))
 					return (0);
 				if (key < (*root)->val.first)
@@ -187,13 +187,12 @@ namespace ft
 					else
 					{
 						BSTNode		*replace = new BSTNode((*root)->val);
-						BSTNode		*parent = getAncestor(this->_root, (*root)->val.first);
+						BSTNode		*parent = getAncestor(this->_root, \
+															(*root)->val.first);
 						int			dir = 0; // left
 						if (parent->right == (*root))
 							dir = 1; // right
 
-						//(*root)->val.first = tmp->val.first;
-						//(*root)->val.second = tmp->val.second;
 						replace->left = (*root)->left;
 						replace->right = (*root)->right;
 
@@ -212,15 +211,14 @@ namespace ft
 				return (*root);
 			}
 
-			BSTNode		*insertNode(BSTNode **root, Key const &key, T const &val) {
+			BSTNode		*insertNode(BSTNode **root, Key const &key, \
+																T const &val) {
 
 				if (*root == 0)
 				{
 					value_type	n_val(key, val);
 					*root = new BSTNode(n_val);
 
-					//(*root)->val.first = key;
-					//(*root)->val.second = val;
 					(*root)->left = 0;
 					(*root)->right = 0;
 
@@ -239,7 +237,7 @@ namespace ft
 					return (*root);
 				}
 				else
-					return (*root); // Check the original
+					return (*root);
 			}
 
 			BSTNode		*copyBST(BSTNode *root) {
@@ -248,341 +246,10 @@ namespace ft
 					return (0);
 
 				BSTNode		*node = new BSTNode(root->val);
-				//node->val.first = root->val.first;
-				//node->val.second = root->val.second;
 				node->left = copyBST(root->left);
 				node->right = copyBST(root->right);
 				return (node);
 			}
-
-		public:
-
-			class iterator;
-
-			// Constructor #1 (empty)
-			explicit map(Compare const &comp = Compare(), \
-						Alloc const &alloc = std::allocator<value_type>()) :
-										_root(0), _comp(comp), _alloc(alloc) {
-				return ;
-			}
-
-			// Constructor #2 (range)
-			map(iterator first, iterator last, \
-						Compare const &comp = Compare(), \
-						Alloc const &alloc = std::allocator<value_type>()) :
-										_root(0), _comp(comp), _alloc(alloc) {
-
-				while (first != last)
-				{
-					if (!first.getRoot())
-						return ;
-					if (!this->findNode(this->_root, first.getNode()->val.first))
-						this->insertNode(&this->_root, \
-							first.getNode()->val.first, first.getNode()->val.second);
-					first++;
-				}
-
-				return ;
-			}
-
-			// Constructor #3 (copy)
-			map(map const &src) : _root(0) {
-
-				*this = src;
-
-				return ;
-			}
-
-			~map(void) {
-
-				this->deleteBST(this->_root);
-
-				return ;
-			}
-
-			map<Key, T, Compare, Alloc>		&operator=(map<Key, T, Compare, Alloc> const &rhs) {
-
-				this->_comp = rhs._comp;
-				this->_alloc = rhs._alloc;
-
-				if (this->_root)
-					deleteBST(this->_root);
-				this->_root = this->copyBST(rhs._root);
-
-				return (*this);
-			}
-
-			class iterator {
-
-				protected:
-
-					BSTNode		*_node;
-					BSTNode		*_root;
-					BSTNode		*_last;
-
-					BSTNode			*findNode(BSTNode *root, Key key) {
-
-						while (root && root->val.first != key)
-						{
-							if (key < root->val.first)
-								root = root->left;
-							else
-								root = root->right;
-						}
-						return (root);
-					}
-
-					BSTNode			*findMin(BSTNode *node) {
-
-						if (!node)
-							return (0);
-						while (node->left)
-							node = node->left;
-						return (node);
-					}
-
-					BSTNode			*findMax(BSTNode *node) {
-
-						if (!node)
-							return (0);
-						while (node->right)
-							node = node->right;
-						return (node);
-					}
-
-					BSTNode			*getSuccessor(BSTNode *root, Key key) {
-
-						BSTNode		*current = findNode(root, key);
-						BSTNode		*ancestor = root;
-						BSTNode		*successor = 0;
-
-						if (!current)
-							return (0);
-						// Case 1: there is right subtree
-						if (current->right)
-							return (findMin(current->right));
-						else // Case 2: there are no right subtree - O(h)
-						{
-							while (ancestor != current)
-							{
-								if (current->val.first < ancestor->val.first)
-								{
-									successor = ancestor; // the deepest node for which curr is in left
-									ancestor = ancestor->left;
-								}
-								else
-									ancestor = ancestor->right;
-							}
-						}
-						return (successor);
-					}
-
-					BSTNode			*getAncestor(BSTNode *root, Key key) { // CHANGE EVERYWHERE
-
-						BSTNode		*current = findNode(root, key);
-						BSTNode		*ancestor = 0;
-
-						if (!root || !current)
-							return (0);
-						// Case 1: left child exists
-						if (current->left)
-							return (findMax(current->left));
-						// Case 2: no left child
-						else
-						{
-							while (root != current)
-							{
-								if (current->val.first > root->val.first)
-								{
-									ancestor = root;
-									root = ancestor->right;
-								}
-								else
-									root = root->left;
-							}
-							return (ancestor);
-						}
-					}
-
-				public:
-
-					// Constructor #1 (empty)
-					iterator(void) : _node(0), _root(0) {
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
-						return ;
-					}
-
-					// Constructor #2 (init)
-					iterator(map<Key, T, Compare, Alloc> const &rhs) {
-
-						BSTNode		*tmp;
-						this->_node = rhs.begin();
-						this->_root = this->_node;
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
-						tmp = getAncestor(this->_node);
-						while (tmp)
-						{
-							this->_root = tmp;
-							tmp = getAncestor(tmp);
-						}
-
-						return ;
-					}
-
-					// Constructor #3 (for begin & end)
-					iterator(BSTNode *node, BSTNode *root) : _node(node), _root(root) {
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
-						return ;
-					}
-
-					// Copy constructor
-					iterator(iterator const &src) { *this = src; return ; }
-
-					// Destructor
-					~iterator(void) {
-						
-						delete this->_last;
-						return ;
-					}
-
-					// Assignment operation
-					iterator	&operator=(iterator const &rhs) {
-
-						this->_node = rhs._node;
-						this->_root = rhs._root;
-
-						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
-
-						return (*this);
-					}
-
-					// Comparison operator
-					bool		operator==(iterator const &rhs) {
-
-						if (this->_node != rhs._node)
-							return (false);
-						if (!this->_node && !rhs._node)
-							return (true);
-						if (!this->_node || !rhs._node)
-							return (false);
-						return (this->_node->val.first == rhs._node->val.first);
-					}
-
-					bool		operator!=(iterator const &rhs) {
-
-						if (this->_node == rhs._node)
-							return (false);
-						if (!this->_node && !rhs._node)
-							return (false);
-						if (!this->_node || !rhs._node)
-							return (true);
-						return (this->_node->val.first != rhs._node->val.first);
-					}
-
-					// Dereferencing operator
-					value_type	&operator*(void) {
-
-						if (this->_node == 0)
-							return (this->_last->val);
-						return (this->_node->val);
-					}
-
-					// Field access operator (arrow operator)
-					value_type	*operator->(void) {
-
-						// Возвращать нулевой value_type, чтобы его можно было разыменовать
-						if (this->_node == 0)
-							return (&(this->_last->val));
-						return (&(this->_node->val));
-					}
-
-					// Increment prefix
-					iterator	&operator++(void) {
-
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						// Change everywhere
-						this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
-
-						return (*this);
-					}
-
-					// Increment postfix
-					iterator	operator++(int) {
-
-						iterator	tmp(*this);
-
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node != 0)
-							this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
-
-						return (tmp);
-					}
-
-					// Decrement prefix
-					iterator	&operator--(void) {
-
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node == 0)
-						{
-							this->_node = this->_root;
-							while (this->_node->right)
-								this->_node = this->_node->right;
-						}
-						else
-							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
-
-						return (*this);
-					}
-
-					iterator	operator--(int) {
-
-						iterator	tmp(*this);
-
-						if (this->_root == 0)
-							throw (std::out_of_range("error: out of range"));
-						if (this->_node == 0)
-						{
-							this->_node = this->_root;
-							while (this->_node->right)
-								this->_node = this->_node->right;
-						}
-						else
-							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
-
-						return (tmp);
-					}
-
-					BSTNode		*getNode(void) {
-
-						return (this->_node);
-					}
-
-					BSTNode		*getRoot(void) {
-
-						return (this->_root);
-					}
-			};
 
 			class const_iterator {
 
@@ -639,7 +306,8 @@ namespace ft
 							{
 								if (current->val.first < ancestor->val.first)
 								{
-									successor = ancestor; // the deepest node for which curr is in left
+									successor = ancestor; // the deepest node
+													//for which curr is in left
 									ancestor = ancestor->left;
 								}
 								else
@@ -649,7 +317,7 @@ namespace ft
 						return (successor);
 					}
 
-					BSTNode			*getAncestor(BSTNode *root, Key key) { // CHANGE EVERYWHERE
+					BSTNode			*getAncestor(BSTNode *root, Key key) {
 
 						BSTNode		*current = findNode(root, key);
 						BSTNode		*ancestor = 0;
@@ -721,24 +389,37 @@ namespace ft
 					}
 
 					// Copy constructor
-					const_iterator(const_iterator const &src) { *this = src; return ; }
+					const_iterator(const_iterator const &src) : _last(0) {
+						
+						*this = src;
+						
+						return ;
+					}
 
 					// Destructor
 					~const_iterator(void) {
 
-						delete this->_last;
+						if (this->_last)
+						{
+							delete this->_last;
+							this->_last = 0;
+						}
 						return ;
 					}
 
 					// Assignment operation
-					const_iterator const	&operator=(const_iterator const &rhs) {
+					const_iterator const	&operator=(const_iterator const \
+																		&rhs) {
 
 						this->_node = rhs._node;
 						this->_root = rhs._root;
 
 						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
+						if (!this->_last)
+						{
+							value_type	n_val(0, 0);
+							this->_last = new BSTNode(n_val);
+						}
 
 						return (*this);
 					}
@@ -789,7 +470,7 @@ namespace ft
 							throw (std::out_of_range("error: out of range"));
 						// Change everywhere
 						this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+														this->_node->val.first);
 
 						return (*this);
 					}
@@ -803,7 +484,7 @@ namespace ft
 							throw (std::out_of_range("error: out of range"));
 						if (this->_node != 0)
 							this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+														this->_node->val.first);
 
 						return (tmp);
 					}
@@ -821,7 +502,7 @@ namespace ft
 						}
 						else
 							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+														this->_node->val.first);
 
 						return (*this);
 					}
@@ -840,7 +521,369 @@ namespace ft
 						}
 						else
 							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+														this->_node->val.first);
+
+						return (tmp);
+					}
+
+					BSTNode		*getNode(void) {
+
+						return (this->_node);
+					}
+
+					BSTNode		*getRoot(void) {
+
+						return (this->_root);
+					}
+			};
+
+			ft::map<Key, T, Compare, Alloc>::const_iterator	cbegin(void) const {
+
+				BSTNode		*first = this->_root;
+
+				if (!first)
+					return (const_iterator());
+				while (first->left)
+					first = first->left;
+
+				return (ft::map<Key, T, Compare, Alloc>::const_iterator(first, \
+																this->_root));
+			}
+
+			ft::map<Key, T, Compare, Alloc>::const_iterator	cend(void) const {
+
+				return (const_iterator(0, this->_root));
+			}
+
+		public:
+
+			class iterator;
+
+			// Constructor #1 (empty)
+			explicit map(Compare const &comp = Compare(), \
+						Alloc const &alloc = std::allocator<value_type>()) :
+										_root(0), _comp(comp), _alloc(alloc) {
+				return ;
+			}
+
+			// Constructor #2 (range)
+			map(iterator first, iterator last, \
+						Compare const &comp = Compare(), \
+						Alloc const &alloc = std::allocator<value_type>()) :
+										_root(0), _comp(comp), _alloc(alloc) {
+
+				while (first != last)
+				{
+					if (!first.getRoot())
+						return ;
+					if (!this->findNode(this->_root, first.getNode()->val.first))
+						this->insertNode(&this->_root, \
+							first.getNode()->val.first, \
+												first.getNode()->val.second);
+					first++;
+				}
+
+				return ;
+			}
+
+			// Constructor #3 (copy)
+			map(map const &src) : _root(0) {
+
+				*this = src;
+
+				return ;
+			}
+
+			~map(void) {
+
+				this->deleteBST(this->_root);
+
+				return ;
+			}
+
+			map<Key, T, Compare, Alloc>		&operator=(map<Key, T, Compare, \
+															Alloc> const &rhs) {
+
+				this->_comp = rhs._comp;
+				this->_alloc = rhs._alloc;
+
+				if (this->_root)
+					deleteBST(this->_root);
+				this->_root = this->copyBST(rhs._root);
+
+				return (*this);
+			}
+
+			class iterator {
+
+				protected:
+
+					BSTNode		*_node;
+					BSTNode		*_root;
+					BSTNode		*_last;
+
+					BSTNode			*findNode(BSTNode *root, Key key) {
+
+						while (root && root->val.first != key)
+						{
+							if (key < root->val.first)
+								root = root->left;
+							else
+								root = root->right;
+						}
+						return (root);
+					}
+
+					BSTNode			*findMin(BSTNode *node) {
+
+						if (!node)
+							return (0);
+						while (node->left)
+							node = node->left;
+						return (node);
+					}
+
+					BSTNode			*findMax(BSTNode *node) {
+
+						if (!node)
+							return (0);
+						while (node->right)
+							node = node->right;
+						return (node);
+					}
+
+					BSTNode			*getSuccessor(BSTNode *root, Key key) {
+
+						BSTNode		*current = findNode(root, key);
+						BSTNode		*ancestor = root;
+						BSTNode		*successor = 0;
+
+						if (!current)
+							return (0);
+						// Case 1: there is right subtree
+						if (current->right)
+							return (findMin(current->right));
+						else // Case 2: there are no right subtree - O(h)
+						{
+							while (ancestor != current)
+							{
+								if (current->val.first < ancestor->val.first)
+								{
+									successor = ancestor; // the deepest node
+													//for which curr is in left
+									ancestor = ancestor->left;
+								}
+								else
+									ancestor = ancestor->right;
+							}
+						}
+						return (successor);
+					}
+
+					BSTNode			*getAncestor(BSTNode *root, Key key) {
+
+						BSTNode		*current = findNode(root, key);
+						BSTNode		*ancestor = 0;
+
+						if (!root || !current)
+							return (0);
+						// Case 1: left child exists
+						if (current->left)
+							return (findMax(current->left));
+						// Case 2: no left child
+						else
+						{
+							while (root != current)
+							{
+								if (current->val.first > root->val.first)
+								{
+									ancestor = root;
+									root = ancestor->right;
+								}
+								else
+									root = root->left;
+							}
+							return (ancestor);
+						}
+					}
+
+				public:
+
+					// Constructor #1 (empty)
+					iterator(void) : _node(0), _root(0) {
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
+						return ;
+					}
+
+					// Constructor #2 (init)
+					iterator(map<Key, T, Compare, Alloc> const &rhs) {
+
+						BSTNode		*tmp;
+						this->_node = rhs.begin();
+						this->_root = this->_node;
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
+						tmp = getAncestor(this->_node);
+						while (tmp)
+						{
+							this->_root = tmp;
+							tmp = getAncestor(tmp);
+						}
+
+						return ;
+					}
+
+					// Constructor #3 (for begin & end)
+					iterator(BSTNode *node, BSTNode *root) : _node(node), \
+															 	_root(root) {
+
+						// Last element
+						value_type	n_val(0, 0);
+						this->_last = new BSTNode(n_val);
+
+						return ;
+					}
+
+					// Copy constructor
+					iterator(iterator const &src) : _last(0) {
+						
+						*this = src;
+						
+						return ;
+					}
+
+					// Destructor
+					~iterator(void) {
+						
+						if (this->_last)
+						{
+							delete this->_last;
+							this->_last = 0;
+						}
+						return ;
+					}
+
+					// Assignment operation
+					iterator	&operator=(iterator const &rhs) {
+
+						this->_node = rhs._node;
+						this->_root = rhs._root;
+
+						// Last element
+						if (!this->_last)
+						{
+							value_type	n_val(0, 0);
+							this->_last = new BSTNode(n_val);
+						}
+
+						return (*this);
+					}
+
+					// Comparison operator
+					bool		operator==(iterator const &rhs) {
+
+						if (this->_node != rhs._node)
+							return (false);
+						if (!this->_node && !rhs._node)
+							return (true);
+						if (!this->_node || !rhs._node)
+							return (false);
+						return (this->_node->val.first == rhs._node->val.first);
+					}
+
+					bool		operator!=(iterator const &rhs) {
+
+						if (this->_node == rhs._node)
+							return (false);
+						if (!this->_node && !rhs._node)
+							return (false);
+						if (!this->_node || !rhs._node)
+							return (true);
+						return (this->_node->val.first != rhs._node->val.first);
+					}
+
+					// Dereferencing operator
+					value_type	&operator*(void) {
+
+						if (this->_node == 0)
+							return (this->_last->val);
+						return (this->_node->val);
+					}
+
+					// Field access operator (arrow operator)
+					value_type	*operator->(void) {
+
+						if (this->_node == 0)
+							return (&(this->_last->val));
+						return (&(this->_node->val));
+					}
+
+					// Increment prefix
+					iterator	&operator++(void) {
+
+						if (this->_root == 0)
+							throw (std::out_of_range("error: out of range"));
+						// Change everywhere
+						this->_node = this->getSuccessor(this->_root, \
+														this->_node->val.first);
+
+						return (*this);
+					}
+
+					// Increment postfix
+					iterator	operator++(int) {
+
+						iterator	tmp(*this);
+
+						if (this->_root == 0)
+							throw (std::out_of_range("error: out of range"));
+						if (this->_node != 0)
+							this->_node = this->getSuccessor(this->_root, \
+														this->_node->val.first);
+
+						return (tmp);
+					}
+
+					// Decrement prefix
+					iterator	&operator--(void) {
+
+						if (this->_root == 0)
+							throw (std::out_of_range("error: out of range"));
+						if (this->_node == 0)
+						{
+							this->_node = this->_root;
+							while (this->_node->right)
+								this->_node = this->_node->right;
+						}
+						else
+							this->_node = this->getAncestor(this->_root, \
+														this->_node->val.first);
+
+						return (*this);
+					}
+
+					iterator	operator--(int) {
+
+						iterator	tmp(*this);
+
+						if (this->_root == 0)
+							throw (std::out_of_range("error: out of range"));
+						if (this->_node == 0)
+						{
+							this->_node = this->_root;
+							while (this->_node->right)
+								this->_node = this->_node->right;
+						}
+						else
+							this->_node = this->getAncestor(this->_root, \
+														this->_node->val.first);
 
 						return (tmp);
 					}
@@ -911,7 +954,8 @@ namespace ft
 							{
 								if (current->val.first < ancestor->val.first)
 								{
-									successor = ancestor; // the deepest node for which curr is in left
+									successor = ancestor; // the deepest node
+													// for which curr is in left
 									ancestor = ancestor->left;
 								}
 								else
@@ -921,7 +965,7 @@ namespace ft
 						return (successor);
 					}
 
-					BSTNode			*getAncestor(BSTNode *root, Key key) { // CHANGE EVERYWHERE
+					BSTNode			*getAncestor(BSTNode *root, Key key) {
 
 						BSTNode		*current = findNode(root, key);
 						BSTNode		*ancestor = 0;
@@ -1004,7 +1048,7 @@ namespace ft
 					}
 
 					// Copy constructor
-					reverse_iterator(reverse_iterator const &src) {
+					reverse_iterator(reverse_iterator const &src) : _last(0) {
 						
 						*this = src;
 						return ;
@@ -1013,7 +1057,11 @@ namespace ft
 					// Destructor
 					~reverse_iterator(void) {
 						
-						delete this->_last;
+						if (this->_last)
+						{
+							delete this->_last;
+							this->_last = 0;
+						}
 						return ;
 					}
 
@@ -1024,8 +1072,11 @@ namespace ft
 						this->_root = rhs._root;
 
 						// Last element
-						value_type	n_val(0, 0);
-						this->_last = new BSTNode(n_val);
+						if (!this->_last)
+						{
+							value_type	n_val(0, 0);
+							this->_last = new BSTNode(n_val);
+						}
 
 						return (*this);
 					}
@@ -1076,7 +1127,7 @@ namespace ft
 							throw (std::out_of_range("error: out of range"));
 						// Change everywhere
 						this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+														this->_node->val.first);
 
 						return (*this);
 					}
@@ -1090,7 +1141,7 @@ namespace ft
 							throw (std::out_of_range("error: out of range"));
 						if (this->_node != 0)
 							this->_node = this->getAncestor(this->_root, \
-															this->_node->val.first);
+														this->_node->val.first);
 
 						return (tmp);
 					}
@@ -1108,7 +1159,7 @@ namespace ft
 						}
 						else
 							this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+														this->_node->val.first);
 
 						return (*this);
 					}
@@ -1127,7 +1178,7 @@ namespace ft
 						}
 						else
 							this->_node = this->getSuccessor(this->_root, \
-															this->_node->val.first);
+														this->_node->val.first);
 
 						return (tmp);
 					}
@@ -1143,29 +1194,13 @@ namespace ft
 				while (first->left)
 					first = first->left;
 
-				return (ft::map<Key, T, Compare, Alloc>::iterator(first, this->_root));
+				return (ft::map<Key, T, Compare, Alloc>::iterator(first, \
+																this->_root));
 			}
 
 			iterator	end(void) {
 
 				return (iterator(0, this->_root));
-			}
-
-			ft::map<Key, T, Compare, Alloc>::const_iterator		cbegin(void) const {
-
-				BSTNode		*first = this->_root;
-
-				if (!first)
-					return (const_iterator());
-				while (first->left)
-					first = first->left;
-
-				return (ft::map<Key, T, Compare, Alloc>::const_iterator(first, this->_root));
-			}
-
-			ft::map<Key, T, Compare, Alloc>::const_iterator		cend(void) const {
-
-				return (const_iterator(0, this->_root));
 			}
 
 			reverse_iterator	rbegin(void) {
@@ -1268,9 +1303,13 @@ namespace ft
 				{
 					if (!first.getRoot())
 						return ;
-					if (!this->findNode(this->_root, first.getNode()->val.first))
+					if (!this->findNode(this->_root, \
+													first.getNode()->val.first))
+					{
 						this->insertNode(&this->_root, \
-							first.getNode()->val.first, first.getNode()->val.second);
+							first.getNode()->val.first, \
+												first.getNode()->val.second);
+					}
 					first++;
 				}
 			}
@@ -1328,12 +1367,7 @@ namespace ft
 			}
 
 			// Functor key_compare
-			//template <typename Key, typename T, typename Compare, typename Alloc>
-			class key_compare
-			{
-				private:
-
-					friend class map;
+			class key_compare {
 
 				protected:
 
@@ -1347,30 +1381,23 @@ namespace ft
 													Key const &y) const {
 						return comp(x, y);
 					}
-
 			};
 
 			// Functor value_compare
-			//template <typename Key, typename T, typename Compare, typename Alloc>
-			class value_compare
-			{
-				private:
-
-					friend class map;
+			class value_compare {
 
 				protected:
 
 					Compare		comp;
-					value_compare(Compare c) : comp(c) { return ; }
 
 				public:
-					typedef bool result_type;
-					typedef value_type first_argument_type;
-					typedef value_type second_argument_type;
+
+					value_compare(Compare c) : comp(c) { return ; }
+
 					bool	operator()(value_type const &x, \
 													value_type const &y) const
 					{
-						return comp(x.first, y.first);
+						return (comp(x.first, y.first));
 					}
 			};
 
@@ -1384,7 +1411,8 @@ namespace ft
 			// Value_comp
 			value_compare	value_comp(void) const {
 
-				map<Key, T, Compare, Alloc>::value_compare	value_comp(this->_comp);
+				map<Key, T, Compare, Alloc>::value_compare	value_comp(\
+																this->_comp);
 
 				return (value_comp);
 			}
@@ -1408,8 +1436,8 @@ namespace ft
 
 			const_iterator	find(Key const &k) const {
 
-				map<Key, T, Compare, Alloc>::const_iterator		it = this->cbegin();
-				map<Key, T, Compare, Alloc>::const_iterator		ite = this->cend();
+				map<Key, T, Compare, Alloc>::const_iterator	it = this->cbegin();
+				map<Key, T, Compare, Alloc>::const_iterator	ite = this->cend();
 				while (it != ite)
 				{
 					if (this->_comp(it.getNode()->val.first, k) == false && \
@@ -1505,7 +1533,8 @@ namespace ft
 				return (std::pair<iterator, iterator>(it, ite));
 			}
 
-			std::pair<const_iterator, const_iterator>	equal_range(Key const &k) const {
+			std::pair<const_iterator, const_iterator>	equal_range(\
+														Key const &k) const {
 
 				map<Key, T, Compare, Alloc>::const_iterator	it = lower_bound(k);
 				map<Key, T, Compare, Alloc>::const_iterator	ite = upper_bound(k);
