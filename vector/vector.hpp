@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/08 14:03:54 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/09 10:17:41 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1207,7 +1207,7 @@ namespace ft
 
 					tmp = new T[new_capacity];
 
-					while (i < this->_size)
+					while (i < static_cast<int>(this->_size))
 					{
 						tmp[i] = this->_array[i];
 						i++;

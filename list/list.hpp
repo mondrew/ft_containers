@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/07 16:38:05 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/09 11:18:08 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,10 +59,14 @@ namespace ft
 			}
 
 			// #2 Fill constructor
-			explicit list<T, A>(std::size_t n, T const &val) {
+			//explicit list<T, A>(std::size_t n, T const &val) {
+			explicit list<T, A>(int n, T const &val) {
 
 				int		i = 0;
 				t_list	*tmp;
+
+				if (n < 0)
+					throw (std::bad_alloc());
 
 				// Create null-element
 				this->_head = new t_list;
@@ -91,9 +95,8 @@ namespace ft
 			}
 
 			// #3 Range constructor
-			list<T, A>(list<T, A>::iterator first, list<T, A>::iterator last) {
-
-				t_list	*tmp;
+			template <typename InputIterator>
+			list<T, A>(InputIterator first, InputIterator last) {
 
 				// Create null-element
 				this->_head = new t_list;
@@ -115,6 +118,7 @@ namespace ft
 				return ;
 			}
 
+			/*
 			// #3.1 Range constructor (type pointers)
 			list<T, A>(T *first, T *last) {
 
@@ -139,6 +143,7 @@ namespace ft
 				}
 				return ;
 			}
+			*/
 
 			// #4 Copy constructor
 			list<T, A>(list<T, A> const &src) {
@@ -241,6 +246,7 @@ namespace ft
 					// DESTRUCTOR
 					~iterator(void) { return ; }
 
+					// Assignment operation
 					iterator	&operator=(iterator const &rhs) {
 
 						this->_node = rhs._node;
@@ -299,6 +305,11 @@ namespace ft
 					T			&operator*(void) {
 
 						return (this->_node->val);
+					}
+
+					T			*operator->(void) {
+
+						return (this->_node);
 					}
 
 					// Getters
@@ -403,6 +414,11 @@ namespace ft
 
 						return (this->_node->val);
 					}
+
+					T			*operator->(void) {
+
+						return (this->_node);
+					}
 			};
 
 			// Reverse iterator
@@ -500,6 +516,114 @@ namespace ft
 
 						return (this->_node->val);
 					}
+
+					T			*operator->(void) {
+
+						return (this->_node);
+					}
+			};
+
+			// Const reverse iterator
+			class const_reverse_iterator {
+
+				private:
+
+					t_list		*_node;
+					t_list		*_head;
+
+				public:
+
+					// CONSTRUCTORS
+					// #1 default constructor
+					const_reverse_iterator(void) : _node(0), _head(0) { return ; }
+
+					// #2 param constructor (for iterator init: begin, end, etc)
+					const_reverse_iterator(t_list *node, t_list *head) :
+										_node(node), _head(head) { return ; }
+
+					// #3 Parameterized constructor
+					const_reverse_iterator(list<T, A> const &src) {
+
+						this->_node = src._tail()->prev;
+						this->_head = src._tail()->prev;
+
+						return ;
+					}
+
+					// #4 Copy constructor
+					const_reverse_iterator(const_reverse_iterator const &src) {
+
+						*this = src;
+					}
+
+					// DESTRUCTOR
+					~const_reverse_iterator(void) { return ; }
+
+					const_reverse_iterator	&operator=(reverse_iterator \
+																const &rhs) {
+
+						this->_node = rhs._node;
+						this->_head = rhs._head;
+
+						return (*this);
+					}
+
+					// Increment prefix
+					const_reverse_iterator	&operator++(void) {
+
+						this->_node = this->_node->prev;
+
+						return (*this);
+					}
+
+					// Increment postfix
+					const_reverse_iterator	operator++(int) {
+
+						const_reverse_iterator	tmp(*this);
+
+						this->_node = this->_node->prev;
+
+						return (tmp);
+					}
+
+					// Decrement prefix
+					const_reverse_iterator	&operator--(void) {
+
+						this->_node = this->_node->next;
+
+						return (*this);
+					}
+
+					// Decrement postfix
+					const_reverse_iterator	operator--(int) {
+
+						const_reverse_iterator	tmp(*this);
+
+						this->_node = this->_node->next;
+						return (tmp);
+					}
+
+					// Comparison operators
+					bool		operator==(const_reverse_iterator const &rhs) {
+
+						return (this->_node == rhs._node);
+					}
+
+					bool		operator!=(const_reverse_iterator const &rhs) {
+
+						return (this->_node != rhs._node);
+					}
+
+					// Dereference operator
+					T			&operator*(void) {
+
+						return (this->_node->val);
+					}
+
+					T			*operator->(void) {
+
+						return (this->_node);
+					}
 			};
 
 			// ITERATORS
@@ -513,12 +637,12 @@ namespace ft
 				return (iterator(this->_tail, this->_head));
 			}
 
-			const_iterator 		cbegin(void) const {
+			const_iterator 		begin(void) const {
 
 				return (const_iterator(this->_head, this->_head));
 			}
 
-			const_iterator		cend(void) const {
+			const_iterator		end(void) const {
 
 				return (const_iterator(this->_tail, this->_head));
 			}
@@ -531,6 +655,16 @@ namespace ft
 			reverse_iterator	rend(void) {
 
 				return (reverse_iterator(this->_head->prev, this->_head));
+			}
+
+			const_reverse_iterator	rbegin(void) const {
+
+				return (const_reverse_iterator(this->_tail->prev, this->_head));
+			}
+
+			const_reverse_iterator	rend(void) const {
+
+				return (const_reverse_iterator(this->_head->prev, this->_head));
 			}
 
 			// CAPACITY
@@ -564,14 +698,25 @@ namespace ft
 				return (this->_head->val);
 			}
 
-			T					&back(void) {
+			T const				&front(void) const {
+
+				return (this->_head->val);
+			}
+
+			T 					&back(void) {
+
+				return (this->_tail->prev->val);
+			}
+
+			T const				&back(void) const {
 
 				return (this->_tail->prev->val);
 			}
 
 			// MODIFIERS
 			// Assign #1 range
-			void				assign(iterator first, iterator last) {
+			template <typename InputIterator>
+			void			assign(InputIterator first, InputIterator last) {
 
 				// Delete all nodes except tail-null-node
 				this->clear();
@@ -589,9 +734,13 @@ namespace ft
 			}
 
 			// Assign #2 fill
-			void				assign(std::size_t n, T const &val) {
+			// void				assign(std::size_t n, T const &val) {
+			void				assign(int n, T const &val) {
 
 				t_list	*tmp;
+
+				if (n < 0)
+					throw (std::bad_alloc());
 
 				// Delete all nodes except tail-null-node
 				this->clear();
@@ -623,6 +772,7 @@ namespace ft
 				return ;
 			}
 
+			// Pop front
 			void				pop_front(void) {
 
 				t_list		*tmp = this->_head->next;
@@ -640,6 +790,7 @@ namespace ft
 				return ;
 			}
 
+			// Push back
 			void				push_back(T const &val) {
 
 				t_list		*tmp = new t_list;
@@ -656,6 +807,7 @@ namespace ft
 				return ;
 			}
 
+			// Pop back
 			void				pop_back(void) {
 
 				t_list		*tmp = this->_tail->prev->prev;
@@ -693,11 +845,15 @@ namespace ft
 			}
 
 			// Insert #2 (fill)
-			void				insert(iterator position, std::size_t n, \
-																T const &val) {
+			// void		insert(iterator position, std::size_t n, \
+			//													T const &val) {
+			void		insert(iterator position, int n, T const &val) {
 
 				int			i = n;
 				t_list		*tmp;
+
+				if (n < 0)
+					throw (std::bad_alloc());
 
 				while (n > 0)
 				{
@@ -722,8 +878,9 @@ namespace ft
 			}
 
 			// Insert #3 (range)
-			void				insert(iterator position, iterator first, \
-																iterator last) {
+			template <typename InputIterator>
+			void				insert(iterator position, \
+										InputIterator first, InputIterator last) {
 
 				int			n = 0;
 				t_list		*tmp;
@@ -1209,9 +1366,9 @@ namespace ft
 			// Relational operators
 			friend bool	operator==(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 
-				ft::list<T, A>::const_iterator	it1 = lhs.cbegin();
-				ft::list<T, A>::const_iterator	ite1 = lhs.cend();
-				ft::list<T, A>::const_iterator	it2 = rhs.cbegin();
+				ft::list<T, A>::const_iterator	it1 = lhs.begin();
+				ft::list<T, A>::const_iterator	ite1 = lhs.end();
+				ft::list<T, A>::const_iterator	it2 = rhs.begin();
 
 				if (lhs._size != rhs._size)
 					return (false);
@@ -1227,9 +1384,9 @@ namespace ft
 
 			friend bool	operator!=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 
-				ft::list<T, A>::const_iterator	it1 = lhs.cbegin();
-				ft::list<T, A>::const_iterator	ite1 = lhs.cend();
-				ft::list<T, A>::const_iterator	it2 = rhs.cbegin();
+				ft::list<T, A>::const_iterator	it1 = lhs.begin();
+				ft::list<T, A>::const_iterator	ite1 = lhs.end();
+				ft::list<T, A>::const_iterator	it2 = rhs.begin();
 
 				if (lhs._size != rhs._size)
 					return (true);
@@ -1245,10 +1402,10 @@ namespace ft
 	
 			friend bool	operator<(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 
-				ft::list<T, A>::const_iterator	it1 = lhs.cbegin();
-				ft::list<T, A>::const_iterator	ite1 = lhs.cend();
-				ft::list<T, A>::const_iterator	it2 = rhs.cbegin();
-				ft::list<T, A>::const_iterator	ite2 = rhs.cend();
+				ft::list<T, A>::const_iterator	it1 = lhs.begin();
+				ft::list<T, A>::const_iterator	ite1 = lhs.end();
+				ft::list<T, A>::const_iterator	it2 = rhs.begin();
+				ft::list<T, A>::const_iterator	ite2 = rhs.end();
 
 				while (it1 != ite1 && it2 != ite2)
 				{
@@ -1264,10 +1421,10 @@ namespace ft
 
 			friend bool	operator<=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 
-				ft::list<T, A>::const_iterator	it1 = lhs.cbegin();
-				ft::list<T, A>::const_iterator	ite1 = lhs.cend();
-				ft::list<T, A>::const_iterator	it2 = rhs.cbegin();
-				ft::list<T, A>::const_iterator	ite2 = rhs.cend();
+				ft::list<T, A>::const_iterator	it1 = lhs.begin();
+				ft::list<T, A>::const_iterator	ite1 = lhs.end();
+				ft::list<T, A>::const_iterator	it2 = rhs.begin();
+				ft::list<T, A>::const_iterator	ite2 = rhs.end();
 
 				while (it1 != ite1 && it2 != ite2)
 				{
@@ -1283,10 +1440,10 @@ namespace ft
 
 			friend bool	operator>(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 
-				ft::list<T, A>::const_iterator	it1 = lhs.cbegin();
-				ft::list<T, A>::const_iterator	ite1 = lhs.cend();
-				ft::list<T, A>::const_iterator	it2 = rhs.cbegin();
-				ft::list<T, A>::const_iterator	ite2 = rhs.cend();
+				ft::list<T, A>::const_iterator	it1 = lhs.begin();
+				ft::list<T, A>::const_iterator	ite1 = lhs.end();
+				ft::list<T, A>::const_iterator	it2 = rhs.begin();
+				ft::list<T, A>::const_iterator	ite2 = rhs.end();
 
 				while (it1 != ite1 && it2 != ite2)
 				{
@@ -1302,10 +1459,10 @@ namespace ft
 
 			friend bool	operator>=(ft::list<T, A> const &lhs, ft::list<T, A> const &rhs) {
 
-				ft::list<T, A>::const_iterator	it1 = lhs.cbegin();
-				ft::list<T, A>::const_iterator	ite1 = lhs.cend();
-				ft::list<T, A>::const_iterator	it2 = rhs.cbegin();
-				ft::list<T, A>::const_iterator	ite2 = rhs.cend();
+				ft::list<T, A>::const_iterator	it1 = lhs.begin();
+				ft::list<T, A>::const_iterator	ite1 = lhs.end();
+				ft::list<T, A>::const_iterator	it2 = rhs.begin();
+				ft::list<T, A>::const_iterator	ite2 = rhs.end();
 
 				while (it1 != ite1 && it2 != ite2)
 				{
