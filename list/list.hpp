@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 20:54:31 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/09 11:18:08 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/11 08:12:36 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -736,8 +736,6 @@ namespace ft
 			// Assign #2 fill
 			// void				assign(std::size_t n, T const &val) {
 			void				assign(int n, T const &val) {
-
-				t_list	*tmp;
 
 				if (n < 0)
 					throw (std::bad_alloc());

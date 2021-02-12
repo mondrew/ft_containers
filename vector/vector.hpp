@@ -6,7 +6,7 @@
 /*   By: mondrew <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/15 17:16:13 by mondrew           #+#    #+#             */
-/*   Updated: 2021/02/09 10:17:41 by mondrew          ###   ########.fr       */
+/*   Updated: 2021/02/11 08:38:12 by mondrew          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1041,7 +1041,7 @@ namespace ft
 
 			void				reserve(size_t n) {
 
-				int		i = 0;
+				std::size_t		i = 0;
 
 				if (n > this->_capacity)
 				{
@@ -1108,8 +1108,8 @@ namespace ft
 			template <typename InputIterator>
 			void				assign(InputIterator first, InputIterator last) {
 
-				int		i = 0;
-				int		new_size = &(*last) - &(*first);
+				std::size_t		i = 0;
+				std::size_t		new_size = &(*last) - &(*first);
 
 				if (&(*last) < &(*first))
 					throw (std::bad_alloc());
@@ -1150,29 +1150,29 @@ namespace ft
 			// void				assign(size_t n, T const &val) {
 			void				assign(int n, T const &val) {
 
-				int		i = 0;
+				std::size_t		i = 0;
+				std::size_t		m = static_cast<std::size_t>(n);
 
-				if (n < 0)
+				if (m < 0)
 					throw (std::bad_alloc());
-				n = static_cast<int>(n);
 
-				if (n > this->_capacity)
+				if (m > this->_capacity)
 				{
 					if (this->_array)
 						delete [] this->_array;
-					T	*tmp = new T[n];
-					while (i < n)
+					T	*tmp = new T[m];
+					while (i < m)
 					{
 						tmp[i] = val;
 						i++;
 					}
-					this->_size = n;
-					this->_capacity = n;
+					this->_size = m;
+					this->_capacity = m;
 					this->_array = tmp;
 				}
 				else
 				{
-					while (i < n)
+					while (i < m)
 					{
 						this->_array[i] = val;
 						i++;
@@ -1182,7 +1182,7 @@ namespace ft
 						this->_array[i].~T();
 						i++;
 					}
-					this->_size = n;
+					this->_size = m;
 				}
 			}
 
@@ -1239,10 +1239,10 @@ namespace ft
 			// Insert #1 (single element)
 			iterator			insert(iterator position, T const &val) {
 
-				int			i = 0;
-				int			j = 0;
-				iterator	it = this->begin();
-				iterator	ite = this->end();
+				std::size_t		i = 0;
+				std::size_t		j = 0;
+				iterator		it = this->begin();
+				iterator		ite = this->end();
 
 				if (position < it || position > ite) // not original behaviour
 					throw (std::out_of_range("Error: std::out_of_range"));
@@ -1301,16 +1301,16 @@ namespace ft
 			void				insert(iterator position, int n, \
 																T const &val) {
 
-				int			i = 0;
-				int			j = 0;
-				int			k = 0;
-				iterator	it = this->begin();
-				iterator	ite = this->end();
+				std::size_t		i = 0;
+				int				j = 0;
+				int				k = 0;
+				iterator		it = this->begin();
+				iterator		ite = this->end();
 
 				if (n < 0)
 					throw (std::bad_alloc());
 
-				n = static_cast<int>(n);
+				n = static_cast<std::size_t>(n);
 
 				if (position < it || position > ite)
 					throw (std::out_of_range("Error: std::out_of_range"));
@@ -1393,7 +1393,7 @@ namespace ft
 			void			insert(iterator position, InputIterator first, \
 																InputIterator last) {
 
-				int			i = 0;
+				std::size_t	i = 0;
 				int			j = 0;
 				int			k = 0;
 				int			n = &(*last) - &(*first);
@@ -1576,7 +1576,7 @@ namespace ft
 			// Erase #1 single
 			iterator			erase(iterator position) {
 
-				int			i = 0;
+				std::size_t	i = 0;
 				iterator	it = this->begin();
 				iterator	ite = this->end();
 
@@ -1606,11 +1606,11 @@ namespace ft
 			// Erase #2 range
 			iterator			erase(iterator first, iterator last) {
 
-				int			i = 0;
-				int			j;
-				int			rem = &(*last) - &(*first);
-				iterator	it = this->begin();
-				iterator	ite = this->end();
+				std::size_t		i = 0;
+				std::size_t		j;
+				int				rem = &(*last) - &(*first);
+				iterator		it = this->begin();
+				iterator		ite = this->end();
 
 				if (first < it || last > ite || rem < 0)
 					throw (std::out_of_range("Error: std::out_of_range"));
@@ -1665,7 +1665,7 @@ namespace ft
 			void				clear(void) {
 
 				// A reallocation is not guaranteed to happen
-				int		i = 0;
+				std::size_t		i = 0;
 
 				while (i < this->_size)
 				{
@@ -1683,7 +1683,7 @@ namespace ft
 			// Relational operators
 			friend bool	operator==(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
-				int		i = 0;
+				std::size_t		i = 0;
 
 				if (lhs.size() != rhs.size())
 					return (false);
@@ -1698,7 +1698,7 @@ namespace ft
 
 			friend bool	operator!=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
-				int		i = 0;
+				std::size_t		i = 0;
 
 				if (lhs.size() != rhs.size())
 					return (true);
@@ -1713,7 +1713,7 @@ namespace ft
 
 			friend bool	operator<(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
-				int		i = 0;
+				std::size_t		i = 0;
 
 				// Only elements counts! Not size and not capacity!
 				while (i < lhs.size() && i < rhs.size())
@@ -1729,7 +1729,7 @@ namespace ft
 
 			friend bool	operator<=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
-				int		i = 0;
+				std::size_t		i = 0;
 
 				// Only elements counts! Not size and not capacity!
 				while (i < lhs.size() && i < rhs.size())
@@ -1745,7 +1745,7 @@ namespace ft
 
 			friend bool	operator>(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
-				int		i = 0;
+				std::size_t		i = 0;
 
 				// Only elements counts! Not size and not capacity!
 				while (i < lhs.size() && i < rhs.size())
@@ -1761,7 +1761,7 @@ namespace ft
 
 			friend bool	operator>=(const ft::vector<T, A> &lhs, const ft::vector<T, A> &rhs) {
 
-				int		i = 0;
+				std::size_t		i = 0;
 
 				// Only elements counts! Not size and not capacity!
 				while (i < lhs.size() && i < rhs.size())
